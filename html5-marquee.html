@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+        <marquee direction="right">我想向右滚动</marquee>
+        <marquee behavior="slide">我只滚动一次</marquee>
+        <marquee loop="2">我是loop循环滚动</marquee>
+        <!--值越大，滚动速度越快 一般5-10比较适宜消息观看-->
+        <marquee scrollamount="5">我是速度为5的滚动</marquee>
+        <!--值越大，滚动速度越慢，通常不设置-->
+        <marquee scrolldelay="90">我延迟滚动</marquee>
+        <!-- 默认值-1或infinite 表示无限循环滚动 loop="数值" 表示滚动相应的次数-->
+        <h3>宽100px 高90px 背景色为#f5f5f5的滚动区域</h3>
+        <marquee direction="up" width="100" height="90" bgcolor="#f5f5f5" hspace="20" vspace="10" >
+            <p>开发工程师</p>
+            <p>设计师</p>
+            <p>前端开发</p>
+        </marquee>
+        <h3>鼠标悬停，滚动停止   鼠标离开，滚动继续</h3>
+        <marquee direction="up" onmouseover="this.stop()" onmouseout="this.start()">
+            <p>开发工程师</p>
+            <p>设计师</p>
+            <p>前端开发</p>
+        </marquee>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bootstrap 实例</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+
+  <style>
+    html,body{ height: 100%; width: 100%; margin: 0; padding:0;}
+    div { width: 100px; height: 100px; background: orange; text-align: center; }
+    .floatTop        {position:relative; top:0px;    left:50%; transform: translateX(-50%);}
+    .floatTopLeft    {position:relative; top:0px;    left:0px; }
+    .floatTopRight   {position:relative; top:0px;    right:0px; }
+    .floatBottomLeft {position:relative; bottom:0px; left:0px; }
+    .floatBottomRight{position:relative; bottom:0px; right:0px; }
+    .floatBottom     {position:relative; bottom:0px; left:50%; transform: translateX(-50%); }
+    .floatLeft       {position:relative; top:50%;    transform: translateY(-50%); left:0px; }
+    .floatCenter     {position:relative; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
+    .floatRight      {position:relative; top:50%;    transform: translateY(-50%); right:0px; }
+
+  </style>
+</head>
+<body class="bg-primary">
+    <div class="floatTopLeft">topLeft</div>
+    <div class="floatTop">top</div>
+    <div class="floatTopRight">topRight</div>
+    <div class="floatLeft">left</div>
+    <div class="floatCenter">center</div>
+    <div class="floatRight">right</div>
+    <div class="floatBottomLeft">bottomLeft</div>
+    <div class="floatBottom">bottom</div>
+    <div class="floatBottomRight">bottomRight</div>
+  </body>
+  </html>

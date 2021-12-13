@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<title>菜鸟教程(runoob.com)</title> 
+<link href="css/flexgrid.css" rel="stylesheet" />
+<style> 
+
+.item {
+    background-color:orange;
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    text-align: center;
+}
+.item1 {
+    background-color:orange;
+    width: 50px;
+    /*height: 50px;*/
+    margin: 10px;
+    text-align: center;
+}
+.item2 {
+    background-color:orange;
+    width: 60px;
+    /*height: 50px;*/
+    margin: 10px;
+    text-align: center;
+}
+.item3 {
+    background-color:orange;
+    width: 70px;
+    /*height: 50px;*/
+    margin: 10px;
+    text-align: center;
+}
+
+/* 弹性容器 */
+.container {
+    /*width: 400px;*/
+    height: 250px;
+    background-color: lightgrey;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- row & column -->
+<h3>flex row</h3>
+<div class="container row">
+  <div class="item">item 1</div>
+  <div class="item">item 2</div>
+  <div class="item">item 3</div>  
+</div>
+
+<h3>flex rowreverse</h3>
+<div class="container rowreverse">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+
+<h3>flex column</h3>
+<div class="container column">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+
+<h3>flex columnreverse</h3>
+<div class="container columnreverse">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+
+<!-- justify -->
+<h3>justify-start</h3>
+<div class="container flex-justifystart">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+<h3>justify-center</h3>
+<div class="container flex-justifycenter">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+<h3>justify-end</h3>
+<div class="container flex-justifyend">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+<h3>justify-between</h3>
+<div class="container flex-justifybetween">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+<h3>justify-around</h3>
+<div class="container flex-justifyaround">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+<h3>justify-evenly</h3>
+<div class="container flex-justifyevenly">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+</div>
+<h3>login page demo</h3>
+<div class="container column flex-aligncenter ">
+    <div class="item">title</div>
+    <div class="item">login form</div>
+    <div class="item">copyright</div>  
+</div>
+
+
+<!-- align -->
+<h3>alignbase</h3>
+<div class="container flex-alignbase">
+    <div class="item1">item 1</div>
+    <div class="item2">item 2</div>
+    <div class="item3">item 3</div>  
+</div>
+<h3>alignstart</h3>
+<div class="container flex-alignstart">
+    <div class="item1">item 1</div>
+    <div class="item2">item 2</div>
+    <div class="item3">item 3</div>  
+</div>
+<h3>aligncenter</h3>
+<div class="container flex-aligncenter">
+    <div class="item1">item 1</div>
+    <div class="item2">item 2</div>
+    <div class="item3">item 3</div>  
+</div>
+<h3>alignend</h3>
+<div class="container flex-alignend">
+    <div class="item1">item 1</div>
+    <div class="item2">item 2</div>
+    <div class="item3">item 3</div>  
+</div>
+<h3>alignstretch（子项的高度不能指定，否则没效果）</h3>
+<div class="container flex-alignstretch">
+    <div class="item1">item 1</div>
+    <div class="item2">item 2</div>
+    <div class="item3">item 3</div>  
+</div>
+
+
+<!-- wrap -->
+<h3>nowrap</h3>
+<div class="container flex-nowrap">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+    <div class="item">item 4</div>
+    <div class="item">item 5</div>
+    <div class="item">item 6</div>  
+    <div class="item">item 7</div>
+    <div class="item">item 8</div>
+    <div class="item">item 9</div>  
+    <div class="item">item 10</div>
+    <div class="item">item 11</div>
+    <div class="item">item 12</div>  
+</div>
+<h3>wrap</h3>
+<div class="container flex-wrap">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+    <div class="item">item 4</div>
+    <div class="item">item 5</div>
+    <div class="item">item 6</div>  
+    <div class="item">item 7</div>
+    <div class="item">item 8</div>
+    <div class="item">item 9</div>  
+    <div class="item">item 10</div>
+    <div class="item">item 11</div>
+    <div class="item">item 12</div>  
+</div>
+<h3>wrapstart</h3>
+<div class="container flex-wrapstart">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+    <div class="item">item 4</div>
+    <div class="item">item 5</div>
+    <div class="item">item 6</div>  
+    <div class="item">item 7</div>
+    <div class="item">item 8</div>
+    <div class="item">item 9</div>  
+    <div class="item">item 10</div>
+    <div class="item">item 11</div>
+    <div class="item">item 12</div>  
+</div>
+<h3>wrapcenter</h3>
+<div class="container flex-wrapcenter">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+    <div class="item">item 4</div>
+    <div class="item">item 5</div>
+    <div class="item">item 6</div>  
+    <div class="item">item 7</div>
+    <div class="item">item 8</div>
+    <div class="item">item 9</div>  
+    <div class="item">item 10</div>
+    <div class="item">item 11</div>
+    <div class="item">item 12</div>  
+</div>
+<h3>wrapend</h3>
+<div class="container flex-wrapend">
+    <div class="item">item 1</div>
+    <div class="item">item 2</div>
+    <div class="item">item 3</div>  
+    <div class="item">item 4</div>
+    <div class="item">item 5</div>
+    <div class="item">item 6</div>  
+    <div class="item">item 7</div>
+    <div class="item">item 8</div>
+    <div class="item">item 9</div>  
+    <div class="item">item 10</div>
+    <div class="item">item 11</div>
+    <div class="item">item 12</div>  
+</div>
+
+<!-- 单个子项目设置 -->
+<!-- 单个子项目设置 -->
+<!-- 单个子项目设置 -->
+<!-- 单个子项目设置 -->
+<!-- 单个子项目设置 -->
+<!-- 单个子项目设置 -->
+<!-- item order -->
+<h3>item order</h3>
+<div class="container flex">
+    <div class="item1 fi-third">item 1</div>
+    <div class="item2 fi-second">item 2</div>
+    <div class="item3 fi-first">item 3</div>  
+</div>
+
+<!-- item align -->
+<h3>item align（辅轴）</h3>
+<div class="container flex">
+    <div class="item1 fi-alignbase">item 1</div>
+    <div class="item1 fi-alignstart">item 3</div>  
+    <div class="item1 fi-aligncenter">item 2</div>
+    <div class="item1 fi-alignend">item 4</div>
+    <div class="item1 fi-alignstretch">item 5</div>
+</div>
+
+
+<!-- item place -->
+<h3>item place（主轴、没效果）</h3>
+<div class="container flex">
+    <div class="item fi-left">item 1</div>
+    <div class="item fi-hcenter">item 2</div>
+    <div class="item fi-right">item 3</div>
+</div>
+<h3>item justify（主轴、没效果）</h3>
+<div class="container flex">
+    <div class="item fi-justifystart">item1</div>
+    <div class="item fi-justifycenter">item2</div>
+    <div class="item fi-justifyend">item3</div>
+</div>
+
+
+<!-- item size -->
+<h3>item size（其它都是固定值，自动填充的子项设置为 flex: 1)</h3>
+<div class="container flex">
+    <div class="item1">item 1</div>
+    <div class="item1 flex-1">item 2</div>  
+    <div class="item1">item 3</div>
+    <div class="item1">item 4</div>
+</div>
+
+
+</body>
+</html>

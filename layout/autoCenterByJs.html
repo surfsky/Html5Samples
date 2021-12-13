@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>自动居中</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <style>
+        *{margin:0;padding:0}
+        #box{
+            width:100px;
+            height:100px;
+            position:absolute;top:30px;left:20px; 
+            background:chocolate;
+        }
+        body{
+            background-color: #0066cc;
+        }
+    </style>
+</head>
+
+<body>
+<div id="box"></div>
+<script>
+    function autoCenter(){
+        var ele = document.getElementById('box');
+        var len = ele.offsetWidth; //获取元素自身的宽度
+        var height = ele.offsetHeight; //获取元素自身的高度
+        var left = (document.documentElement.clientWidth-len)/2;
+        var top = (document.documentElement.clientHeight-height)/2;
+        ele.style.left = left+'px';
+        ele.style.top = top+'px';
+    }
+
+    window.onload = autoCenter;
+    window.onresize = autoCenter;
+</script>
+</body>
+</html>

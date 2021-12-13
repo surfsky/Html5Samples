@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grid12 system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/flexgrid.css">
+  <link rel="stylesheet" href="css/color.css">
+</head>
+<body class="container">
+
+    <h1>仿 Bootstrap 12 列网格系统</h1>
+
+    <h3>1. 列宽</h3>
+    <p>等宽列(col)</p>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col bg-primary">.col</div>
+          <div class="col bg-warning">.col</div>
+          <div class="col bg-light">.col</div>
+        </div>
+    </div>
+    <p>使用 col-* 来表示列的宽度</p>
+    <div class="bg-light">
+      <div class="bg-warning col-1  "  >col-1</div>
+      <div class="bg-warning col-2  "  >col-2</div>
+      <div class="bg-warning col-3  "  >col-3</div>
+      <div class="bg-warning col-4  "  >col-4</div>
+      <div class="bg-warning col-5  "  >col-5</div>
+      <div class="bg-warning col-6  "  >col-6</div>
+      <div class="bg-warning col-7  "  >col-7</div>
+      <div class="bg-warning col-8  "  >col-8</div>
+      <div class="bg-warning col-9  "  >col-9</div>
+      <div class="bg-warning col-10 " >col-10</div>
+      <div class="bg-warning col-11 " >col-11</div>
+      <div class="bg-warning col-12 " >col-12</div>
+    </div>
+
+    <h3>2. 偏移 </h3>
+    <p>偏移列（offset-*)：往右移。注意是跟随式的浮动布局。</p>
+    <div class="column bg-light"> 
+        <div class="bg-warning col-1"  >无偏移</div>
+        <div class="bg-warning col-1 offset-1 "  >offset-1 </div>
+        <div class="bg-warning col-1 offset-2 "  >offset-2 </div>
+        <div class="bg-warning col-1 offset-3 "  >offset-3 </div>
+        <div class="bg-warning col-1 offset-4 "  >offset-4 </div>
+        <div class="bg-warning col-1 offset-5 "  >offset-5 </div>
+        <div class="bg-warning col-1 offset-6 "  >offset-6 </div>
+        <div class="bg-warning col-1 offset-7 "  >offset-7 </div>
+        <div class="bg-warning col-1 offset-8 "  >offset-8 </div>
+        <div class="bg-warning col-1 offset-9 "  >offset-9 </div>
+        <div class="bg-warning col-1 offset-10" >coffset-10</div>
+        <div class="bg-warning col-1 offset-11" >coffset-11</div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1 bg-success">1</div>
+            <div class="col-1 bg-warning">2</div>
+            <div class="col-1 bg-success">3</div>
+            <div class="col-1 bg-warning">4</div>
+            <div class="col-1 bg-success">5</div>
+            <div class="col-1 bg-warning">6</div>
+            <div class="col-1 bg-success">7</div>
+            <div class="col-1 bg-warning">8</div>
+            <div class="col-1 bg-success">9</div>
+            <div class="col-1 bg-warning">10</div>
+            <div class="col-1 bg-success">11</div>
+            <div class="col-1 bg-warning">12</div>
+        </div>
+        <div class="row">
+            <div class="col-3 bg-success">.col-3</div>
+            <div class="col-3 offset-3 bg-warning">.col-3 .offset-3</div>
+        </div>
+        <div class="row">
+          <div class="col-9 offset-3 bg-success">.col-9 .offset-3</div>
+        </div>
+    </div>
+    
+    
+    <h3>3. 自适应布局（sm,md,lg,xl)</h3>
+    <div class="container-fluid">
+        <p>屏幕宽小于 576px，四个列将会上下堆叠排版。</p>
+        <div class="row">
+        <div class="col-sm-3 bg-primary" >.col-sm-3</div>
+        <div class="col-sm-3 bg-success" >.col-sm-3</div>
+        <div class="col-sm-3 bg-warning" >.col-sm-3</div>
+        <div class="col-sm-3 bg-light" >.col-sm-3</div>
+      </div>
+      <p>随着宽度增大两列比例调整为：堆叠、1/1、1/2、1/3、1/5</p>
+        <div class="row">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 bg-success">column1</div>
+          <div class="col-sm-6 col-md-8 col-lg-9 col-xl-10 bg-warning">column2</div>
+      </div>
+      <p>随着宽度增大展示1列 > 2列 > 4列</p>
+      <div class="row" >
+          <div class="col-lg-3 col-sm-6 bg-success" >A</div>
+          <div class="col-lg-3 col-sm-6 bg-warning" >B</div>
+          <div class="clearfix visible-sm bg-dark"></div>
+          <div class="col-lg-3 col-sm-6  bg-success" >C</div>
+          <div class="col-lg-3 col-sm-6  bg-warning" >D</div>
+       </div>
+       <p>两端固定宽度，中间部分自动拉伸</p>
+       <div class="row">
+          <div class="bg-warning container" style="width:200px;">fix</div>
+          <div class="col bg-light">auto size</div>
+          <div class="bg-warning container" style="width:200px;">fix</div>
+       </div>
+       <p>屏幕过小会隐藏</p>
+       <div class="row">
+          <div class="bg-warning container visible-md invisible-sm">fix</div>
+       </div>
+       <p>屏幕过小才显示</p>
+       <div class="row">
+          <div class="bg-warning container invisible-md visible-sm">fix</div>
+       </div>
+    </div>
+      
+    <h3>5. 调整列位置（push, pull) （测试无效）</h3>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-4 col-push-8 bg-success" >我在左边</div>
+          <div class="col-8 col-pull-4 bg-warning" >我在右边</div>
+      </div>
+    </div>
+  </body>
+
+</html>

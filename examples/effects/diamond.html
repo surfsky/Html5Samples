@@ -1,0 +1,28 @@
+<div class="diamond">
+    <p>diamond</p>
+</div>
+<style>
+.diamond {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    line-height: 200px;
+    text-align: center;
+    color: white;
+    font-size: 200%;
+}
+
+.diamond:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: deeppink;
+    z-index: -1;
+    transform: rotateZ(45deg);
+}
+</style>

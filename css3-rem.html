@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta charset="utf-8"> 
+<link href="css/flexgrid.css" rel="stylesheet" />
+<style>
+/*
+px 像素
+em 是相对长度单位（相对于父元素的字体高度）
+rem 是相对长度单位（相对于根元素的字体高度）。浏览器默认字高都是16px，即 1rem=16px，可在html里面修改rem的定义，如font-size:20px;
+*/
+/* 定义文本基础大小 rem */
+html { font-size : 20px; }
+@media only screen and (min-width: 401px){ html { font-size: 25px !important;}}
+@media only screen and (min-width: 428px){ html { font-size: 26.75px !important;}}
+@media only screen and (min-width: 481px){ html { font-size: 30px !important; }}
+@media only screen and (min-width: 569px){ html { font-size: 35px !important; }}
+@media only screen and (min-width: 641px){ html { font-size: 40px !important; }}
+
+/* 根据屏幕自动调整元素大小 */
+.w10 {width:10rem;}
+.w20 {width:20rem;}
+.h10 {height:10rem;}
+.h20 {height:20rem;}
+.border {border-width: 1rem; border-color: green; border-style: solid;}
+.center {position:fixed; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
+.childCenter {display: flex; justify-content: center;      align-items: center;}
+</style>
+</head>
+
+<body>
+    <div class="w10 h10 border childCenter">w10 h10</div>
+    <div class="w20 h20 border childCenter">w20 h20</div>
+</body>
+</html>
+
+

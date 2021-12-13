@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			html,body{ height: 100%; width: 100%; margin: 0; padding:0;}
+			/*水平居中（需预先设置父元素和当前元素的尺寸）*/
+			.hcenter{
+                margin: 0 auto;
+			}
+			/*垂直居中（需预先设置父元素和当前元素的尺寸）*/
+			.vcenter{
+				position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+			}
+			/*居中（需预先设置父元素和当前元素的尺寸）*/
+			.center{
+                margin: 0 auto;
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+		</style>
+	</head>
+ 
+<body>
+	<!-- 单独放置没问题，同时放置会移位-->
+    <div class="center"  style="width:200px;height:200px; background: pink;"></div>
+	<!--
+		<div class="hcenter" style="width:200px;height:200px; background:yellow;"></div>
+		<div class="vcenter" style="width:200px;height:200px; background: blue;"></div>
+	-->	
+</body>
+</html>

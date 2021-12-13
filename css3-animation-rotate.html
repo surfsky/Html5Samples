@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>悬停旋转动画效果</title>
+	<style href="css/position.css" type="stylesheet" ></style>
+	<style href="css/color.css" type="stylesheet" ></style>
+	<style> 
+		/*logo*/
+		#logo {
+			width: 128px;
+			background-size: cover;
+			border-radius: 200px;
+			box-shadow: 0px 0px 40px rgba(63, 81, 181, 0.72);
+			border: 3px solid #00a0ff;
+			opacity: 1;
+			/*margin: 0 auto;*/
+			/*margin-top: 20px;*/
+			transition: all 1.0s;
+		}
+		#logo:hover {
+			box-shadow: 0 0 10px #fff;
+			transform:rotate(360deg);
+		}
+	</style>
+</head>
+
+<body class="bg-primary">
+	<div class="center">
+		<img src="http://www.eb89.com/ph_xkjzy/tx.jpg" id="logo" >
+	</div>
+</body>
+</html>
