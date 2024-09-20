@@ -1,0 +1,50 @@
+<html data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+  <script src="https://unpkg.com/@picocss/pico@latest/modal.min.js"></script>
+  <script>
+    /*
+    function toggleModal(e){
+      e.preventDefault();
+      e = document.getElementById(e.currentTarget.getAttribute("data-target"));
+      var isOpen = e.getAttribute("open");
+      if (isOpen != true)
+         e.setAttribute("open", true);
+      else
+        e.setAttribute("open", false);
+    }
+    */
+  
+  </script>
+</head>
+
+<body>
+  <main class="container">
+    <!-- Button to trigger the modal -->
+    <button class="contrast" data-target="modal-example" onClick="toggleModal(event)">
+      Launch demo modal
+    </button>
+  </main>
+
+  <!-- Modal -->
+    <dialog id="modal-example" open="false">
+      <article>
+        <a href="#close" aria-label="Close" class="close" data-target="modal-example" onClick="toggleModal(event)" />
+        <h3>Confirm your action!</h3>
+        <p>
+          Cras sit amet maximus risus.
+          Pellentesque sodales odio sit amet augue finibus pellentesque.
+          Nullam finibus risus non semper euismod.
+        </p>
+        <footer>
+          <a href="#cancel" role="button" class="secondary" data-target="modal-example" onClick="toggleModal(event)">Cancel</a>
+          <a href="#confirm" role="button" data-target="modal-example" onClick="toggleModal(event)">Confirm</a>
+        </footer>
+      </article>
+    </dialog>
+</body>
+
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    /*定义全局 CSS 变量*/
+    :root {
+      --top-color: orange;
+      --bottom-color: yellow;
+      --my-gradient: linear-gradient(var(--top-color), var(--bottom-color));
+      --icon-color: green;
+    }
+
+    /* 用 val() 方法使用 CSS 变量，*/
+    body {
+      height: 100vh;
+      background-image: var(--my-gradient);
+    }
+
+   /* CSS 变量备用值。如果该变量不存在，则使用备用值*/
+    p{
+      width: 100; height:100;
+      padding: 5px;
+      background-color: var(--main-color, #1ace68);
+    }
+  </style>
+</head>
+<body>
+  <p>CSS变量示例。更多请参考：https://www.cnblogs.com/bydzhangxiaowei/p/12245359.html</p>
+  <svg>
+    <circle cx="96" cy="96" r="88" fill="none" stroke="var(--icon-color)" stroke-width="15" />
+    <text x="100" y="160" fill="var(--icon-color)" text-anchor="middle" style="font-size:250px;">x</text>
+  </svg>
+</body>
+</html>

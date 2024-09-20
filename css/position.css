@@ -4,16 +4,105 @@ https://www.github.com/surfsky/
 2019-07
 */
 
+/*************************************************
+预设
+*************************************************/
 html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 
 
 /* 
-当前元素的位置 
+定义文本基础大小 rem 
+rem 是相对长度单位（相对于根元素的字体高度）。
+浏览器默认字高都是16px，即 1rem=16px，可在html里面修改rem的定义，如font-size:20px;
 */
-/* 填满 */
-.fill          {position:fixed; top:0px; bottom:0px; left:0px;  right:0px;}
+html { font-size : 16px; }
+@media only screen and (min-width: 401px){ html { font-size: 25px !important;}}
+@media only screen and (min-width: 428px){ html { font-size: 26.75px !important;}}
+@media only screen and (min-width: 481px){ html { font-size: 30px !important; }}
+@media only screen and (min-width: 569px){ html { font-size: 35px !important; }}
+@media only screen and (min-width: 641px){ html { font-size: 40px !important; }}
 
-/* 放置位置（拖动页面时随着移动） */
+
+/*************************************************
+容器
+*************************************************/
+.fill          {position:fixed; top:0px; bottom:0px; left:0px;  right:0px;}
+.row           {width: 100%; margin-left: auto; margin-right: auto; display: flex; flex-direction: row; flex-wrap: wrap; }
+.column        {height:100%; display: flex; flex-direction: column;}
+
+
+/* 圆角 */
+.r1            {border-radius: 0.1rem;}
+.r2            {border-radius: 0.2rem;}
+.r3            {border-radius: 0.3rem;}
+.r4            {border-radius: 0.4rem;}
+.r5            {border-radius: 0.5rem;}
+.rs            {border-radius: 0.1rem;}
+.rm            {border-radius: 0.3rem;}
+.rl            {border-radius: 0.5rem;}
+
+
+/*************************************************
+网格
+*************************************************/
+/* 2列网格 */
+.grid2 {
+    display: grid;
+    grid-template-columns: auto auto;  /*几个auto就几列*/
+    grid-gap: 10px;  /*子项间距*/
+    padding: 10px;
+    }
+/* 3列网格 */
+.grid3 {
+    display: grid;
+    grid-template-columns: auto auto auto;  /*几个auto就几列*/
+    grid-gap: 10px;  /*子项间距*/
+    padding: 10px;
+    }
+/* 4列网格 */
+.grid4 {
+    display: grid;
+    grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
+    grid-gap: 10px;  /*子项间距*/
+    padding: 10px;
+    }
+/* 自动网格（统统放在一行） */
+.gridRow{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+    grid-gap: 10px;
+    padding: 10px;
+    }
+/* 自动网格（统统放在一列） */
+.gridColumn{
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
+    grid-gap: 10px;
+    padding: 10px;
+    }
+    
+      
+/*网格项（占2个网格）*/
+.gridItem2 {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    }
+/*网格项（占3个网格）*/
+.gridItem3 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    }
+/*网格项（占4个网格）*/
+.gridItem4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    }
+
+    
+/*************************************************
+当前元素的位置控制
+*************************************************/
+/* 位置（拖动页面时随着移动） */
 .topLeft       {position:absolute; top:0px;    left:0px; }
 .top           {position:absolute; top:0px;    left:50%; transform: translateX(-50%);}
 .topRight      {position:absolute; top:0px;    right:0px; }
@@ -37,6 +126,77 @@ html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 .fixRight      {position:fixed; top:50%;    transform: translateY(-50%); right:0px; }
 
 
+/* 浮动位置（拖动页面时会移动） */
+.floatTop        {position:relative; top:0px;    left:50%; transform: translateX(-50%);}
+.floatTopLeft    {position:relative; top:0px;    left:0px; }
+.floatTopRight   {position:relative; top:0px;    right:0px; }
+.floatBottomLeft {position:relative; bottom:0px; left:0px; }
+.floatBottomRight{position:relative; bottom:0px; right:0px; }
+.floatBottom     {position:relative; bottom:0px; left:50%; transform: translateX(-50%); }
+.floatLeft       {position:relative; top:50%;    transform: translateY(-50%); left:0px; }
+.floatCenter     {position:relative; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
+.floatRight      {position:relative; top:50%;    transform: translateY(-50%); right:0px; }
+
+
+
+/* 
+margin
+*/
+.m1          {margin:0.1rem;}
+.m2          {margin:0.2rem;}
+.m3          {margin:0.3rem;}
+.m4          {margin:0.4rem;}
+.m5          {margin:0.5rem;}
+.mx1         {margin-left:0.1rem; margin-right:0.1rem;}
+.mx2         {margin-left:0.2rem; margin-right:0.2rem;}
+.mx3         {margin-left:0.3rem; margin-right:0.3rem;}
+.mx4         {margin-left:0.4rem; margin-right:0.4rem;}
+.mx5         {margin-left:0.5rem; margin-right:0.5rem;}
+.my1         {margin-top:0.1rem;  margin-bottom:0.1rem;}
+.my2         {margin-top:0.2rem;  margin-bottom:0.2rem;}
+.my3         {margin-top:0.3rem;  margin-bottom:0.3rem;}
+.my4         {margin-top:0.4rem;  margin-bottom:0.4rem;}
+.my5         {margin-top:0.5rem;  margin-bottom:0.5rem;}
+.mAuto       {margin:auto;}
+.mxAuto      {margin-left:auto; margin-right:auto;}
+.myAuto      {margin-top:auto;  margin-bottom:auto;}
+.ms          {margin:0.1rem;}
+.mm          {margin:0.3rem;}
+.ml          {margin:0.5rem;}
+.mxl         {margin:0.7rem;}
+.mxxl        {margin:1.0rem;}
+
+/* 
+padding
+*/
+.p1          {padding:0.1rem;}
+.p2          {padding:0.2rem;}
+.p3          {padding:0.3rem;}
+.p4          {padding:0.4rem;}
+.p5          {padding:0.5rem;}
+.px1         {padding-left:0.1rem; padding-right:0.1rem;}
+.px2         {padding-left:0.2rem; padding-right:0.2rem;}
+.px3         {padding-left:0.3rem; padding-right:0.3rem;}
+.px3         {padding-left:0.4rem; padding-right:0.4rem;}
+.px5         {padding-left:0.5rem; padding-right:0.5rem;}
+.py1         {padding-top:0.1rem;  padding-bottom:0.1rem;}
+.py2         {padding-top:0.2rem;  padding-bottom:0.2rem;}
+.py3         {padding-top:0.3rem;  padding-bottom:0.3rem;}
+.py3         {padding-top:0.4rem;  padding-bottom:0.4rem;}
+.py5         {padding-top:0.5rem;  padding-bottom:0.5rem;}
+.pAuto       {padding:auto;}
+.pxAuto      {padding-left:auto; padding-right:auto;}
+.pyAuto      {padding-top:auto;  padding-bottom:auto;}
+.ps          {padding:0.1rem;}
+.pm          {padding:0.3rem;}
+.pl          {padding:0.5rem;}
+.pxl         {padding:0.7rem;}
+.pxxl        {padding:1.0rem;}
+
+
+/*************************************************
+子元素位置控制
+*************************************************/
 /* 
 子元素位置 
 */
@@ -52,45 +212,39 @@ html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 
 
 /* 
-margin
+chlid margin
 */
-.m-1          {margin:1rem;}
-.m-2          {margin:2rem;}
-.m-3          {margin:3rem;}
-.m-4          {margin:4rem;}
-.m-5          {margin:5rem;}
-.m-auto       {margin:auto;}
-.mx-1         {margin-left:1rem; margin-right:1rem;}
-.mx-2         {margin-left:2rem; margin-right:2rem;}
-.mx-3         {margin-left:3rem; margin-right:3rem;}
-.mx-3         {margin-left:4rem; margin-right:4rem;}
-.mx-5         {margin-left:5rem; margin-right:5rem;}
-.mx-auto      {margin-left:auto; margin-right:auto;}
-.my-1         {margin-top:1rem;  margin-bottom:1rem;}
-.my-2         {margin-top:2rem;  margin-bottom:2rem;}
-.my-3         {margin-top:3rem;  margin-bottom:3rem;}
-.my-3         {margin-top:4rem;  margin-bottom:4rem;}
-.my-5         {margin-top:5rem;  margin-bottom:5rem;}
-.my-auto      {margin-top:auto;  margin-bottom:auto;}
+.cm1 > *         {margin:0.1rem;}
+.cm2 > *         {margin:0.2rem;}
+.cm3 > *         {margin:0.3rem;}
+.cm4 > *         {margin:0.4rem;}
+.cm5 > *         {margin:0.5rem;}
+.cmr1 > *        {margin-right:0.1rem;}
+.cmr2 > *        {margin-right:0.2rem;}
+.cmr3 > *        {margin-right:0.3rem;}
+.cmr4 > *        {margin-right:0.4rem;}
+.cmr5 > *        {margin-right:0.5rem;}
+.cmb1 > *        {margin-bottom:0.1rem;}
+.cmb2 > *        {margin-bottom:0.2rem;}
+.cmb3 > *        {margin-bottom:0.3rem;}
+.cmb4 > *        {margin-bottom:0.4rem;}
+.cmb5 > *        {margin-bottom:0.5rem;}
+.cms   > *       {margin:0.1rem;}
+.cmm   > *       {margin:0.3rem;}
+.cml   > *       {margin:0.5rem;}
+.cmxl  > *       {margin:0.7rem;}
+.cmxxl > *       {margin:1.0rem;}
 
 /* 
-padding
+child padding
 */
-.p-1          {padding:1rem;}
-.p-2          {padding:2rem;}
-.p-3          {padding:3rem;}
-.p-4          {padding:4rem;}
-.p-5          {padding:5rem;}
-.p-auto       {padding:auto;}
-.px-1         {padding-left:1rem; padding-right:1rem;}
-.px-2         {padding-left:2rem; padding-right:2rem;}
-.px-3         {padding-left:3rem; padding-right:3rem;}
-.px-3         {padding-left:4rem; padding-right:4rem;}
-.px-5         {padding-left:5rem; padding-right:5rem;}
-.px-auto      {padding-left:auto; padding-right:auto;}
-.py-1         {padding-top:1rem;  padding-bottom:1rem;}
-.py-2         {padding-top:2rem;  padding-bottom:2rem;}
-.py-3         {padding-top:3rem;  padding-bottom:3rem;}
-.py-3         {padding-top:4rem;  padding-bottom:4rem;}
-.py-5         {padding-top:5rem;  padding-bottom:5rem;}
-.py-auto      {padding-top:auto;  padding-bottom:auto;}
+.cp1 > *         {padding:0.1rem;}
+.cp2 > *         {padding:0.2rem;}
+.cp3 > *         {padding:0.3rem;}
+.cp4 > *         {padding:0.4rem;}
+.cp5 > *         {padding:0.5rem;}
+.cps   > *       {padding:0.1rem;}
+.cpm   > *       {padding:0.3rem;}
+.cpl   > *       {padding:0.5rem;}
+.cpxl  > *       {padding:0.7rem;}
+.cpxxl > *       {padding:1.0rem;}

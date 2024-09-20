@@ -1,0 +1,43 @@
+<html data-theme="light">
+<head>
+    <meta charset="utf-8"> 
+    <link rel="stylesheet" href="css/color.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+    <script>
+        function toggleScheme() {
+            var scheme = document.querySelector("html").getAttribute("data-theme");
+            var newScheme = (scheme=="light") ? "dark" : "light";
+            document.querySelector("html").setAttribute("data-theme", newScheme);
+        }
+    </script>
+</head>
+
+<body>
+    <main class="container">
+      <h1>Theme</h1>
+      <p>
+        <button onclick="toggleScheme()">Toggle page scheme</button>
+      </p>
+
+      <article data-theme="dark">
+        <h3>Dark theme</h3>
+        <form class="grid">
+            <input type="text" name="User" placeholder="User" autocomplete="nickname" required> 
+            <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+            <button type="submit"  onclick="event.preventDefault()">Login</button>
+        </form>
+      </article>
+
+      <article data-theme="light">
+        <h3>Light theme</h3>
+        <form class="grid">
+            <input type="text" name="User" placeholder="User" autocomplete="nickname" required> 
+            <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+            <button type="submit"  onclick="event.preventDefault()">Login</button>
+        </form>
+      </article>
+  </main>
+  </body>
+</html>
+
+

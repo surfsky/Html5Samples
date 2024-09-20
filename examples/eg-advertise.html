@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    #slider-container {
+      position: relative;
+      max-width: 600px;
+      margin: auto;
+      overflow: hidden;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+    }
+
+    #slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      box-sizing: border-box;
+    }
+
+    #prev, #next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    #prev {
+      left: 10px;
+    }
+
+    #next {
+      right: 10px;
+    }
+
+    .thumbnail-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .thumbnail {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      margin: 0 8px;
+      cursor: pointer;
+    }
+	
+	.thumbnail :hover {
+		border: 1px #ffaa7f solid;
+	}
+	.active {
+		border: 1px #ffaa00 solid;
+	}
+	
+	
+  </style>
+</head>
+<body>
+
+<div id="slider-container">
+  <div id="slider">
+    <div class="slide"><img src="https://www.baidu.com/img/flexible/logo/pc/result.png" alt="Slide 1"></div>
+    <div class="slide"><img src="https://www.baidu.com/img/flexible/logo/pc/result.png" alt="Slide 2"></div>
+    <div class="slide"><img src="https://www.baidu.com/img/flexible/logo/pc/result.png" alt="Slide 3"></div>
+  </div>
+</div>
+
+<div class="thumbnail-container">
+  <img class="thumbnail" src="https://www.baidu.com/img/flexible/logo/pc/result.png" onmouseover="currentSlide(1)" alt="Thumbnail 1">
+  <img class="thumbnail" src="https://www.baidu.com/img/flexible/logo/pc/result.png" onmouseover="currentSlide(2)" alt="Thumbnail 2">
+  <img class="thumbnail" src="https://www.baidu.com/img/flexible/logo/pc/result.png" onmouseover="currentSlide(3)" alt="Thumbnail 3">
+</div>
+
+<script>
+  let slideIndex = 1;
+
+  function showSlides(index) {
+    const slides = document.getElementById('slider');
+    const thumbnails = document.getElementsByClassName('thumbnail');
+    
+    if (index > slides.children.length) {
+      slideIndex = 1;
+    }
+
+    if (index < 1) {
+      slideIndex = slides.children.length;
+    }
+
+    for (let i = 0; i < slides.children.length; i++) {
+      slides.children[i].style.display = 'none';
+    }
+
+    for (let i = 0; i < thumbnails.length; i++) {
+      thumbnails[i].classList.remove('active');
+    }
+
+    slides.children[slideIndex - 1].style.display = 'block';
+    thumbnails[slideIndex - 1].classList.add('active');
+  }
+
+  function prevSlide() {
+    showSlides(slideIndex -= 1);
+  }
+
+  function nextSlide() {
+    showSlides(slideIndex += 1);
+  }
+
+  function currentSlide(index) {
+    showSlides(slideIndex = index);
+  }
+
+  // 初始显示第一张幻灯片
+  showSlides(slideIndex);
+</script>
+
+</body>
+</html>
+

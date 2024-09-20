@@ -1,0 +1,41 @@
+<html data-theme="light">
+<head>
+    <meta charset="utf-8"> 
+    <link href="css/color.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css" />
+    <!--link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.fluid.classless.min.css" /-->
+    <link rel="stylesheet" href="/css/color.css" />
+
+    <style>
+    /*网格容器（经测试classless版本未内置 grid 类，要自己写）*/
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+        grid-gap: 10px;
+        padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="bg-pink">
+      This is header.
+    </header>
+    <main>
+      This is main.
+      <article data-theme="light" aria-label="Forced dark theme example">
+        In this version, &lt;header&gt;, &lt;main&gt;, and &lt;footer&gt; act as containers to define a centered or a fluid viewport.
+          <form class="grid">
+            <input type="text" name="login" placeholder="Login" aria-label="Login" autocomplete="nickname" required> 
+            <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required>
+            <button type="submit"  aria-label="Example button" onclick="event.preventDefault()">Login</button>
+        </form>
+      </article>
+  </main>
+  <footer class="bg-green">
+    This footer
+  </footer>
+  </body>
+</html>
+
+

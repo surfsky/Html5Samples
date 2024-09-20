@@ -1,0 +1,22 @@
+<style>
+    /* https://www.cnblogs.com/bydzhangxiaowei/p/12245359.html */
+    /* 定义全局 CSS 变量*/
+    :root {--icon-color: blue;}
+    /* 定义成功状态下的 CSS 变量 */
+    .success {--icon-color: green;}
+</style>
+
+
+<!-- 定义svg符号 -->
+<svg>
+  <symbol id="close-icon" viewbox="0 0 200 200">
+    <circle cx="96" cy="96" r="88" fill="none" stroke="var(--icon-color)" stroke-width="15" />
+    <text x="100" y="160" fill="var(--icon-color)" text-anchor="middle" style="font-size:250px;">x</text>
+  </symbol>
+</svg>
+
+
+<!-- 创建 svg 实例（颜色不同） -->
+<svg><use xlink:href="#close-icon" /></svg>
+<svg class="success"><use xlink:href="#close-icon" /></svg>
+  
