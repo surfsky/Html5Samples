@@ -1,5 +1,10 @@
-// 自定义数据行。注意不继承自原有的 html
-class Line extends HTMLElement{
+/**
+ * Sign tag
+ * @example
+ *     <script src="./x-sign.js" defer></script>
+ *     <x-sign docname="DocA" patientname="aaaa"></x-sign>
+ */
+class Sign extends HTMLElement{
     // 类的构造函数constructor
     constructor(){
         // 总是先调用super()来建立正确的原型链继承关系。
@@ -37,31 +42,28 @@ class Line extends HTMLElement{
 
         // style
         const style = document.createElement('style');
-        console.log(style.isConnected);
-        const attr_doc = document.createAttribute("docname");
-        const attr_patient = document.createAttribute("patientname");
         style.textContent = `
-        .div_parent{
-            display:flex;
-            justify-content:flex-start;
-        }
-        .lable_sign{
-            font-style:italic;
-            font-weight:bold;
-            font-size:16px;
-        }
-        .doc_sign{
-            font-weight:normal;
-        }
-        .patient_sign{
-            font-weight:normal;
-        }
-        .span{
-            min-width:50px;
-        }
-        `
+            .div_parent{
+                display:flex;
+                justify-content:flex-start;
+            }
+            .lable_sign{
+                font-style:italic;
+                font-weight:bold;
+                font-size:16px;
+            }
+            .doc_sign{
+                font-weight:normal;
+            }
+            .patient_sign{
+                font-weight:normal;
+            }
+            .span{
+                min-width:50px;
+            }
+            `;
+
         // build dom
-        console.log(style.isConnected);
         shadow.appendChild(style);
         shadow.appendChild(divparent);
         divparent.appendChild(divDoc);
@@ -80,19 +82,20 @@ class Line extends HTMLElement{
     
     // 指定观察属性，属性发生变化时调用  attributeChangedCallback
     static get observedAttributes() {
-        return ['docname', 'patientname'];
+        return ['doctor', 'patient'];
     }
     attributeChangedCallback(name, oldValue, newValue) {
         console.log(`element attributes changed. oldvalue:${oldValue} newValue:${newValue}`);
         switch(name){
-            case 'docname':
+            case 'doctor':
                 this.divDocSign.textContent = newValue;
                 break;
-            case 'patientname':
+            case 'patient':
                 this.divPatientSign.textContent = newValue;
                 break;
         }
       }
 }
 
-customElements.define('user-line', Line);
+// define custom tag name, must has '-' seperator
+customElements.define('x-sign', Sign);
