@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xtags rect</title>
+    <!-- use xtags.js. must attach 'defer' attribute -->
+    <script src="./xtags.js" defer></script>
+</head>
+<body>
+    <!-- fix rects -->
+    <x-rect bgcolor="lightgreen" hovercolor="lightblue" radius="0px" anchor="topLeft"     childAnchor='topLeft' font="bold 15px arial" click="alert('hello');">topLeft<br/>click me</x-rect>
+    <x-rect bgcolor="lightgray"  hovercolor="lightblue" radius="0px" anchor="top"         childAnchor="top"  color="red" fontsize="18px" fontweight="bold" click="toggleDiv()" id="topDiv">top <br/>click me</x-rect>
+    <x-rect bgcolor="pink"       hovercolor="lightblue" radius="0px" anchor="topRight"    childAnchor="topRight">topRight</x-rect>
+    <x-rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="left"        childAnchor="left">left</x-rect>
+    <x-rect bgcolor="white"      hovercolor="lightblue" radius="8px" anchor="center"      childAnchor="center" click="showDialog(true)">center chick me</x-rect>
+    <x-rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="right"       childAnchor="right">right</x-rect>
+    <x-rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="bottomLeft"  childAnchor="bottomLeft">bottomLeft</x-rect>
+    <x-rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="bottom"      childAnchor="bottom">bottom</x-rect>
+    <x-rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="bottomRight" childAnchor="bottomRight">bottomRight</x-rect>
+
+    <x-rect bgcolor="white" id="dlg" anchor="center" radius="16px" width="400px" height="600px" visible="false" z="200" shadow="5px 5px 10px lightgray" draggable="true">
+        <svg id="close-icon" width="24" height="24" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="gray" stroke-width="2" fill="none" />
+            <line x1="8" y1="8" x2="16" y2="16" stroke="gray" stroke-width="2" />
+            <line x1="16" y1="8" x2="8" y2="16" stroke="gray" stroke-width="2" />
+        </svg>
+        This is dialog
+        <x-btn click="showDialog(false)" anchor="bottom" bottom="16px">Close</x-btn>
+    </x-rect>
+</body>
+</html>
+
+<script>
+    var b = false;
+    function toggleDiv(){
+        var ele = document.getElementById('topDiv');
+        b = !b;
+        if (b){
+            // set root dom's attributes
+            ele.root.style.width = '500px';
+            ele.root.style.top = '100px';
+            ele.root.style.backgroundColor = 'green';
+        }
+        else{
+            ele.root.style.width = '100px';
+            ele.root.style.top = '0px';
+            ele.root.style.backgroundColor = 'pink';
+        }
+    };
+
+    function showDialog(b){
+        var ele = document.getElementById('dlg');
+        ele.setVisible(b);
+        if (b){
+            ele.root.style.top = '400px';
+            //ele.root.style.left = '400px';
+        }
+        else{
+            ele.root.style.top = '-300px';
+            //ele.root.style.left = '100px';
+        }
+    }
+</script>

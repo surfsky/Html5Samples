@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+  .dialog {
+      position: absolute;
+      width: 300px;
+      height: 200px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      display: none;
+      z-index: 1000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+   .close-svg {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <button id="openDialogButton">打开对话框</button>
+
+  <div class="dialog" id="draggableDialog">
+    这是一个可拖动的对话框。
+    <svg class="close-svg" viewBox="0 0 24 24">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+    </svg>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script>
+    const openDialogButton = document.getElementById('openDialogButton');
+    const dialog = document.getElementById('draggableDialog');
+    const overlay = document.getElementById('overlay');
+    const closeSvg = document.querySelector('.close-svg');
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    openDialogButton.addEventListener('click', function () {
+      dialog.style.display = 'block';
+      overlay.style.display = 'block';
+    });
+
+    closeSvg.addEventListener('click', function () {
+      dialog.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    dialog.addEventListener('mousedown', function (event) {
+      isDragging = true;
+      offsetX = event.clientX - dialog.offsetLeft;
+      offsetY = event.clientY - dialog.offsetTop;
+    });
+
+    document.addEventListener('mousemove', function (event) {
+      if (isDragging) {
+        dialog.style.left = event.clientX - offsetX + 'px';
+        dialog.style.top = event.clientY - offsetY + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', function () {
+      isDragging = false;
+    });
+  </script>
+
+</body>
+
+</html>

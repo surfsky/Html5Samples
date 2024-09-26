@@ -7,16 +7,52 @@
     <x-row cellmargin="0 20px 0 0" margin="0 0 10px 0" fix="center" width="430px">
     <x-col cellmargin="0 0 20px 0" width="130px" height="500px" fix="right">
 * @description
-   - Support tags: rect, row, col, grid...
+   - Support tags: rect, btn, row, col, grid...
    - Support fix position
    - Support child position
    - Support hover color change
    - Support animation for position, size, color
    - Support click event
  * @todo
- * - grid layout
- * - button
+   - x-item, can set anchor
+   - image tag, can set anchor
+ * - dragable
+ * - dialog: module mask, pure code invoke to show a dialog.
+ * - child sortable
+ * - grid responsive
+ * 
+ * @history
+ * - fix -> anchor
  */
+
+
+/************************************************************
+ * Scheme
+ ***********************************************************/
+const Theme = {
+    Light : {
+        Primary   : '#007bff',
+        Secondary : '#6c757d',
+        Success   : '#28a745',
+        Info      : '#17a2b8',
+        Warning   : '#ffc107',
+        Danger    : '#dc3545',
+        Dark      : '#343a40',
+        Light     : '#f8f9fa',
+        Text      : 'white'
+    },
+    Dark : {
+        Primary   : '#007bff',
+        Secondary : '#6c757d',
+        Success   : '#28a745',
+        Info      : '#17a2b8',
+        Warning   : '#ffc107',
+        Danger    : '#dc3545',
+        Dark      : '#343a40',
+        Light     : '#f8f9fa',
+        Text      : 'white'
+    },
+}
 
 
 /************************************************************
@@ -34,6 +70,7 @@ const Align = {
     BR: 'bottomRight'
 };
 
+
 /************************************************************
  * Rectangle
  * @example  <x-rect width="100px" height="100px" bgcolor="green" color="white" radius="10px" borderwidth="2px" bordercolor="yellow" borderstyle="solid" ></rect-tag>
@@ -42,15 +79,16 @@ const Align = {
 class Rect extends HTMLElement {
     // supported attribute. Notice these names must be all small chars.
     static _attrs = [
-        'id', 'class', 'newclass', 'z',
+        'id', 'class', 'newclass', 'z', 'opacity', 'visible', 
         'bgcolor', 'color', 'hovercolor',
-        'radius', 
-        'width', 'height', 
+        'top', 'bottom', 'left', 'right', 
+        'width', 'height', 'radius', 
         'border', 'borderwidth', 'bordercolor', 'borderstyle',
         'margin', 'padding',
         'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
-        'fix', 'childalign',
-        'click'
+        'anchor', 'childanchor',
+        'shadow',
+        'click', 'draggable'
     ];
 
     constructor() {
@@ -61,9 +99,9 @@ class Rect extends HTMLElement {
         this.root.style.width = '100px';
         this.root.style.height = '100px';
         this.root.style.border = '1px solid lightgray';
-        this.root.style.transition = 'width 0.5s, height 0.5s, top 0.5s, left 0.5s, right 0.5s, bottom 0.5s, background-color 0.5s, color 0.5s';  // animation for background changing
+        this.root.style.transition = 'width 0.5s, height 0.5s, top 0.5s, left 0.5s, right 0.5s, bottom 0.5s, background-color 0.5s, color 0.5s, visibility 0.5s';  // animation for background changing
         this.root.innerHTML = this.innerHTML;   // contain child items
-        this.setChildAlign(Align.CT);
+        this.setChildAnchor(Align.CT);
         this.shadow.appendChild(this.root);
     }
 
@@ -75,7 +113,7 @@ class Rect extends HTMLElement {
     }
 
     /**
-     * Set fix align
+     * Set anchor align
      * @param {Align} align 
         .fixTopLeft    {position:fixed; top:0px;    left:0px; }
         .fixTop        {position:fixed; top:0px;    left:50%; transform: translateX(-50%);}
@@ -87,7 +125,7 @@ class Rect extends HTMLElement {
         .fixCenter     {position:fixed; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
         .fixRight      {position:fixed; top:50%;    transform: translateY(-50%); right:0px; }
      */
-    setFixAlign(align){
+    setAnchor(align){
         var s = this.root.style;
         switch (align){
             case Align.TL  : s.position='fixed'; s.top='0px';    s.left='0px';  break;
@@ -116,7 +154,7 @@ class Rect extends HTMLElement {
     .childCenter        {display: flex; justify-content: center;      align-items: center;}
     .childRight         {display: flex; justify-content: flex-end;    align-items: center;}
      */
-    setChildAlign(align){
+    setChildAnchor(align){
         var s = this.root.style;
         switch (align){
             case Align.TL  : s.display='flex'; s.justifyContent='flex-start';  s.alignItems='flex-start'; break;
@@ -149,6 +187,13 @@ class Rect extends HTMLElement {
         });
     }
 
+    
+    setVisible(newValue){
+        var b = (newValue=='true' || newValue==true);
+        this.root.style.visibility = b ? 'visible' : 'hidden';
+    }
+
+
     /**
      * Set click event
      */
@@ -164,34 +209,95 @@ class Rect extends HTMLElement {
      */
     attributeChangedCallback(name, oldValue, newValue) {
         switch(name){
+            // common
             case 'id':                this.root.setAttribute('id', newValue); break;
             case 'class':             this.root.setAttribute('class', newValue); break;
             case 'newclass':          this.root.setAttribute('class', newValue + ' ' + this.root.getAttribute('class')); break;
             case 'z':                 this.root.style.zIndex = newValue; break;
+            case 'opacity':           this.root.style.opacity = newValue;  break;
+            case 'visible':           this.setVisible(newValue); break;
+            case 'width':             this.root.style.width = newValue;  break;
+            case 'height':            this.root.style.height = newValue;  break;
+            case 'radius':            this.root.style.borderRadius = newValue;  break;
+            
+            // color
             case 'bgcolor':           this.root.style.backgroundColor = newValue;  break;
             case 'color':             this.root.style.color = newValue;  break;
             case 'hovercolor':        this.setHoverColor(newValue); break;
-            case 'radius':            this.root.style.borderRadius = newValue;  break;
-            case 'width':             this.root.style.width = newValue;  break;
-            case 'height':            this.root.style.height = newValue;  break;
+
+            // position
+            case 'top':               this.root.style.top = newValue;  break;
+            case 'bottom':            this.root.style.bottom = newValue;  break;
+            case 'left':              this.root.style.left = newValue;  break;
+            case 'right':             this.root.style.right = newValue;  break;
+            case 'anchor':            this.setAnchor(newValue); break;
+            case 'childanchor':       this.setChildAnchor(newValue); break;
+
+            // border
             case 'border':            this.root.style.border = newValue;  break;
             case 'borderwidth':       this.root.style.borderWidth = newValue;  break;
             case 'bordercolor':       this.root.style.borderColor = newValue;  break;
             case 'borderstyle':       this.root.style.borderStyle = newValue;  break;
+
+            // margin & padding
             case 'margin':            this.root.style.margin = newValue;  break;
             case 'padding':           this.root.style.padding = newValue;  break;
+
+            // text
             case 'font':              this.root.style.font = newValue;  break;
             case 'fontsize':          this.root.style.fontSize = newValue;  break;
             case 'fontfamily':        this.root.style.fontFamily = newValue;  break;
             case 'fontstyle':         this.root.style.fontStyle = newValue;  break;
             case 'fontweight':        this.root.style.fontWeight = newValue;  break;
-            case 'fix':               this.setFixAlign(newValue); break;
-            case 'childalign':        this.setChildAlign(newValue); break;
+
+            // effect
+            case 'shadow':            this.root.style.boxShadow = newValue; break;
+
+            // event
             case 'click':             this.setClick(newValue); break;
+            case 'draggable':         this.root.setAttribute('draggable', newValue);  // draggable="true"
         }
     }
 }
 customElements.define("x-rect", Rect);
+
+
+/************************************************************
+ * Button
+ * @example
+ *     <x-btn>
+ ***********************************************************/
+class Button extends Rect {
+    constructor() {
+        super();
+        this.root.style.backgroundColor = Theme.Light.Primary;
+        this.root.style.color  = Theme.Light.Text;
+        this.root.style.height = '24px';
+        this.root.style.borderRadius = "8px";
+        this.root.style.borderWidth = 0;
+        this.setHoverOpacity('0.8');
+    }
+
+    /**
+     * Set hover opacity color
+     * @param {Color} color 
+     */
+    setHoverOpacity(opacity){
+        var element = this.root;
+        var oldValue = element.style.opacity;
+        var oldCursor = element.style.cursor;
+        element.addEventListener('mouseover', function() {
+            element.style.opacity = opacity;
+            element.style.cursor = 'pointer';
+        });
+        element.addEventListener('mouseout', function() {
+            element.style.opacity = oldValue;
+            element.style.cursor = oldCursor;
+        });
+    }
+}
+
+customElements.define("x-btn", Button);
 
 
 /***********************************************************
@@ -206,7 +312,6 @@ class Row extends Rect {
 
         // child style
         this.styleEle = document.createElement('style');
-        this.styleEle.textContent = ".x-container > *  {margin: 0;}";
         this.shadow.appendChild(this.styleEle);
 
         // div
@@ -218,6 +323,12 @@ class Row extends Rect {
         this.root.style.flexDirection = "row";
         this.root.style.width = '100%';
         this.root.style.height = '';
+        this.root.style.marginRight = '12px';
+        this.setCellMargin('0 8px 0 0');
+    }
+
+    setCellMargin(val){
+        this.styleEle.textContent = `.x-container > *  {margin: ${val} }`;
     }
 
     static get observedAttributes() {
@@ -229,7 +340,7 @@ class Row extends Rect {
         super.attributeChangedCallback(name, oldValue, newValue);
         switch(name){
             case 'cellmargin':            
-                this.styleEle.textContent = `.x-container > *  {margin: ${newValue} }`;
+                this.setCellMargin(newValue);
                 break;
         }
     }
@@ -249,6 +360,7 @@ class Column extends Row {
         this.root.style.flexDirection = "column";
         this.root.style.width = '';
         this.root.style.height = '100%';
+        this.setCellMargin('0 0 8px 0');
     }
 }
 
@@ -261,12 +373,30 @@ customElements.define("x-col", Column);
  * @example
  *     <x-grid cellmargin="0 0 20px 0">
  ***********************************************************/
-class Grid extends Row {
+class Grid extends Rect {
     constructor() {
         super();
-        this.root.style.flexDirection = "column";
-        this.root.style.width = '';
-        this.root.style.height = '100%';
+        this.root.style.display = "grid";
+        this.root.style.gap = '10px';
+        this.root.style.borderWidth = 0;
+        this.root.style.padding = "";
+        this.setColumns(4);
+    }
+
+    static get observedAttributes() {
+        return ['gap', 'columns', 'rows'].concat(this._attrs);
+    }
+
+    setColumns(val){ this.root.style.gridTemplateColumns = `repeat(${val}, 1fr)`; }
+    setRows(val)   { this.root.style.gridTemplateRows = `repeat(${val}, 1fr)`; }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        switch(name){
+            case 'gap':             this.root.style.gap = newValue; break;
+            case 'columns':         this.setColumns(newValue); break;
+            case 'rows':            this.setRows(newValue); break;
+        }
     }
 }
 

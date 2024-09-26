@@ -45,6 +45,20 @@ html { font-size : 16px; }
 /*************************************************
 网格
 *************************************************/
+/* 自动网格（统统放在一行） */
+.gridRow{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+    grid-gap: 10px;
+    padding: 10px;
+    }
+/* 自动网格（统统放在一列） */
+.gridColumn{
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
+    grid-gap: 10px;
+    padding: 10px;
+    }
 /* 2列网格 */
 .grid2 {
     display: grid;
@@ -64,20 +78,6 @@ html { font-size : 16px; }
     display: grid;
     grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
     grid-gap: 10px;  /*子项间距*/
-    padding: 10px;
-    }
-/* 自动网格（统统放在一行） */
-.gridRow{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
-    grid-gap: 10px;
-    padding: 10px;
-    }
-/* 自动网格（统统放在一列） */
-.gridColumn{
-    display: grid;
-    grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
-    grid-gap: 10px;
     padding: 10px;
     }
     
@@ -102,18 +102,6 @@ html { font-size : 16px; }
 /*************************************************
 当前元素的位置控制
 *************************************************/
-/* 位置（拖动页面时随着移动） */
-.topLeft       {position:absolute; top:0px;    left:0px; }
-.top           {position:absolute; top:0px;    left:50%; transform: translateX(-50%);}
-.topRight      {position:absolute; top:0px;    right:0px; }
-.bottomLeft    {position:absolute; bottom:0px; left:0px; }
-.bottom        {position:absolute; bottom:0px; left:50%; transform: translateX(-50%); }
-.bottomRight   {position:absolute; bottom:0px; right:0px; }
-.left          {position:absolute; top:50%;    transform: translateY(-50%); left:0px; }
-.center        {position:absolute; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
-.right         {position:absolute; top:50%;    transform: translateY(-50%); right:0px; }
-
-
 /* 固定位置（拖动页面时不会移动） */
 .fixTopLeft    {position:fixed; top:0px;    left:0px; }
 .fixTop        {position:fixed; top:0px;    left:50%; transform: translateX(-50%);}
@@ -124,6 +112,18 @@ html { font-size : 16px; }
 .fixLeft       {position:fixed; top:50%;    transform: translateY(-50%); left:0px; }
 .fixCenter     {position:fixed; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
 .fixRight      {position:fixed; top:50%;    transform: translateY(-50%); right:0px; }
+
+
+/* 位置（拖动页面时随着移动） */
+.topLeft       {position:absolute; top:0px;    left:0px; }
+.top           {position:absolute; top:0px;    left:50%; transform: translateX(-50%);}
+.topRight      {position:absolute; top:0px;    right:0px; }
+.bottomLeft    {position:absolute; bottom:0px; left:0px; }
+.bottom        {position:absolute; bottom:0px; left:50%; transform: translateX(-50%); }
+.bottomRight   {position:absolute; bottom:0px; right:0px; }
+.left          {position:absolute; top:50%;    transform: translateY(-50%); left:0px; }
+.center        {position:absolute; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
+.right         {position:absolute; top:50%;    transform: translateY(-50%); right:0px; }
 
 
 /* 浮动位置（拖动页面时会移动） */
