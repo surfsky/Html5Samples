@@ -1,34 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8"> 
-<title>菜鸟教程(runoob.com)</title>
-<style> 
-@keyframes  anim
-{
-	0%   {background:red; left:0px; top:0px;}
-	25%  {background:yellow; left:200px; top:0px;  transform: rotate(45deg);}
-	50%  {background:blue; left:200px; top:200px;  transform: skew(30deg);}
-	75%  {background:green; left:0px; top:200px;   transform: scale(1.5);}
-	100% {background:red; left:0px; top:0px;       transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);}
-}
-
-div
-{
-	width:100px;
-	height:100px;
-	background:red;
-	position:relative;
-	animation: anim 5s linear 2s infinite alternate;
-}
-
-</style>
+	<meta charset="utf-8"> 
+	<title>菜鸟教程(runoob.com)</title>
+	<style> 
+	div
+	{
+		width:100px;
+		height:100px;
+		background:red;
+		position: relative;
+		animation: anim 5s linear 2s infinite alternate;
+	}
+	@keyframes  anim
+	{
+		0%   {background:red;    left:0px;   top:0px;}
+		25%  {background:yellow; left:200px; top:0px;    transform: rotate(45deg);}
+		50%  {background:blue;   left:200px; top:200px;  transform: skew(30deg);}
+		75%  {background:green;  left:0px;   top:200px;  transform: scale(1.5);}
+		100% {background:red;    left:0px;   top:0px;    transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);}
+	}
+	</style>
 </head>
 <body>
-
-<p>CSS 3 动画示例。<b>注意：</b>该示例在 Internet Explorer 9 及更早 IE 版本是无效的。</p>
-
-<div></div>
-
+	<p>CSS 3 动画示例。<b>注意：</b>该示例在 Internet Explorer 9 及更早 IE 版本是无效的。</p>
+	<div>Text</div>
 </body>
 </html>

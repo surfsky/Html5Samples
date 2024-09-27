@@ -1,0 +1,62 @@
+<html>
+<head>
+    <style>
+    .ripple-button {
+        position: relative;
+        padding: 15px 30px;
+        background: none;
+        border: 2px solid #3498db;
+        color: #3498db;
+        font-size: 16px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .ripple-button:hover {
+        background-color: #3498db;
+        color: white;
+    }
+
+    @keyframes ripple-effect {
+        to {
+        transform: scale(10);
+        opacity: 0;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <button class="ripple-button">Click me</button>
+    <button class="ripple-button">Click me</button>
+    <button class="ripple-button">Click me</button>
+    <button class="ripple-button">Click me</button>
+</body>
+
+<script>
+    const buttons = document.querySelectorAll('.ripple-button');
+    buttons.forEach((button) => {
+      button.addEventListener('click', function (e) {
+        const x = e.clientX - e.target.offsetLeft;
+        const y = e.clientY - e.target.offsetTop;
+        const ripple = document.createElement('span');
+        ripple.style.width = "40px";
+        ripple.style.height = "40px";
+        ripple.style.borderRadius = "20px";
+        ripple.style.position = 'absolute';
+        ripple.style.left = `${x-20}px`;
+        ripple.style.top  = `${y-20}px`;
+        ripple.style.backgroundColor = 'white';
+        ripple.style.opacity = '0.9';
+        ripple.style.animation = 'ripple-effect 0.3s linear';
+
+        this.appendChild(ripple);
+        ripple.addEventListener('animationend', function () {
+            this.remove();
+        });
+      });
+    });
+</script>
+
+</html>

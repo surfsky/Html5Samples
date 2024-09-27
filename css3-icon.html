@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {background: rgb(215, 213, 213);}
+  .red { color: red; font-size: 32px;}
+  .icon-man {
+      width: 50px;
+      height: 50px;
+      background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>');
+      background-size: cover;
+  }
+
+  /*fail*/
+  .icon-bulb {
+    width: 50px;
+    height: 50px;
+    background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" t="1727417379783" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="4298" width="200" height="200"><path d="M632 888H392c-4.4 0-8 3.6-8 8v32c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32v-32c0-4.4-3.6-8-8-8zM512 64c-181.1 0-328 146.9-328 328 0 121.4 66 227.4 164 284.1V792c0 17.7 14.3 32 32 32h264c17.7 0 32-14.3 32-32V676.1c98-56.7 164-162.7 164-284.1 0-181.1-146.9-328-328-328z m127.9 549.8L604 634.6V752H420V634.6l-35.9-20.8C305.4 568.3 256 484.5 256 392c0-141.4 114.6-256 256-256s256 114.6 256 256c0 92.5-49.4 176.3-128.1 221.8z" p-id="4299" data-spm-anchor-id="a313x.search_index.0.i0.53d73a817m2HxM" fill="#ffffff"></path></svg>');
+    background-size: cover;
+  }
+  /*fail*/
+  .icon-bulb-fill {
+    width: 50px;
+    height: 50px;
+    background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" t="1727417734955" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="4502" width="200" height="200"><path d="M348 676.1C250 619.4 184 513.4 184 392c0-181.1 146.9-328 328-328s328 146.9 328 328c0 121.4-66 227.4-164 284.1V792c0 17.7-14.3 32-32 32H380c-17.7 0-32-14.3-32-32V676.1zM392 888h240c4.4 0 8 3.6 8 8v32c0 17.7-14.3 32-32 32H416c-17.7 0-32-14.3-32-32v-32c0-4.4 3.6-8 8-8z" p-id="4503" fill="#ffffff"></path></svg>');
+    background-size: cover;
+  }
+  /*fail*/
+  .bulb-on {
+      width: 50px;
+      height: 50px;
+      background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 21c0.55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0.55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V9c0-.8.65-1.43 1.43-1.43h1.24c.27 0.52.1.71.29l1.77 1.77 1.41-1.41L14.3 11.5c-.19-.19-.44-.29-.7-.29H13v4.8l-1.15.9z"/></svg>');
+      background-size: cover;
+  }
+  /*fail*/
+  .bulb-off {
+    width: 50px;
+    height: 50px;
+    background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 21c0.55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0.55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm.85-2.95L11.29.29a.996.996 0 1 0-1.41 1.41L9.83 4h-3.67c-.55 0-1.45-1 1s.45 1 1 1h3.67l1.83 1.83c.39.39 1.02.39 1.41 0.39-.39.39-1.02 0-1.41z"/></svg>');
+    background-size: cover;
+  }
+    </style>
+</head>
+
+<body>
+  <!-- svg  -->
+  <svg t="1727417734955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4502" width="200" height="200">
+    <path d="M348 676.1C250 619.4 184 513.4 184 392c0-181.1 146.9-328 328-328s328 146.9 328 328c0 121.4-66 227.4-164 284.1V792c0 17.7-14.3 32-32 32H380c-17.7 0-32-14.3-32-32V676.1zM392 888h240c4.4 0 8 3.6 8 8v32c0 17.7-14.3 32-32 32H416c-17.7 0-32-14.3-32-32v-32c0-4.4 3.6-8 8-8z" p-id="4503" fill="#d81e06"></path>
+  </svg>
+
+  <!-- icon font  -->
+  <i class="fa-solid fa-user"></i>
+  <i class="fa-regular fa-lightbulb red"></i>
+  <i class="fa-solid fa-lightbulb red"></i>
+  
+  <!-- icon svg  -->
+  <div class="icon-man"></div>
+  <div class="icon-bulb"></div>
+  <div class="icon-bulb-fill"></div>
+  <div class="bulb-on"></div>
+  <div class="bulb-off"></div>
+
+  
+</body>
+
+</html>

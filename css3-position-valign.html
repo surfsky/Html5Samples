@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+   .container {
+      height: 200px;
+      background-color: lightgray;
+
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gridContainer {
+      height: 200px;
+      background-color: lightgray;
+      display: grid;
+      place-items: center;
+    }
+
+    .container2 {
+      position: relative;
+      height: 200px;
+      background-color: lightgray;
+    }
+    .content {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div>This is some text inside a div.</div>
+    <div>This is another line of text.</div>
+    <div>可以垂直居中对齐</div>
+  </div>
+  <div class="container">
+    This is some text inside a div.<br/>
+    This is another line of text.<br/>
+    无法垂直居中对齐
+  </div>
+  <div class="gridContainer">
+    This is some text inside a div.<br/>
+    This is another line of text.<br/>
+    还是无法垂直居中对齐
+  </div>
+  <div class="container">
+    <div class="content">
+      This is some text inside a div.<br/>
+      This is another line of text.<br/>
+      现在尝试垂直居中对齐
+    </div>
+  </div>
+</body>
+
+</html>

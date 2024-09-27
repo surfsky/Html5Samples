@@ -207,7 +207,7 @@ padding
 .childBottom        {display: flex; justify-content: center;      align-items: flex-end;}
 .childBottomRight   {display: flex; justify-content: flex-end;    align-items: flex-end;}
 .childLeft          {display: flex; justify-content: flex-start;  align-items: center;}
-.childCenter        {display: flex; justify-content: center;      align-items: center;}
+.childCenter        {display: flex; justify-content: center;      align-items: center; flex-direction: column;}
 .childRight         {display: flex; justify-content: flex-end;    align-items: center;}
 
 
