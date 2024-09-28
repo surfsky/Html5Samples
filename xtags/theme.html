@@ -5,38 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>xtags theme</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <script src="./xtags.js" type="module" defer></script>
-    <script type="module">
-        import {XTags} from "./xtags-base.js";
-        // 在使用 <script type="module"> 时，模块内的函数默认具有模块作用域，不会自动暴露到全局作用域中
-        // 所以在页面上的自定义元素的事件中无法直接调用模块中的 setTheme 函数。
-        // 要解决这个问题，可将 setTheme 函数添加到 window 对象上，使其在全局作用域中可用
-        // function setTheme(theme){
-        window.setTheme = function(theme){
-            if (theme=='light')
-                XTags.setTheme(XTags.themeLight);
-            else
-                XTags.setTheme(XTags.themeDark);
-        };
-    </script>
 </head>
 <body>
-    <i class="fa-regular fa-lightbulb"></i>
-    <div class="fa-solid fa-lightbulb"></div>
     <x-rect anchor="fill" childAnchor="top">
         <h1>Click to change theme.</h1>
-        <h2 class="fa-regular fa-lightbulb"></h2>
-        <div class="fa-solid fa-lightbulb"></div>
-          
         <x-row width="500" anchor="center">
-            <x-btn click="XTags.setTheme(XTags.themeLight)" theme="primary">
-                <i class="fa-regular fa-lightbulb"></i>
+            <x-btn click="XTags.setTheme(Theme.themeLight)" theme="primary">
                 Light
             </x-btn>
-            <x-btn click="XTags.setTheme(XTags.themeDark)" theme="secondary">
-                <i class="fa-solid fa-lightbulb"></i>
+            <x-btn click="XTags.setTheme(Theme.themeDark)" theme="secondary">
                 Dark
             </x-btn>
         </x-row>

@@ -18,8 +18,8 @@ export class Rect extends HTMLElement {
     //-----------------------------------------------------
     // supported attribute. Notice these names must be all small chars.
     static _attrs = [
-        'id', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow',
-        'position', 'anchor', 'childanchor', 'top', 'bottom', 'left', 'right', 
+        'id', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'box',
+        'position', 'anchor', 'childanchor', 'top', 'bottom', 'left', 'right', 'flex',
         'width', 'height', 'radius',  'minwidth', 'minheight',
         'border', 'borderwidth', 'bordercolor', 'borderstyle',
         'margin', 'padding',
@@ -53,6 +53,12 @@ export class Rect extends HTMLElement {
     //-----------------------------------------------------
     // Css Property Getter & Setter
     //-----------------------------------------------------
+    /** Insert style tag into shadow root. And use this.styleEle.contentText = ...; */
+    writeStyleTag(){
+        this.styleEle = document.createElement('style');
+        this.shadow.appendChild(this.styleEle);
+    }
+
     /** This root div's style */
     get style(){
         return this.root.style;
@@ -114,28 +120,28 @@ export class Rect extends HTMLElement {
      * @param {Theme} t 
      */
     setTheme(t){
-        this.root.style.color = t.Text;
+        this.root.style.color = t.text;
         switch (this._themeCls){
             case "primary":
-                this.root.style.backgroundColor = t.Primary;
+                this.root.style.backgroundColor = t.primary;
                 break;
             case "secondary":
-                this.root.style.backgroundColor = t.Secondary;
+                this.root.style.backgroundColor = t.secondary;
                 break;
             case "success":
-                this.root.style.backgroundColor = t.Success;
+                this.root.style.backgroundColor = t.success;
                 break;
             case "info":
-                this.root.style.backgroundColor = t.Info;
+                this.root.style.backgroundColor = t.info;
                 break;
             case "warning":
-                this.root.style.backgroundColor = t.Warning;
+                this.root.style.backgroundColor = t.warning;
                 break;
             case "danger":
-                this.root.style.backgroundColor = t.Danger;
+                this.root.style.backgroundColor = t.danger;
                 break;
             default:
-                this.root.style.backgroundColor = t.Background;
+                this.root.style.backgroundColor = t.background;
                 break;
         }
         return this;
@@ -352,9 +358,7 @@ export class Rect extends HTMLElement {
     //-----------------------------------------------------
     // Event
     //-----------------------------------------------------
-    /**
-     * Set click event
-     */
+    /** Set click event */
     setClick(func){
         this.root.addEventListener('click', ()=>eval(func));
         return this;
@@ -378,7 +382,8 @@ export class Rect extends HTMLElement {
             case 'z':                 this.root.style.zIndex = newValue; break;
             case 'opacity':           this.root.style.opacity = newValue;  break;
             case 'visible':           this.setVisible(newValue); break;
-            case 'overflow':          this.overflow = newValue; break;
+            case 'overflow':          this.root.style.overflow = newValue; break;
+            case 'box':               this.root.style.boxSizing = newValue; break;
 
             // size
             case 'width':             this.root.style.width = newValue;  break;
@@ -394,6 +399,7 @@ export class Rect extends HTMLElement {
             case 'bottom':            this.root.style.bottom = newValue;  break;
             case 'left':              this.root.style.left = newValue;  break;
             case 'right':             this.root.style.right = newValue;  break;
+            case 'flex':              this.root.style.flex = newValue;  break;
 
             // border
             case 'border':            this.root.style.border = newValue;  break;
@@ -408,11 +414,11 @@ export class Rect extends HTMLElement {
 
             // color
             case 'bgcolor':           this.root.style.backgroundColor = newValue;  break;
-            case 'color':             this.root.style.color = newValue;  break;
             case 'hovercolor':        this.setHoverColor(newValue); break;
             case 'theme':             this.setThemeCls(newValue); break;
 
             // text
+            case 'color':             this.root.style.color = newValue;  break;
             case 'font':              this.root.style.font = newValue;  break;
             case 'fontsize':          this.root.style.fontSize = newValue;  break;
             case 'fontfamily':        this.root.style.fontFamily = newValue;  break;
@@ -436,10 +442,11 @@ export class Rect extends HTMLElement {
 customElements.define("x-rect", Rect);
 
 
+
 /************************************************************
  * Circle
  * @example
- *     <x-circle></x-circle>
+ *     <x-circle width='100px'></x-circle>
  ***********************************************************/
 export class Circle extends Rect {
     constructor() {
@@ -483,6 +490,7 @@ export class Row extends Rect {
         this.root.style.display = "flex";
         this.root.style.flexWrap = "wrap";
         this.root.style.flexDirection = "row";
+        this.root.style.alignItems = 'flex-start';
         this.root.style.width = '100%';
         this.root.style.height = '';
         this.root.style.marginRight = '12px';
@@ -494,14 +502,14 @@ export class Row extends Rect {
     }
 
     static get observedAttributes() {
-        return ['cellmargin'].concat(this._attrs);
+        return ['gap'].concat(this._attrs);
     }
 
 
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
         switch(name){
-            case 'cellmargin':            
+            case 'gap':            
                 this.setCellMargin(newValue);
                 break;
         }
@@ -611,3 +619,75 @@ export class Image extends Rect {
 }
 customElements.define("x-img", Image);
 
+
+/************************************************************
+ * Image
+ * @example
+ *     <x-link></x-link>
+ ***********************************************************/
+export class Link extends Rect {
+    constructor() {
+        super();
+        //this.shadow = this.attachShadow({mode: 'open'});  // fail
+        this.clear();
+        this.writeStyleTag();
+        this.styleEle.textContent = `
+            a { text-decoration: none; color: var(--link-color, blue);}
+            a:hover, a:visited { color: var(--link-color, blue);}
+            `;
+        this.root = document.createElement("a");
+        this.root.innerHTML = this.innerHTML;     // contain child items
+        this.root.style.transition = 'all 0.5s';  // animation
+        this.root.style.overflow = 'hidden';
+        this.root.style.textDecoration = 'none';
+        this.writeLinkColor('blue');
+
+        this.root.href = this.getAttribute('href');
+        this.root.target = this.getAttribute('target');
+        this.shadow.appendChild(this.root);
+    }
+
+    /**
+     * write css with color
+     * @param {Color} color 
+     */
+    writeLinkColor(color){
+        //this.root.style['--link-color'] = color;
+        this.root.style.setProperty('--link-color', color);
+        var o = this.root.style.getPropertyValue('--link-color');
+        var s = this.root.style.cssText;
+        //this.style.setProperty('--link-hover-color',  color);
+        //this.style.setProperty('--link-visited-color', color);
+    }
+
+
+    static get observedAttributes() {
+        return ['href', 'target'].concat(this._attrs);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        switch(name){
+            case 'href':
+                this.root.setAttribute('href', newValue);
+                break;
+            case 'target':
+                this.root.setAttribute('target', newValue);
+                break;
+            case 'color':
+                this.writeLinkColor(newValue);
+                break;
+        }
+    }
+
+    /** Set theme. 
+     * @param {Theme} t 
+    */
+    setTheme(t){
+        this.writeLinkColor(t.Link);  // TODO：无效？
+        //this.root.style.textDecoration = 'none';
+        //this.root.style.color = t.Link;
+    }
+
+}
+customElements.define("x-link", Link);

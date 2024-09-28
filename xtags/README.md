@@ -88,14 +88,13 @@ Features
 -----------------------------------------------------
 Task
 -----------------------------------------------------
+注入全局样式。或弄一个全局配置标签。
 用 ITheme 接口改造 Rect
-用 Toast.show() 静态方法来展示 Toast
 
-- popup: x, y, width, height, closeicon
+popup: x, y, width, height, closeicon
     - messagebox
     - dialog: module mask, pure code invoke to show a dialog
     - dropdown
-- image
  - dragable
  - child sortable
  - responsive
@@ -105,6 +104,8 @@ Task
 -----------------------------------------------------
 history
 -----------------------------------------------------
-- 重构类库结构：base、baseui、control、util...
-- Rect.fix -> anchor
+/用 Toast.show() 静态方法来展示 Toast
+/image
+/重构类库结构：base、baseui、control、util...
+/Rect.fix -> anchor
 

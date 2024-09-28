@@ -16,3 +16,18 @@
       height: 100%;
     }
 
+
+
+    <script type="module">
+        import {XTags} from "./xtags-base.js";
+        // 在使用 <script type="module"> 时，模块内的函数默认具有模块作用域，不会自动暴露到全局作用域中
+        // 所以在页面上的自定义元素的事件中无法直接调用模块中的 setTheme 函数。
+        // 要解决这个问题，可将 setTheme 函数添加到 window 对象上，使其在全局作用域中可用
+        // function setTheme(theme){
+        window.setTheme = function(theme){
+            if (theme=='light')
+                XTags.setTheme(XTags.themeLight);
+            else
+                XTags.setTheme(XTags.themeDark);
+        };
+    </script>

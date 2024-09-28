@@ -3,61 +3,95 @@
  * @author surfsky.github.com 2024
  */
 
+/************************************************************
+ * Align enum for anchor and childAnchor
+ ***********************************************************/
+export const Anchor = {
+  TL: 'topLeft',
+  T:  'top',
+  TR: 'topRight',
+  L:  'left',
+  CT: 'center',
+  R:  'right',
+  BL: 'bottomLeft',
+  B:  'bottom',
+  BR: 'bottomRight',
+  F:  'fill'
+};
 
 
 /************************************************************
  * Theme
  ***********************************************************/
 export class Theme{
-    Name      = 'ios';
-    Background= 'white';
-    Text      = 'black';
-    Primary   = '#007bff';
-    Secondary = '#6c757d';
-    Success   = '#28a745';
-    Info      = '#17a2b8';
-    Warning   = '#ffc107';
-    Danger    = '#dc3545';
-    Dark      = '#343a40';
-    Light     = '#f8f9fa';
-    Border    = '#cdcdcd';
-    Radius    = '8px';
+    name      = 'ios';
+    background= 'white';
+    text      = 'black';
+    primary   = '#007bff';
+    secondary = '#6c757d';
+    success   = '#28a745';
+    info      = '#17a2b8';
+    warning   = '#ffc107';
+    danger    = '#dc3545';
+    dark      = '#343a40';
+    light     = '#f8f9fa';
+    border    = '#cdcdcd';
+    radius    = '8px';
 
     constructor(opt) {
-        this.Background = opt.Background;
-        this.Text       = opt.Text;
-        this.Primary    = opt.Primary;
-        this.Secondary  = opt.Secondary;
-        this.Success    = opt.Success;
-        this.Info       = opt.Info;
-        this.Warning    = opt.Warning;
-        this.Danger     = opt.Danger;
-        this.Dark       = opt.Dark;
-        this.Light      = opt.Light;
-        this.Border     = opt.Border;
-        this.Radius     = opt.Radius;
+        this.name       = opt.name;
+        this.background = opt.background;
+        this.text       = opt.text;
+        this.Link       = opt.link;
+        this.primary    = opt.primary;
+        this.secondary  = opt.secondary;
+        this.success    = opt.success;
+        this.info       = opt.info;
+        this.warning    = opt.warning;
+        this.danger     = opt.danger;
+        this.dark       = opt.dark;
+        this.light      = opt.light;
+        this.border     = opt.border;
+        this.radius     = opt.radius;
     }
+
+    /** Theme light*/
+    static themeLight = new Theme({
+        name      : 'iOSLight',
+        background: 'white',
+        text      : 'black',
+        link      : 'blue',
+        primary   : '#007bff',
+        secondary : '#7633d4',
+        success   : '#28a745',
+        info      : '#17a2b8',
+        warning   : '#ffc107',
+        danger    : '#dc3545',
+        dark      : '#343a40',
+        light     : '#f8f9fa',
+        border    : '#cdcdcd',
+        radius    : '8px',
+    });
+
+    /** Theme dark */
+    static themeDark = new Theme({
+        name      : 'MaterialDark',
+        background: '#171717',
+        text      : '#cccccc',
+        link      : 'red',
+        primary   : '#007bff',
+        secondary : '#6c757d',
+        success   : '#28a745',
+        info      : '#17a2b8',
+        warning   : '#ffc107',
+        danger    : '#dc3545',
+        dark      : '#343a40',
+        light     : '#f8f9fa',
+        border    : '#707070',
+        radius    : '8px',
+    });
 }
 
-
-/************************************************************
- * Align enum for anchor and childAnchor
- ***********************************************************/
-export const Anchor = {
-    TL: 'topLeft',
-    T:  'top',
-    TR: 'topRight',
-    L:  'left',
-    CT: 'center',
-    R:  'right',
-    BL: 'bottomLeft',
-    B:  'bottom',
-    BR: 'bottomRight',
-    F:  'fill'
-};
-
-
-//import {Rect} from "./xtags-baseui.js";
 
 /** Theme interface */
 class ITheme{
@@ -97,42 +131,8 @@ export class XTags {
     //-----------------------------------------
     // Theme
     //-----------------------------------------
-    /** Theme light*/
-    static themeLight = new Theme({
-        Name      : 'iOSLight',
-        Background: 'white',
-        Text      : 'black',
-        Primary   : '#007bff',
-        Secondary : '#7633d4',
-        Success   : '#28a745',
-        Info      : '#17a2b8',
-        Warning   : '#ffc107',
-        Danger    : '#dc3545',
-        Dark      : '#343a40',
-        Light     : '#f8f9fa',
-        Border    : '#cdcdcd',
-        Radius    : '8px',
-    });
-
-    /** Theme dark */
-    static themeDark = new Theme({
-        Name      : 'MaterialDark',
-        Background: '#171717',
-        Text      : '#cccccc',
-        Primary   : '#007bff',
-        Secondary : '#6c757d',
-        Success   : '#28a745',
-        Info      : '#17a2b8',
-        Warning   : '#ffc107',
-        Danger    : '#dc3545',
-        Dark      : '#343a40',
-        Light     : '#f8f9fa',
-        Border    : '#707070',
-        Radius    : '8px',
-    });
-
     /** Global Theme*/
-    static theme = this.themeLight;
+    static theme = Theme.themeLight;
 
     /**
      * Set page theme.
@@ -152,7 +152,8 @@ export class XTags {
             if (tag.setTheme != 'undefined'){
               tag.setTheme(theme);
           }
-      });
+        });
+        //document.dispatchEvent(new Event('stylechange'));  // 应用新样式
     }
 
 

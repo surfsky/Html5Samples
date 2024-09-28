@@ -10,7 +10,7 @@ import { Rect, Circle, Row, Column, Grid, Image } from "./xtags-baseui.js";
 /************************************************************
  * Button
  * @example
- *     <x-btn click='alert("...")'></x-btn>
+ *     <x-btn click='alert("...")' ripple='true'></x-btn>
  * @description
  *     - default theme like bootstrap
  *     - support click disable and become gray
@@ -18,12 +18,17 @@ import { Rect, Circle, Row, Column, Grid, Image } from "./xtags-baseui.js";
 export class Button extends Rect {
     constructor() {
         super();
-        this.root.style.backgroundColor = XTags.theme.Primary;
-        this.root.style.color  = XTags.theme.Light;
-        this.root.style.height = '24px';
+        this.root.style.backgroundColor = XTags.theme.primary;
+        this.root.style.color  = XTags.theme.light;
         this.root.style.borderRadius = "8px";
         this.root.style.borderWidth = "0px";
         this.root.style.overflow = 'hidden';
+        if (this.root.style.boxShadow == '' || this.root.style.boxShadow =='content-box'){
+            this.root.style.height = '24px';
+        }
+        else{
+            this.root.style.height = '44px';
+        }
         this.setHoverOpacity('0.8');
     }
 
@@ -42,8 +47,8 @@ export class Button extends Rect {
     setTheme(o){
         super.setTheme(o);
         //this.root.style.borderColor = o.Border;
-        this.root.style.borderRadius = o.Radius;
-        this.root.style.color = o.Light;
+        this.root.style.borderRadius = o.radius;
+        this.root.style.color = o.light;
         this.setBorderColor();
     }
     
@@ -103,7 +108,7 @@ export class Toast{
         var toast = new Rect()
             .setSize('400px', '26px')
             .setRadius('6px')
-            .setColors(XTags.theme.Success, XTags.theme.Light)
+            .setColors(XTags.theme.success, XTags.theme.light)
             //.setShadow(true)
             .setAnchor(Anchor.T)
             .setChildAnchor(Anchor.CT)
