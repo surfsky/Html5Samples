@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Left Menu with iframe</title>
+  <style>
+    html,body {
+      height: 100%;    /*全屏*/
+      width: 100%;
+      display: flex;   /*左右结构*/
+      margin: 0;
+      padding: 0;
+    }
+
+   .menu {
+      width: 200px;
+      background-color: #f0f0f0;
+      padding: 10px;
+    }
+    iframe {
+        flex:1;   /*填满剩余部分*/
+        border: none;
+        height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="menu">
+    <h1>XTags</h1>
+    <ul>
+        <li><a target="iframe" href="./rect.html">Rectangle</a></li>
+        <li><a target="iframe" href="./circle.html">Circle</a></li>
+        <li><a target="iframe" href="./container.html">Container</a></li>
+        <li><a target="iframe" href="./image.html">Image</a></li>
+        <li><a target="iframe" href="./dialog.html">Dialog</a></li>
+        <li><a target="iframe" href="./mobile.html">Mobile</a></li>
+        <li><a target="iframe" href="./theme.html">Theme</a></li>
+    </ul>
+  </div>
+  <iframe name="iframe" src="./rect.html"></iframe>
+</body>
+
+</html>

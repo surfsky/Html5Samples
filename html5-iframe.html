@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Left Menu with iframe</title>
+  <style>
+    html,body {
+      height: 100%;    /*全屏*/
+      width: 100%;
+      display: flex;   /*左右结构*/
+      margin: 0;
+      padding: 0;
+    }
+
+   .menu {
+      width: 200px;
+      background-color: #f0f0f0;
+      padding: 10px;
+    }
+    iframe {
+        flex:1;   /*填满剩余部分*/
+        border: none;
+        height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="menu">
+    <ul>
+      <li><a href="./html5-dialog.html" target="iframe">dialog</a></li>
+      <li><a href="./html5-drag.html" target="iframe">drag</a></li>
+      <li><a href="./html5-form.html" target="iframe">form</a></li>
+    </ul>
+  </div>
+  <iframe name="iframe" src="./html5-contextmenu.html"></iframe>
+</body>
+
+</html>

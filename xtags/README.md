@@ -5,6 +5,57 @@ xtags : html5 custom tag system without writing any css and class.
 
 author: surfsky.github.com 2024
 
+Xtags framework
+    base: 
+        /theme + common
+    baseui: 
+        rect
+            box
+                /size
+                /border
+                /margin\padding
+                /radius
+            position
+                /anchor
+                /childAnchor
+            theme
+                /bgcolor
+                /textcolor
+                /hovercolor
+                /font
+                /theme
+            effect
+                /transform
+                /shadow
+                /textshadow
+                /rotate
+                /scale
+                /skew
+                /animation
+        container
+            /row
+            /column
+            /grid
+            iframe
+        event
+            /click
+            /hover
+            drag
+            swipe
+            any
+        temple
+        responsive
+    control:
+        /button
+        groupbutton
+        switch
+        textbox
+        popup
+        toast
+    util:
+        extensions
+
+
 
 -----------------------------------------------------
 Examples
@@ -35,8 +86,11 @@ Features
 
 
 -----------------------------------------------------
-todo
+Task
 -----------------------------------------------------
+用 ITheme 接口改造 Rect
+用 Toast.show() 静态方法来展示 Toast
+
 - popup: x, y, width, height, closeicon
     - messagebox
     - dialog: module mask, pure code invoke to show a dialog
@@ -51,5 +105,6 @@ todo
 -----------------------------------------------------
 history
 -----------------------------------------------------
-- fix -> anchor
+- 重构类库结构：base、baseui、control、util...
+- Rect.fix -> anchor
 

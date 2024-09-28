@@ -1,8 +1,9 @@
 /*
 传统位置布局 CSS 预设类
 https://www.github.com/surfsky/
-2019-07
+2024-09
 */
+@import url("./rem.css");
 
 /*************************************************
 预设
@@ -10,98 +11,12 @@ https://www.github.com/surfsky/
 html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 
 
-/* 
-定义文本基础大小 rem 
-rem 是相对长度单位（相对于根元素的字体高度）。
-浏览器默认字高都是16px，即 1rem=16px，可在html里面修改rem的定义，如font-size:20px;
-*/
-html { font-size : 16px; }
-@media only screen and (min-width: 401px){ html { font-size: 25px !important;}}
-@media only screen and (min-width: 428px){ html { font-size: 26.75px !important;}}
-@media only screen and (min-width: 481px){ html { font-size: 30px !important; }}
-@media only screen and (min-width: 569px){ html { font-size: 35px !important; }}
-@media only screen and (min-width: 641px){ html { font-size: 40px !important; }}
-
 
 /*************************************************
-容器
+当前元素的位置 Anchor 控制（position 属性）
 *************************************************/
 .fill          {position:fixed; top:0px; bottom:0px; left:0px;  right:0px;}
-.row           {width: 100%; margin-left: auto; margin-right: auto; display: flex; flex-direction: row; flex-wrap: wrap; }
-.column        {height:100%; display: flex; flex-direction: column;}
 
-
-/* 圆角 */
-.r1            {border-radius: 0.1rem;}
-.r2            {border-radius: 0.2rem;}
-.r3            {border-radius: 0.3rem;}
-.r4            {border-radius: 0.4rem;}
-.r5            {border-radius: 0.5rem;}
-.rs            {border-radius: 0.1rem;}
-.rm            {border-radius: 0.3rem;}
-.rl            {border-radius: 0.5rem;}
-
-
-/*************************************************
-网格
-*************************************************/
-/* 自动网格（统统放在一行） */
-.gridRow{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
-    grid-gap: 10px;
-    padding: 10px;
-    }
-/* 自动网格（统统放在一列） */
-.gridColumn{
-    display: grid;
-    grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
-    grid-gap: 10px;
-    padding: 10px;
-    }
-/* 2列网格 */
-.grid2 {
-    display: grid;
-    grid-template-columns: auto auto;  /*几个auto就几列*/
-    grid-gap: 10px;  /*子项间距*/
-    padding: 10px;
-    }
-/* 3列网格 */
-.grid3 {
-    display: grid;
-    grid-template-columns: auto auto auto;  /*几个auto就几列*/
-    grid-gap: 10px;  /*子项间距*/
-    padding: 10px;
-    }
-/* 4列网格 */
-.grid4 {
-    display: grid;
-    grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
-    grid-gap: 10px;  /*子项间距*/
-    padding: 10px;
-    }
-    
-      
-/*网格项（占2个网格）*/
-.gridItem2 {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    }
-/*网格项（占3个网格）*/
-.gridItem3 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    }
-/*网格项（占4个网格）*/
-.gridItem4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    }
-
-    
-/*************************************************
-当前元素的位置控制
-*************************************************/
 /* 固定位置（拖动页面时不会移动） */
 .fixTopLeft    {position:fixed; top:0px;    left:0px; }
 .fixTop        {position:fixed; top:0px;    left:50%; transform: translateX(-50%);}
@@ -139,9 +54,30 @@ html { font-size : 16px; }
 
 
 
-/* 
-margin
-*/
+/*************************************************
+元素外观控制
+*************************************************/
+/* 圆角 */
+.r1            {border-radius: 0.1rem;}
+.r2            {border-radius: 0.2rem;}
+.r3            {border-radius: 0.3rem;}
+.r4            {border-radius: 0.4rem;}
+.r5            {border-radius: 0.5rem;}
+.rs            {border-radius: 0.1rem;}
+.rm            {border-radius: 0.3rem;}
+.rl            {border-radius: 0.5rem;}
+
+
+
+/*************************************************
+元素间距控制（margin & padding）
+box模型：content + padding + border + margin
+box-sizing: 
+    content-box 标准盒：width 和 height 指的是 content
+    border-box  IE盒：width 和 height 指的是 content + padding + border
+    常用内容盒，边框盒更容易精准控制布局（不受padding和border影响）
+*************************************************/
+/* margin 外间距 */
 .m1          {margin:0.1rem;}
 .m2          {margin:0.2rem;}
 .m3          {margin:0.3rem;}
@@ -167,7 +103,7 @@ margin
 .mxxl        {margin:1.0rem;}
 
 /* 
-padding
+padding 内间距
 */
 .p1          {padding:0.1rem;}
 .p2          {padding:0.2rem;}
@@ -192,23 +128,6 @@ padding
 .pl          {padding:0.5rem;}
 .pxl         {padding:0.7rem;}
 .pxxl        {padding:1.0rem;}
-
-
-/*************************************************
-子元素位置控制
-*************************************************/
-/* 
-子元素位置 
-*/
-.childTopLeft       {display: flex; justify-content: flex-start;  align-items: flex-start;}
-.childTop           {display: flex; justify-content: center;      align-items: flex-start;}
-.childTopRight      {display: flex; justify-content: flex-end;    align-items: flex-start;}
-.childBottomLeft    {display: flex; justify-content: flex-start;  align-items: flex-end;}
-.childBottom        {display: flex; justify-content: center;      align-items: flex-end;}
-.childBottomRight   {display: flex; justify-content: flex-end;    align-items: flex-end;}
-.childLeft          {display: flex; justify-content: flex-start;  align-items: center;}
-.childCenter        {display: flex; justify-content: center;      align-items: center; flex-direction: column;}
-.childRight         {display: flex; justify-content: flex-end;    align-items: center;}
 
 
 /* 
@@ -248,3 +167,98 @@ child padding
 .cpl   > *       {padding:0.5rem;}
 .cpxl  > *       {padding:0.7rem;}
 .cpxxl > *       {padding:1.0rem;}
+
+
+/*************************************************
+容器
+*************************************************/
+.row           {display: flex; flex-direction: row; flex-wrap: wrap; width: 100%; margin-left: auto; margin-right: auto;  }
+.column        {display: flex; flex-direction: column; height:100%; }
+
+
+
+/*************************************************
+Flex 弹性容器布局：控制子元素位置
+*************************************************/
+/* 
+子元素位置
+flex 弹性布局方式：控制子元素的布局
+容器属性
+    flex-direction: 主轴方向
+    justify-content: 主轴上的位置，如起点、中间、终点
+    align-items：交叉轴上的位置
+子元素属性
+    flex-grow: 1：表示当容器有剩余空间时，该元素将扩大以占据剩余空间。这里的数值 “1” 表示该元素与其他设置了flex-grow的元素平分剩余空间。如果有多个元素设置了不同的flex-grow值，它们将按照比例分配剩余空间。
+    flex-shrink: 1：表示当容器空间不足时，该元素将缩小。默认情况下，所有元素的flex-shrink值都是 1，即等比例缩小。
+    flex-basis: auto：表示该元素的初始大小根据其内容自动确定。如果设置了具体的长度值，如flex-basis: 200px，则元素的初始大小将为该固定值。
+    flex: 1 是一个简写属性，表示同时设置了flex-grow、flex-shrink和flex-basis三个属性。表示等比分摊，若只有一个元素，那就是填满。
+*/
+.childTopLeft       {display: flex; flex-direction: row;     justify-content: flex-start;  align-items: flex-start;}
+.childTop           {display: flex; flex-direction: row;     justify-content: center;      align-items: flex-start;}
+.childTopRight      {display: flex; flex-direction: row;     justify-content: flex-end;    align-items: flex-start;}
+.childBottomLeft    {display: flex; flex-direction: row;     justify-content: flex-start;  align-items: flex-end;}
+.childBottom        {display: flex; flex-direction: row;     justify-content: center;      align-items: flex-end;}
+.childBottomRight   {display: flex; flex-direction: row;     justify-content: flex-end;    align-items: flex-end;}
+.childLeft          {display: flex; flex-direction: row;     justify-content: flex-start;  align-items: center;}
+.childCenter        {display: flex; flex-direction: column;  justify-content: center;      align-items: center;}
+.childRight         {display: flex; flex-direction: row;     justify-content: flex-end;    align-items: center;}
+
+
+/*************************************************
+Grid 网格容器布局，控制子元素布局
+*************************************************/
+/* 自动网格（统统放在一行） */
+.gridRow{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+    gap: 10px;
+    padding: 10px;
+    }
+/* 自动网格（统统放在一列） */
+.gridColumn{
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
+    gap: 10px;
+    padding: 10px;
+    }
+/* 2列网格 */
+.grid2 {
+    display: grid;
+    grid-template-columns: auto auto;  /*几个auto就几列*/
+    gap: 10px;  /*子项间距*/
+    padding: 10px;
+    }
+/* 3列网格 */
+.grid3 {
+    display: grid;
+    grid-template-columns: auto auto auto;  /*几个auto就几列*/
+    gap: 10px;  /*子项间距*/
+    padding: 10px;
+    }
+/* 4列网格 */
+.grid4 {
+    display: grid;
+    grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
+    gap: 10px;  /*子项间距*/
+    padding: 10px;
+    }
+    
+      
+/*网格项（占2个网格）*/
+.gridItem2 {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    }
+/*网格项（占3个网格）*/
+.gridItem3 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    }
+/*网格项（占4个网格）*/
+.gridItem4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    }
+
+    
+

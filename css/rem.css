@@ -1,12 +1,14 @@
 /*
 传统位置布局 CSS 预设类
 https://www.github.com/surfsky/
-2019-07
 */
+
 /* 
 定义文本基础大小 rem 
 rem 是相对长度单位（相对于根元素的字体高度）。
 浏览器默认字高都是16px，即 1rem=16px，可在html里面修改rem的定义，如font-size:20px;
+以下为常用响应式设计，根据不同的屏幕尺寸提供不同的字体大小，以确保在各种设备上都能有较好的可读性和视觉效果。
+通过逐步增加字体大小，可以适应不同大小的屏幕，使得内容在较大屏幕上更容易阅读，而在较小屏幕上也不会显得过于拥挤。
 */
 html { font-size : 16px; }
 @media only screen and (min-width: 401px){ html { font-size: 25px !important;}}
@@ -14,4 +16,3 @@ html { font-size : 16px; }
 @media only screen and (min-width: 481px){ html { font-size: 30px !important; }}
 @media only screen and (min-width: 569px){ html { font-size: 35px !important; }}
 @media only screen and (min-width: 641px){ html { font-size: 40px !important; }}
-

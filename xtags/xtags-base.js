@@ -1,10 +1,15 @@
-import {Rect} from "./xtags.js";
+/**
+ * xtags common class.
+ * @author surfsky.github.com 2024
+ */
+
 
 
 /************************************************************
  * Theme
  ***********************************************************/
 export class Theme{
+    Name      = 'ios';
     Background= 'white';
     Text      = 'black';
     Primary   = '#007bff';
@@ -52,6 +57,21 @@ export const Anchor = {
 };
 
 
+//import {Rect} from "./xtags-baseui.js";
+
+/** Theme interface */
+class ITheme{
+    /**
+     * Set theme
+     * @param {Theme} theme 
+     */
+    setTheme(theme)
+    {
+        throw new Error('Un implemented.');
+    }
+}
+
+
 /************************************************************
  * XTags
  ***********************************************************/
@@ -61,10 +81,25 @@ export class XTags {
 
 
     //-----------------------------------------
+    // Common
+    //-----------------------------------------
+    /**
+     * async/await delay 
+     * @param {number} ms
+     * @example await delay(20);
+     */
+    static delay(ms) {
+      return new Promise((resolve) => {
+          setTimeout(resolve, ms);
+      });
+    }      
+
+    //-----------------------------------------
     // Theme
     //-----------------------------------------
     /** Theme light*/
     static themeLight = new Theme({
+        Name      : 'iOSLight',
         Background: 'white',
         Text      : 'black',
         Primary   : '#007bff',
@@ -81,6 +116,7 @@ export class XTags {
 
     /** Theme dark */
     static themeDark = new Theme({
+        Name      : 'MaterialDark',
         Background: '#171717',
         Text      : '#cccccc',
         Primary   : '#007bff',
@@ -110,59 +146,30 @@ export class XTags {
             tags = tags.filter(element => element.nodeName.startsWith('X-'));  // notice: will upper
         }
         tags.forEach(tag => {
-            if (tag instanceof Rect){
-                tag.setTheme(theme);
-            }
-        });
+            //if (tag instanceof Rect){
+            //    tag.setTheme(theme);
+            //}
+            if (tag.setTheme != 'undefined'){
+              tag.setTheme(theme);
+          }
+      });
     }
 
 
 
     //-----------------------------------------
-    // UI utils
+    // Icon
     //-----------------------------------------
-    /**
-     * Show toast
-     * @param {string} icon iconname without extension
-     * @param {string} info information 
-     */
-    static async showToast(icon, info){
-        var toast = new Rect()
-            .setSize('400px', '26px')
-            .setRadius('6px')
-            .setColors(XTags.theme.Success, XTags.theme.Light)
-            //.setShadow(true)
-            .setAnchor(Anchor.T)
-            .setChildAnchor(Anchor.CT)
-            .setInnerHTML(`<x-row><img src='${this.iconRoot}${icon}.png' width='24px'/><div>${info}<div></x-row>`)
-            ;
-        toast.style.top = '-100px';
-        document.body.appendChild(toast);
-        await this.delay(50);
-        toast.style.top = '25px';
-        await this.delay(2000);
-        toast.style.top = '-100px';
-        await this.delay(1000);
-        document.body.removeChild(toast);
+    /** Get icon url from icons root and icon name */
+    static getIconUrl(name){
+        if (name.includes('.'))
+            return this.iconRoot + name;
+        return `${this.iconRoot}${name}.png`;
     }
 
-    //-----------------------------------------
-    // Common Utils
-    //-----------------------------------------
-    /**
-     * async/await delay 
-     * @param {number} ms
-     * @example await delay(20);
-     */
-    static delay(ms) {
-        return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
-    }      
-
 
     //-----------------------------------------
-    // Color Utils
+    // Color
     //-----------------------------------------
     /** 生成浅色 */
     static getOpacityColor(rawColor, opacity) {

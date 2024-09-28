@@ -11,8 +11,8 @@
 <body>
     <x-rect anchor="fill" childAnchor="top">
         <x-row width="500" anchor="center">
-            <x-btn click="XTags.showToast('white-bulb', 'hello world!')" >Toast</x-btn>
             <x-btn click="showDialog(true)">Diaog</x-btn>
+            <x-btn click="Toast.show('white-bulb', 'hello world!')" >Toast</x-btn>
         </x-row>
     </x-rect>
 
@@ -29,7 +29,6 @@
 </html>
 
 <script>
-    
     function showDialog(b){
         var ele = document.getElementById('dlg');
         ele.setVisible(b);

@@ -28,16 +28,16 @@ body
 
 /* 容器 */
 *, *::before, *::after {box-sizing: border-box;}  /*盒式模型预设：尺寸包括边框*/
-.container        {width: 100%; padding-left: 15px; padding-right: 15px; margin-left: auto; margin-right: auto;}
-.container-fluid  {width: 100%; padding-left: 15px; padding-right: 15px; margin-left: 0px; margin-right: 0px;}
-.row              {display: flex; flex-direction: row; flex-wrap: wrap; margin-left: -15px; margin-right: -15px;}  /*占满整行，抵消掉容器设置的padding*/
+.container        {width: 100%; padding-left: 15px; padding-right: 15px; margin-left: auto; margin-right: auto;}   /*居中放置，左右留白*/
+.container-fluid  {width: 100%; padding-left: 15px; padding-right: 15px; margin-left: 0px; margin-right: 0px;}     /*居中填满，左右只有内间距*/
+.row              {display: flex; flex-direction: row; flex-wrap: wrap; margin-left: -15px; margin-right: -15px;}  /*占满整行，并抵消掉容器设置的padding*/
 .rowreverse       {display: flex; flex-direction: row-reverse; flex-wrap: wrap; }
 .column           {display: flex; flex-direction: column;}
 .columnreverse    {display: flex; flex-direction: column-reverse;}
 .flex             {display: flex;}
 .block            {display: block;}
 .inline           {display: inline-block;}
-.clearfix::after  {display: block;clear: both; content: "";}
+.clearfix::after  {display: block; clear: both; content: "";}
 
 
 
@@ -84,7 +84,7 @@ body
 /* 自适应布局（使用媒体查询语法） */
 /* container 会自适应设置阶梯式宽度：540-720-960-1140 */
 @media (min-width: 576px){
-    .container {max-width: 540px;}
+    .container           {max-width: 540px;}
     .col-sm-1            {padding-left: 15px; padding-right: 15px; flex: 0 0 8.333333%;  max-width: 8.333333%; /*1/12*/}
     .col-sm-2            {padding-left: 15px; padding-right: 15px; flex: 0 0 16.666667%; max-width: 16.666667%;}
     .col-sm-3            {padding-left: 15px; padding-right: 15px; flex: 0 0 25%;        max-width: 25%;}
@@ -112,7 +112,7 @@ body
     .invisible-sm        {visibility: none;}
 }
 @media (min-width: 768px){
-    .container {max-width: 720px;}
+    .container           {max-width: 720px;}
     .col-md-1            {padding-left: 15px; padding-right: 15px; flex: 0 0 8.333333%;  max-width: 8.333333%; /*1/12*/}
     .col-md-2            {padding-left: 15px; padding-right: 15px; flex: 0 0 16.666667%; max-width: 16.666667%;}
     .col-md-3            {padding-left: 15px; padding-right: 15px; flex: 0 0 25%;        max-width: 25%;}
@@ -140,7 +140,7 @@ body
     .invisible-md        {visibility: none;}
 }
 @media (min-width: 992px){
-    .container {max-width: 960px;}
+    .container           {max-width: 960px;}
     .col-lg-1            {padding-left: 15px; padding-right: 15px; flex: 0 0 8.333333%;  max-width: 8.333333%; /*1/12*/}
     .col-lg-2            {padding-left: 15px; padding-right: 15px; flex: 0 0 16.666667%; max-width: 16.666667%;}
     .col-lg-3            {padding-left: 15px; padding-right: 15px; flex: 0 0 25%;        max-width: 25%;}
@@ -168,7 +168,7 @@ body
     .invisible-lg        {visibility: none;}
 }
 @media (min-width: 1200px){
-    .container {max-width: 1140px;}
+    .container           {max-width: 1140px;}
     .col-xl-1            {padding-left: 15px; padding-right: 15px; flex: 0 0 8.333333%;  max-width: 8.333333%; /*1/12*/}
     .col-xl-2            {padding-left: 15px; padding-right: 15px; flex: 0 0 16.666667%; max-width: 16.666667%;}
     .col-xl-3            {padding-left: 15px; padding-right: 15px; flex: 0 0 25%;        max-width: 25%;}
@@ -199,11 +199,11 @@ body
 
 
 
-/*
+/**********************************************************
 Flex 弹性布局 CSS 预设类
 https://www.github.com/surfsky/
 2019-07
-*/
+**********************************************************/
 
 /*
 flex 容器设置
