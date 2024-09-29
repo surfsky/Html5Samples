@@ -204,18 +204,26 @@ export class Rect extends HTMLElement {
      */
     setChildAnchor(anchor){
         var s = this.root.style;
-        s.display = 'flex';
-        switch (anchor){
-            case Anchor.TL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-start'; break;
-            case Anchor.T   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-start'; break;
-            case Anchor.TR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-start'; break;
-            case Anchor.L   : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='center';     break;
-            case Anchor.CT  : s.flexDirection='column';  s.justifyContent='center';      s.alignItems='center';     break;
-            case Anchor.R   : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='center';     break;
-            case Anchor.BL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-end';   break;
-            case Anchor.B   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-end';   break;
-            case Anchor.BR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-end';   break;
-            case Anchor.F   : this.setChildFill();   break;
+        if (anchor == null || anchor == ""){
+            s.display = '';
+            s.flexDirection  = '';     
+            s.justifyContent = '';  
+            s.alignItems = '';
+        }
+        else{
+            s.display = 'flex';
+            switch (anchor){
+                case Anchor.TL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-start'; break;
+                case Anchor.T   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-start'; break;
+                case Anchor.TR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-start'; break;
+                case Anchor.L   : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='center';     break;
+                case Anchor.CT  : s.flexDirection='column';  s.justifyContent='center';      s.alignItems='center';     break;
+                case Anchor.R   : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='center';     break;
+                case Anchor.BL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-end';   break;
+                case Anchor.B   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-end';   break;
+                case Anchor.BR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-end';   break;
+                case Anchor.F   : this.setChildFill();   break;
+            }
         }
         return this;
     }
@@ -262,7 +270,7 @@ export class Rect extends HTMLElement {
      * Set hover background color
      * @param {Color} color 
      */
-    setHoverColor(color){
+    setHoverBgColor(color){
         var element = this.root;
         var oldColor = element.style.backgroundColor;
         var oldCursor = element.style.cursor;
@@ -272,6 +280,25 @@ export class Rect extends HTMLElement {
         });
         element.addEventListener('mouseout', function() {
             element.style.backgroundColor = oldColor;
+            element.style.cursor = oldCursor;
+        });
+        return this;
+    }
+
+    /**
+     * Set hover text color
+     * @param {Color} color 
+     */
+    setHoverTextColor(color){
+        var element = this.root;
+        var oldColor = element.style.Color;
+        var oldCursor = element.style.cursor;
+        element.addEventListener('mouseover', function() {
+            element.style.Color = color;
+            element.style.cursor = 'pointer';
+        });
+        element.addEventListener('mouseout', function() {
+            element.style.Color = oldColor;
             element.style.cursor = oldCursor;
         });
         return this;
@@ -421,7 +448,7 @@ export class Rect extends HTMLElement {
 
             // color
             case 'bgcolor':           this.root.style.backgroundColor = newValue;  break;
-            case 'hovercolor':        this.setHoverColor(newValue); break;
+            case 'hovercolor':        this.setHoverBgColor(newValue); break;
             case 'background':        this.root.style.background = newValue; break;
 
             // text
@@ -559,6 +586,7 @@ customElements.define("x-col", Column);
 export class Grid extends Rect {
     constructor() {
         super();
+        this.setChildAnchor(null);
         this.root.style.display = "grid";
         this.root.style.gap = '10px';
         this.root.style.borderWidth = 0;
@@ -570,8 +598,24 @@ export class Grid extends Rect {
         return ['gap', 'columns', 'rows'].concat(this._attrs);
     }
 
-    setColumns(val){ this.root.style.gridTemplateColumns = `repeat(${val}, 1fr)`; }
-    setRows(val)   { this.root.style.gridTemplateRows = `repeat(${val}, 1fr)`; }
+    isNumberString(str) {
+        const num = Number(str);
+        return !isNaN(num);
+    }
+
+    setColumns(val){
+        if (this.isNumberString(val))
+            this.root.style.gridTemplateColumns = `repeat(${val}, 1fr)`; 
+        else
+            this.root.style.gridTemplateColumns = val;
+    }
+
+    setRows(val)   { 
+        if (this.isNumberString(val))
+            this.root.style.gridTemplateRows = `repeat(${val}, 1fr)`; 
+        else
+            this.root.style.gridTemplateRows = val;
+    }
 
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
@@ -585,123 +629,6 @@ export class Grid extends Rect {
 
 customElements.define("x-grid", Grid);
 
-
-/************************************************************
- * Image
- * @example
- *     <x-img></x-img>
- ***********************************************************/
-export class Image extends Rect {
-    constructor() {
-        super();
-        //this.shadow = this.attachShadow({mode: 'open'});  // fail
-        this.clear();
-        this.root = document.createElement("img");
-        this.root.innerHTML = this.innerHTML;     // contain child items
-        //this.root.style.transition = 'all 0.5s';  // animation
-        this.root.style.overflow = 'hidden';
-        this.shadow.appendChild(this.root);
-    }
-
-    static get observedAttributes() {
-        return ['src', 'avatar', 'icon'].concat(this._attrs);
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-        switch(name){
-            case 'src':
-                this.root.setAttribute('src', newValue);
-                break;
-            case 'icon':
-                this.root.setAttribute('src', XTags.getIconUrl(newValue));
-                break;
-            case 'avatar':
-                if (Boolean(newValue)){
-                    this.root.style.height = this.root.style.width;
-                    this.root.style.backgroundColor = 'white';
-                    this.root.style.padding = '5px';
-                    this.root.style.border = '1px solid gray';
-                    this.root.style.borderRadius = '50%';
-                }
-                break;
-        }
-    }
-}
-customElements.define("x-img", Image);
-
-
-/************************************************************
- * Image
- * @example
- *     <x-link></x-link>
- ***********************************************************/
-export class Link extends Rect {
-    constructor() {
-        super();
-        //this.shadow = this.attachShadow({mode: 'open'});  // fail
-        this.clear();
-        this.writeStyleTag();
-        this.styleTag.textContent = `
-            a { text-decoration: none; color: var(--link-color, blue);}
-            a:hover, a:visited { color: var(--link-color, blue);}
-            `;
-        this.root = document.createElement("a");
-        this.root.innerHTML = this.innerHTML;     // contain child items
-        this.root.style.transition = 'all 0.5s';  // animation
-        this.root.style.overflow = 'hidden';
-        this.root.style.textDecoration = 'none';
-        this.writeLinkColor('blue');
-
-        this.root.href = this.getAttribute('href');
-        this.root.target = this.getAttribute('target');
-        this.shadow.appendChild(this.root);
-    }
-
-    /**
-     * write css with color
-     * @param {Color} color 
-     */
-    writeLinkColor(color){
-        //this.root.style['--link-color'] = color;
-        this.root.style.setProperty('--link-color', color);
-        var o = this.root.style.getPropertyValue('--link-color');
-        var s = this.root.style.cssText;
-        //this.style.setProperty('--link-hover-color',  color);
-        //this.style.setProperty('--link-visited-color', color);
-    }
-
-
-    static get observedAttributes() {
-        return ['href', 'target'].concat(this._attrs);
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-        switch(name){
-            case 'href':
-                this.root.setAttribute('href', newValue);
-                break;
-            case 'target':
-                this.root.setAttribute('target', newValue);
-                break;
-            case 'color':
-                this.writeLinkColor(newValue);
-                break;
-        }
-    }
-
-    /** Set theme. 
-     * @param {Theme} t 
-    */
-    setTheme(t){
-        this.writeLinkColor(t.Link);  // TODO：无效？
-        //this.root.style.textDecoration = 'none';
-        //this.root.style.color = t.Link;
-    }
-
-}
-customElements.define("x-link", Link);
 
 
 /***********************************************************
@@ -741,35 +668,3 @@ export class Style extends Rect {
 customElements.define("x-style", Style);
 
 
-/************************************************************
- * IFrame
- * @example
- *     <x-frame></x-frame>
- ***********************************************************/
-export class Frame extends Rect {
-    constructor() {
-        super();
-        this.clear();
-        this.root = document.createElement("iframe");
-        this.root.innerHTML = this.innerHTML;
-        this.root.style.border = '0';
-        //this.root.src = this.getAttribute('src');
-        this.shadow.appendChild(this.root);
-    }
-
-    static get observedAttributes() {
-        return ['src'].concat(this._attrs);
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-        switch(name){
-            case 'src':
-                this.root.src = newValue;
-                break;
-        }
-    }
-}
-
-
-customElements.define("x-frame", Frame);

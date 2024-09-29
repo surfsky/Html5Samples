@@ -4,7 +4,7 @@
  */
 
 import { XTags, Theme, Anchor } from "./xtags-base.js";
-import { Rect, Circle, Row, Column, Grid, Image } from "./xtags-baseui.js";
+import { Rect, Circle, Row, Column, Grid} from "./xtags-baseui.js";
 import { Button } from "./xtags-control.js";
 
 

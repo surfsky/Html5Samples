@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xtags demos</title>
+    <script src="../bin/xtags.js" type="module" defer></script>
+</head>
+
+<body>
+    <x-style></x-style>
+    <x-col gap="0px" width="100%" height="100vh">
+        <x-rect width="100%" height="100px" bgcolor="#1c3051" color="white">
+            <h1>XTags</h1>
+        </x-rect>
+        <x-row width="100%" height="calc(100vh-100px)">
+            <x-rect width="400px" height="100%" bgcolor="#f0f0f0" childAnchor="topLeft">
+                <ui>
+                    <li><a target="iframe" href="./about.html">About</a></li>
+                    <li><a target="iframe" href="./rect.html">Rectangle</a></li>
+                    <li><a target="iframe" href="./circle.html">Circle</a></li>
+                    <li><a target="iframe" href="./container.html">Container</a></li>
+                    <li><a target="iframe" href="./image.html">Image</a></li>
+                    <li><a target="iframe" href="./image-icon.html">Icon</a></li>
+                    <li><a target="iframe" href="./dialog.html">Dialog</a></li>
+                    <li><a target="iframe" href="./theme.html">Theme</a></li>
+                    <li><a target="iframe" href="./mobile.html">Mobile</a></li>
+                    <li><a target="iframe" href="./mobile.html">Backend</a></li>
+                    <li><a target="iframe" href="./mobile.html">Dashboard</a></li>
+                </ui>
+            </x-rect>
+            <!-- 经测试 iframe 如果丢到x-rect 中就无法显示，不知原因-->
+            <!-- 经测试 x-rect 中的 a 无法触发 iframe 跳转，不知原因-->
+            <iframe name="iframe" style="flex:1; height:100%; border:none; " src="./about.html"></iframe>
+        </x-row>
+    </x-col>
+</body>
+</html>

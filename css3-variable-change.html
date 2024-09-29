@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --main-color: blue;
+    }
+
+   .my-element {
+      color: var(--main-color);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="my-element">This is a test.</div>
+  <button onclick="changeRootVar()">Change root variable.</button>
+  <button onclick="changeDivVar()">Change div variable。权限高于全局。</button>
+</body>
+
+</html>
+
+<script>
+  function changeRootVar(){
+      document.documentElement.style.setProperty('--main-color', 'green');
+  }
+  function changeDivVar(){
+      document.querySelector('.my-element').style.setProperty('--main-color', 'red');
+  }
+</script>

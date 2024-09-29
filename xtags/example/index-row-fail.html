@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xtags demos</title>
+    <script src="../bin/xtags.js" type="module" defer></script>
+</head>
+
+<body>
+    <x-style></x-style>
+    <x-row width="100%" height="100%">
+        <x-col width="200px" height="100vh" bgcolor="#f0f0f0" padding="20px" >
+            <h3>Menu</h3>
+            <ui>
+                <li><a target="iframe" href="./about.html">About</a></li>
+                <li><a target="iframe" href="./rect.html">Rectangle</a></li>
+                <li><a target="iframe" href="./circle.html">Circle</a></li>
+                <li><a target="iframe" href="./container.html">Container</a></li>
+                <li><a target="iframe" href="./image.html">Image</a></li>
+                <li><a target="iframe" href="./image-icon.html">Icon</a></li>
+                <li><a target="iframe" href="./dialog.html">Dialog</a></li>
+                <li><a target="iframe" href="./theme.html">Theme</a></li>
+                <li><a target="iframe" href="./mobile.html">Mobile</a></li>
+                <li><a target="iframe" href="./mobile.html">Backend</a></li>
+                <li><a target="iframe" href="./mobile.html">Dashboard</a></li>
+            </ui>
+        </x-col>
+        <!-- can't change iframe src-->
+        <iframe name="iframe" src="./about.html" style="height:100vh; flex:1; border:0;"></iframe>
+    </x-row>
+</body>
+</html>

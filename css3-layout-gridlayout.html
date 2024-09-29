@@ -4,11 +4,21 @@
 <link rel="stylesheet" href="css/position.css"  >
 <link rel="stylesheet" href="css/color.css">
 <style>
+
+/*网格容器(左右固定，中间自动拉伸）*/
+.grid-demo {
+  display: grid;
+  grid-template-columns: 100px auto 100px;
+  gap: 10px;  /*子项间距*/
+  background-color: #2196F3;
+  padding: 10px;
+}
+
 /*网格容器(4列）*/
 .grid {
   display: grid;
   grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
-  grid-gap: 10px;  /*子项间距*/
+  gap: 10px;  /*子项间距*/
   background-color: #2196F3;
   padding: 10px;
 }
@@ -36,6 +46,21 @@ div {
 </head>
 
 <body>
+  <h1>网格布局1</h1>
+  <div class="grid-demo">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>  
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>  
+    <div>9</div>
+    <div>10</div>
+    <div>11</div>
+  </div>
+
   <h1>网格布局1</h1>
   <div class="grid">
     <div class="item1">1</div>

@@ -24,71 +24,63 @@ export const Anchor = {
  * Theme
  ***********************************************************/
 export class Theme{
-    name      = 'ios';
-    background= 'white';
-    text      = 'black';
-    primary   = '#007bff';
-    secondary = '#6c757d';
-    success   = '#28a745';
-    info      = '#17a2b8';
-    warning   = '#ffc107';
-    danger    = '#dc3545';
-    dark      = '#343a40';
-    light     = '#f8f9fa';
-    border    = '#cdcdcd';
-    radius    = '8px';
-
     constructor(opt) {
-        this.name       = opt.name;
-        this.background = opt.background;
-        this.text       = opt.text;
-        this.Link       = opt.link;
-        this.primary    = opt.primary;
-        this.secondary  = opt.secondary;
-        this.success    = opt.success;
-        this.info       = opt.info;
-        this.warning    = opt.warning;
-        this.danger     = opt.danger;
-        this.dark       = opt.dark;
-        this.light      = opt.light;
-        this.border     = opt.border;
-        this.radius     = opt.radius;
+        this.name        = opt.name;
+        this.background  = opt.background;
+        this.text        = opt.text;
+        this.link        = opt.link;
+        this.linkHover   = opt.linkHover;
+        this.linkVisited = opt.linkVisited;
+        this.primary     = opt.primary;
+        this.secondary   = opt.secondary;
+        this.success     = opt.success;
+        this.info        = opt.info;
+        this.warning     = opt.warning;
+        this.danger      = opt.danger;
+        this.dark        = opt.dark;
+        this.light       = opt.light;
+        this.border      = opt.border;
+        this.radius      = opt.radius;
     }
 
     /** Theme light*/
     static themeLight = new Theme({
-        name      : 'iOSLight',
-        background: 'white',
-        text      : 'black',
-        link      : 'blue',
-        primary   : '#007bff',
-        secondary : '#7633d4',
-        success   : '#28a745',
-        info      : '#17a2b8',
-        warning   : '#ffc107',
-        danger    : '#dc3545',
-        dark      : '#343a40',
-        light     : '#f8f9fa',
-        border    : '#cdcdcd',
-        radius    : '8px',
+        name        : 'iOSLight',
+        background  : 'white',
+        text        : 'black',
+        link        : 'blue',
+        linkHover   : 'darkblue',
+        linkVisited : 'gray',
+        primary     : '#007bff',
+        secondary   : '#7633d4',
+        success     : '#28a745',
+        info        : '#17a2b8',
+        warning     : '#ffc107',
+        danger      : '#dc3545',
+        dark        : '#343a40',
+        light       : '#f8f9fa',
+        border      : '#cdcdcd',
+        radius      : '8px',
     });
 
     /** Theme dark */
     static themeDark = new Theme({
-        name      : 'MaterialDark',
-        background: '#171717',
-        text      : '#cccccc',
-        link      : 'red',
-        primary   : '#007bff',
-        secondary : '#6c757d',
-        success   : '#28a745',
-        info      : '#17a2b8',
-        warning   : '#ffc107',
-        danger    : '#dc3545',
-        dark      : '#343a40',
-        light     : '#f8f9fa',
-        border    : '#707070',
-        radius    : '8px',
+        name        : 'MaterialDark',
+        background  : '#171717',
+        text        : '#cccccc',
+        link        : 'red',
+        linkHover   : 'darkred',
+        linkVisited : 'gray',
+        primary     : '#007bff',
+        secondary   : '#6c757d',
+        success     : '#28a745',
+        info        : '#17a2b8',
+        warning     : '#ffc107',
+        danger      : '#dc3545',
+        dark        : '#343a40',
+        light       : '#f8f9fa',
+        border      : '#707070',
+        radius      : '8px',
     });
 }
 

@@ -75,3 +75,127 @@
 
         <!-- 经测试 iframe 如果丢到x-rect 中就无法显示，不知原因-->
         <x-frame name="iframe" height="100%" flex="1" src="./about.html"></x-frame>
+
+
+
+        this.root.href = this.getAttribute('href');
+        this.root.target = this.getAttribute('target');
+
+    name      = 'ios';
+    background= 'white';
+    text      = 'black';
+    primary   = '#007bff';
+    secondary = '#6c757d';
+    success   = '#28a745';
+    info      = '#17a2b8';
+    warning   = '#ffc107';
+    danger    = '#dc3545';
+    dark      = '#343a40';
+    light     = '#f8f9fa';
+    border    = '#cdcdcd';
+    radius    = '8px';
+
+-----------------------------------------
+/************************************************************
+ * Link
+ * @example
+ *     <x-link></x-link>
+ ***********************************************************/
+export class Link extends Rect {
+    constructor() {
+        super();
+        this.clear();
+
+        // style
+        this.styleTag = document.createElement('style');
+        this.shadow.appendChild(this.styleTag);
+        this.styleTag.textContent = `
+            :root {
+                --link-color: blue;
+                --hover-color: blue;
+                --visited-color: blue;
+                }
+            a         { text-decoration: none; color: var(--link-color, blue);}
+            a:hover   { text-decoration: none; color: var(--hover-color, blue);}
+            a:visited { text-decoration: none; color: var(--visited-color, blue);}
+            `;
+
+        // a
+        this.root = document.createElement("a");
+        this.root.innerHTML = this.innerHTML;     // contain child items
+        this.root.style.transition = 'all 0.5s';  // animation
+        this.root.style.textDecoration = 'none';
+        this.shadow.appendChild(this.root);
+    }
+
+
+    /** Set theme. 
+     * @param {Theme} t 
+    */
+    setTheme(t){
+        this.setLinkColors(t.link, t.linkHover, t.linkVisited);  // TODO：无效？
+    }
+
+
+    /**
+     * Set link color style. Notice the visited color can't be changed for safety reason.
+     * @param {Color} color 
+     * @param {Color} hoverColor 
+     * @param {Color} visitedColor 
+     */
+    setLinkColors(color, hoverColor, visitedColor){
+        this.root.style.color = color;
+        this.setHoverTextColor(hoverColor);
+        //this.root.addEventListener('mouseover', ()=> this.style.color = color);
+        //this.root.style['--link-color'] = color;
+        //this.root.style.setProperty('--link-color', color);
+        //this.shadow.style.setProperty('--link-color', color);
+        //var o = this.root.style.getPropertyValue('--link-color');
+        //var s = this.root.style.cssText;
+        // 动态修改变量毫无效果
+        //this.root.style.setProperty('--link-color', color);
+        //this.root.style.setProperty('--hover-color', color);
+        //this.root.style.setProperty('--visit-color', color);
+    }
+
+
+    static get observedAttributes() {
+        return ['href', 'target'].concat(this._attrs);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        switch(name){
+            case 'href':     this.root.setAttribute('href', newValue);    break;
+            case 'target':   this.root.setAttribute('target', newValue);  break;
+            case 'color':    this.setLinkColors(newValue);                break;
+        }
+    }
+}
+customElements.define("x-link", Link);
+
+
+
+
+  <div class="container">
+    <div class="left">左侧</div>
+    <div class="right">右侧占满剩余部分</div>
+  </div>
+
+
+    .container{
+        width: 100%;
+        height: 100%;
+        display: flex;
+    }
+
+   .left {
+      width: 200px;
+      background-color: lightblue;
+      height: 100%;
+    }
+
+   .right {
+      flex: 1;
+      background-color: lightgreen;
+    }

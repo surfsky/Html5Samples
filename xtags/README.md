@@ -88,6 +88,10 @@ Features
 -----------------------------------------------------
 Task
 -----------------------------------------------------
+尝试用grid布局来写index.html
+    display: grid;
+    grid-template-columns: 100px auto;
+    gap: 10px;  /*子项间距*/
 Link hover、visited color
 dragable
 responsive
