@@ -18,12 +18,12 @@ export class Rect extends HTMLElement {
     //-----------------------------------------------------
     // supported attribute. Notice these names must be all small chars.
     static _attrs = [
-        'id', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'box',
-        'position', 'anchor', 'childanchor', 'top', 'bottom', 'left', 'right', 'flex',
+        'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'box', 'cursor',
+        'position', 'display', 'anchor', 'childanchor', 'top', 'bottom', 'left', 'right', 'flex',
         'width', 'height', 'radius',  'minwidth', 'minheight',
         'border', 'borderwidth', 'bordercolor', 'borderstyle',
         'margin', 'padding',
-        'bgcolor', 'color', 'hovercolor', 'theme',
+        'bgcolor', 'color', 'hovercolor', 'theme', 'background',
         'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
         'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
         'click', 'draggable'
@@ -41,7 +41,8 @@ export class Rect extends HTMLElement {
         this.style.height = '100px';
         this.style.border = '1px solid lightgray';
         this.style.transition = 'all 0.5s';  // animation
-        this.setChildAnchor(Anchor.CT);
+        if (this.root.innerHTML != '')
+            this.setChildAnchor(Anchor.CT);
         this.shadow.appendChild(this.root);
     }
 
@@ -53,10 +54,10 @@ export class Rect extends HTMLElement {
     //-----------------------------------------------------
     // Css Property Getter & Setter
     //-----------------------------------------------------
-    /** Insert style tag into shadow root. And use this.styleEle.contentText = ...; */
+    /** Insert style tag into shadow root. And use this.styleTag.contentText = ...; */
     writeStyleTag(){
-        this.styleEle = document.createElement('style');
-        this.shadow.appendChild(this.styleEle);
+        this.styleTag = document.createElement('style');
+        this.shadow.appendChild(this.styleTag);
     }
 
     /** This root div's style */
@@ -122,27 +123,13 @@ export class Rect extends HTMLElement {
     setTheme(t){
         this.root.style.color = t.text;
         switch (this._themeCls){
-            case "primary":
-                this.root.style.backgroundColor = t.primary;
-                break;
-            case "secondary":
-                this.root.style.backgroundColor = t.secondary;
-                break;
-            case "success":
-                this.root.style.backgroundColor = t.success;
-                break;
-            case "info":
-                this.root.style.backgroundColor = t.info;
-                break;
-            case "warning":
-                this.root.style.backgroundColor = t.warning;
-                break;
-            case "danger":
-                this.root.style.backgroundColor = t.danger;
-                break;
-            default:
-                this.root.style.backgroundColor = t.background;
-                break;
+            case "primary":   this.root.style.backgroundColor = t.primary;     break;
+            case "secondary": this.root.style.backgroundColor = t.secondary;   break;
+            case "success":   this.root.style.backgroundColor = t.success;     break;
+            case "info":      this.root.style.backgroundColor = t.info;        break;
+            case "warning":   this.root.style.backgroundColor = t.warning;     break;
+            case "danger":    this.root.style.backgroundColor = t.danger;      break;
+            default:          this.root.style.backgroundColor = t.background;  break;
         }
         return this;
     }
@@ -195,7 +182,8 @@ export class Rect extends HTMLElement {
             case Anchor.L   : s.position='fixed'; s.top='50%';    s.left='0px';  s.transform='translateY(-50%)';           break;
             case Anchor.CT  : s.position='fixed'; s.top='50%';    s.left='50%';  s.transform='translate3D(-50%, -50%, 0)'; break;
             case Anchor.R   : s.position='fixed'; s.top='50%';    s.right='0px'; s.transform='translateY(-50%)';           break;
-            case Anchor.F   : s.position='fixed'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';                  break;
+            case Anchor.F   : s.position='fixed'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
+            //case Anchor.F   : s.position='absolute'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
         }
         return this;
     }
@@ -227,8 +215,22 @@ export class Rect extends HTMLElement {
             case Anchor.BL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-end';   break;
             case Anchor.B   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-end';   break;
             case Anchor.BR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-end';   break;
+            case Anchor.F   : this.setChildFill();   break;
         }
         return this;
+    }
+
+    /** Set child fill parent. Add css. */
+    setChildFill(){
+        this.root.style.display = 'flex';
+        this.root.classList.add('x-container');
+        if (this.childStyleTag == null){
+            this.childStyleTag = document.createElement('style');
+            this.childStyleTag.textContent = `
+                x-container > * { flex: 1}
+                `;
+            this.shadow.appendChild(this.childStyleTag);
+        }
     }
 
     //-----------------------------------------------------
@@ -384,6 +386,7 @@ export class Rect extends HTMLElement {
             case 'visible':           this.setVisible(newValue); break;
             case 'overflow':          this.root.style.overflow = newValue; break;
             case 'box':               this.root.style.boxSizing = newValue; break;
+            case 'cursor':            this.root.style.cursor = newValue; break;
 
             // size
             case 'width':             this.root.style.width = newValue;  break;
@@ -395,6 +398,7 @@ export class Rect extends HTMLElement {
             case 'anchor':            this.setAnchor(newValue); break;
             case 'childanchor':       this.setChildAnchor(newValue); break;
             case 'position':          this.root.style.position = newValue; break;
+            case 'display':           this.root.style.display = newValue; break;
             case 'top':               this.root.style.top = newValue;  break;
             case 'bottom':            this.root.style.bottom = newValue;  break;
             case 'left':              this.root.style.left = newValue;  break;
@@ -412,10 +416,13 @@ export class Rect extends HTMLElement {
             case 'margin':            this.root.style.margin = newValue;  break;
             case 'padding':           this.root.style.padding = newValue;  break;
 
+            // theme
+            case 'theme':             this.setThemeCls(newValue); break;
+
             // color
             case 'bgcolor':           this.root.style.backgroundColor = newValue;  break;
             case 'hovercolor':        this.setHoverColor(newValue); break;
-            case 'theme':             this.setThemeCls(newValue); break;
+            case 'background':        this.root.style.background = newValue; break;
 
             // text
             case 'color':             this.root.style.color = newValue;  break;
@@ -478,27 +485,33 @@ export class Row extends Rect {
     //constructor(bgcolor='white') {  // 经测试不支持默认参数代入
     constructor() {
         super();
+        this.clear();
 
-        // child style
-        this.styleEle = document.createElement('style');
-        this.shadow.appendChild(this.styleEle);
+        // style
+        this.styleTag = document.createElement('style');
+        this.shadow.appendChild(this.styleTag);
 
-        // div
-        this.root.setAttribute('class', 'x-container');
-        this.root.style.padding = "0px";
-        this.root.style.borderWidth = '0';
-        this.root.style.display = "flex";
-        this.root.style.flexWrap = "wrap";
-        this.root.style.flexDirection = "row";
-        this.root.style.alignItems = 'flex-start';
+        // root div
+        this.root = document.createElement('div');
+        this.root.innerHTML = this.innerHTML;   // contain child items
+        this.shadow.appendChild(this.root);
+
+        // flex row
+        this.root.classList.add('x-container');
         this.root.style.width = '100%';
-        this.root.style.height = '';
-        this.root.style.marginRight = '12px';
-        this.setCellMargin('0 8px 0 0');
+        this.root.style.height = '100px';
+        this.root.style.display = "flex";
+        this.root.style.flexDirection = "row";
+        //this.root.style.flexWrap = "wrap";
+        //this.root.style.alignItems = 'flex-start';
+        //this.root.style.justifyContent = 'flex-start';
+
+        // child margin
+        this.setGap('0 8px 0 0');
     }
 
-    setCellMargin(val){
-        this.styleEle.textContent = `.x-container > *  {margin: ${val} }`;
+    setGap(val){
+        this.styleTag.textContent = `.x-container > *  {margin: ${val} }`;
     }
 
     static get observedAttributes() {
@@ -510,7 +523,7 @@ export class Row extends Rect {
         super.attributeChangedCallback(name, oldValue, newValue);
         switch(name){
             case 'gap':            
-                this.setCellMargin(newValue);
+                this.setGap(newValue);
                 break;
         }
     }
@@ -530,7 +543,7 @@ export class Column extends Row {
         this.root.style.flexDirection = "column";
         this.root.style.width = '';
         this.root.style.height = '100%';
-        this.setCellMargin('0 0 8px 0');
+        this.setGap('0 0 8px 0');
     }
 }
 
@@ -585,7 +598,7 @@ export class Image extends Rect {
         this.clear();
         this.root = document.createElement("img");
         this.root.innerHTML = this.innerHTML;     // contain child items
-        this.root.style.transition = 'all 0.5s';  // animation
+        //this.root.style.transition = 'all 0.5s';  // animation
         this.root.style.overflow = 'hidden';
         this.shadow.appendChild(this.root);
     }
@@ -605,8 +618,6 @@ export class Image extends Rect {
                 break;
             case 'avatar':
                 if (Boolean(newValue)){
-                    //this.root.style.width = '100px';
-                    //this.root.style.height = '100px';
                     this.root.style.height = this.root.style.width;
                     this.root.style.backgroundColor = 'white';
                     this.root.style.padding = '5px';
@@ -631,7 +642,7 @@ export class Link extends Rect {
         //this.shadow = this.attachShadow({mode: 'open'});  // fail
         this.clear();
         this.writeStyleTag();
-        this.styleEle.textContent = `
+        this.styleTag.textContent = `
             a { text-decoration: none; color: var(--link-color, blue);}
             a:hover, a:visited { color: var(--link-color, blue);}
             `;
@@ -691,3 +702,74 @@ export class Link extends Rect {
 
 }
 customElements.define("x-link", Link);
+
+
+/***********************************************************
+ * Global style
+ * @example
+ *     <x-style cellmargin="0 20px 0 0" bgcolor="lightgray" margin="0 0 10px 0">
+ ***********************************************************/
+export class Style extends Rect {
+    constructor() {
+        super();
+        this.clear();
+
+        // style tag
+        this.styleTag = document.createElement('style');
+        document.head.appendChild(this.styleTag);
+        this.styleTag.textContent = `
+            :root {
+                /* 定义全局变量。组件中可用 var('..')的方式设置值 */
+                --box: border-box;
+                --transition: 'all 0.5s';
+            }
+            html,body {
+                width: 100%;  height: 100%; /*全屏*/
+                padding: 0px; margin: 0px;
+            }
+
+            /* 以下没用，传递不到 shadow 里面去*/
+            *, *::before, *::after {box-sizing: --box;}
+            * {transition: 0.5s;}
+        `;
+
+        // apply variant
+        this.root = document.body;
+    }
+}
+
+customElements.define("x-style", Style);
+
+
+/************************************************************
+ * IFrame
+ * @example
+ *     <x-frame></x-frame>
+ ***********************************************************/
+export class Frame extends Rect {
+    constructor() {
+        super();
+        this.clear();
+        this.root = document.createElement("iframe");
+        this.root.innerHTML = this.innerHTML;
+        this.root.style.border = '0';
+        //this.root.src = this.getAttribute('src');
+        this.shadow.appendChild(this.root);
+    }
+
+    static get observedAttributes() {
+        return ['src'].concat(this._attrs);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        switch(name){
+            case 'src':
+                this.root.src = newValue;
+                break;
+        }
+    }
+}
+
+
+customElements.define("x-frame", Frame);

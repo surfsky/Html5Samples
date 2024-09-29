@@ -7,7 +7,10 @@
     <x-row cellmargin="0 20px 0 0" margin="0 0 10px 0" fix="center" width="430px">
     <x-col cellmargin="0 0 20px 0" width="130px" height="500px" fix="right">
 * @description
-   - Support tags: rect, btn, row, col, grid, circle
+   - Support tags: 
+     basic: rect, circle, link
+     container:  row, col, grid, frame
+     control: btn
    - Support fix position
    - Support child position
    - Support hover color change
@@ -22,7 +25,7 @@
 
 
 import { XTags, Theme, Anchor} from "./xtags-base.js";
-import { Rect, Circle, Row, Column, Grid, Image } from "./xtags-baseui.js";
+import { Rect, Circle, Row, Column, Grid, Image, Frame, Style } from "./xtags-baseui.js";
 import { Button, Toast } from "./xtags-control.js";
 import { XTagsUtil } from "./xtags-util.js";
 

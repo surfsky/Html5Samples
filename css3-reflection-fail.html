@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <title>倒影特效（无效果）</title>
+  <style>
+  body{
+    background-color: black;
+  }
+  .element {
+      width: 200px;
+      height: 150px;
+      border-radius: 8px;
+      background-color: blue;
+      position: relative;
+    }
+
+  .reflection {
+      position: absolute;
+      bottom: -30px;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: scaleY(-1);
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="element animate__animated animate__fadeInDownBig">
+    <div class="reflection"></div>
+  </div>
+</body>
+
+</html>

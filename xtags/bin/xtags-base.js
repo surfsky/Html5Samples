@@ -111,7 +111,7 @@ class ITheme{
  ***********************************************************/
 export class XTags {
     /** Icon root path*/
-    static iconRoot = "./icons/";
+    static iconRoot = "../icons/";
 
 
     //-----------------------------------------

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root{
+        --box-sizing: border-box;  /*采用变量*/
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;  /*无法影响到自定义控件*/
+    }
+  </style>
+  <script>
+    class Rect extends HTMLElement {
+      constructor() {
+        super();
+        const rect = document.createElement('div');
+        rect.style.width = '200px';
+        rect.style.height = '200px';
+        rect.style.backgroundColor = 'blue';
+        rect.style.padding = '10px';
+        rect.style.boxSizing = 'var(--box-sizing)';  // 将变量值传递进去了
+        this.shadow = this.attachShadow({mode: 'open'});
+        this.shadow.appendChild(rect);
+      }
+    }
+    customElements.define('my-rect', Rect);
+  </script>
+</head>
+
+<body>
+  <my-rect></my-rect>
+</body>
+
+</html>

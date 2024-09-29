@@ -94,9 +94,9 @@ customElements.define("x-btn", Button);
 
 
 /************************************************************
- * Circle
+ * Toast
  * @example
- *     <x-circle></x-circle>
+ *     Toast.show('info', 'message info');
  ***********************************************************/
 export class Toast{
     /**
@@ -112,8 +112,9 @@ export class Toast{
             //.setShadow(true)
             .setAnchor(Anchor.T)
             .setChildAnchor(Anchor.CT)
-            .setInnerHTML(`<x-row><img src='${XTags.getIconUrl(icon)}' width='24px'/><div>${info}<div></x-row>`)
+            .setInnerHTML(`<x-row height="100%"><img src='${XTags.getIconUrl(icon)}' width='24px'/><div>${info}<div></x-row>`)
             ;
+        toast.style.border = '0';
         toast.style.top = '-100px';
         document.body.appendChild(toast);
         await XTags.delay(50);
