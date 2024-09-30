@@ -199,3 +199,49 @@ customElements.define("x-link", Link);
       flex: 1;
       background-color: lightgreen;
     }
+
+
+
+/*网格容器(4列）*/
+.grid {
+  display: grid;
+  grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
+  gap: 10px;  /*子项间距*/
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+
+/*表单容器1列（label+input）*/
+.gridForm1 {
+  display: grid;
+  grid-template-columns: 200px minmax(400px, 1fr);
+  gap: 10px;  /*子项间距*/
+  padding: 10px;
+}
+
+/*表单容器2列*/
+.gridForm2 {
+  display: grid;
+  grid-template-columns: minmax(100px, 200px) minmax(400px, 1fr) minmax(100px, 200px)  minmax(400px, 1fr);
+  gap: 10px;  /*子项间距*/
+  padding: 10px;
+}
+
+  <h1>GridForm: 单列表单布局</h1>
+  <div class="gridForm1 bg-primary">
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+  </div>
+
+  <h1>GridForm: 双列表单布局</h1>
+  <div class="gridForm2 bg-primary">
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+  </div>

@@ -1,0 +1,77 @@
+/**********************************************************
+Flex 弹性布局 CSS 预设类
+https://www.github.com/surfsky/
+2019-07
+**********************************************************/
+@import url("./init.css");
+
+/*
+flex 容器设置
+*/
+/* 所有弹性子项的分布方式（主轴）*/
+.flex               {display:flex;}
+.flex-justifystart  {display:flex; justify-content: flex-start;}
+.flex-justifycenter {display:flex; justify-content: center;}
+.flex-justifyend    {display:flex; justify-content: flex-end;}
+.flex-justifybetween{display:flex; justify-content: space-between;}
+.flex-justifyaround {display:flex; justify-content: space-around;}
+.flex-justifyevenly {display:flex; justify-content: space-evenly;}
+
+/* 所有弹性子项在父容器中的（垂直辅轴）对齐方式 */
+.flex-alignstart    {display:flex; align-items: flex-start;}
+.flex-alignend      {display:flex; align-items: flex-end;}
+.flex-aligncenter   {display:flex; align-items: center;}
+.flex-alignstretch  {display:flex; align-items: stretch;}
+.flex-alignbase     {display:flex; align-items: baseline;}
+
+/* 所有弹性子项在父容器中的换行方式 */
+.flex-nowrap        {display:flex; flex-wrap: nowrap;}
+.flex-wrap          {display:flex; flex-wrap: wrap;}
+
+/* 所有弹性子项换行后的对齐方式 */
+.flex-wrapstart     {display:flex; flex-wrap: wrap; align-content: flex-start;}
+.flex-wrapend       {display:flex; flex-wrap: wrap; align-content: flex-end;}
+.flex-wrapcenter    {display:flex; flex-wrap: wrap; align-content: center;}
+.flex-wrapstretch   {display:flex; flex-wrap: wrap; align-content: stretch;}
+.flex-wrapbase      {display:flex; flex-wrap: wrap; align-content: baseline;}
+
+
+
+/*
+flex 子项设置
+*/
+/* 单个弹性子项占用空间比例 */
+.flex-1             {flex: 1;}
+.flex-2             {flex: 2;}
+.flex-3             {flex: 3;}
+.flex-4             {flex: 4;}
+.flex-5             {flex: 5;}
+.flex-6             {flex: 6;}
+.flex-auto          {flex: auto;}
+
+/* 所有弹性子项的分布方式（主轴）测试无效 */
+.fi-justifystart    {justify-self: flex-start;}
+.fi-justifycenter   {justify-self: center;}
+.fi-justifyend      {justify-self: flex-end;}
+
+/* 单个弹性子项在父容器中的（辅轴）对齐方式 */
+.fi-alignstart      {align-self: flex-start;}
+.fi-alignend        {align-self: flex-end;}
+.fi-aligncenter     {align-self: center;}
+.fi-alignstretch    {align-self: stretch;}
+.fi-alignbase       {align-self: baseline;}
+
+/* 单个弹性子项强制排序 */
+.fi-first           {order: 1;}
+.fi-second          {order: 2;}
+.fi-third           {order: 3;}
+
+/* 单个弹性子项位置控制 */
+.fi-center          {margin: auto;}
+.fi-left            {margin-right: auto;}
+.fi-hcenter         {margin-left: auto; margin-right: auto;}
+.fi-right           {margin-left: auto;}
+.fi-bottom          {margin-top: auto;}
+.fi-top             {margin-bottom: auto;}
+.fi-vcenter         {margin-top: auto; margin-bottom: auto;}
+

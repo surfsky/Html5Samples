@@ -1,43 +1,29 @@
 <!DOCTYPE html> 
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head> 
-<title>text-overflow案例在线演示 www.divcss5.com</title> 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-<style type="text/css"> 
-    *{ padding:0; margin:0} 
-    a{ text-decoration:none;color:#6699ff} 
-    ul,li{ list-style:none; text-align:left} 
-    #divcss5{
-        border:1px #ff8000 solid; padding:10px; width:50%; 
-        margin-left:10px; margin-top:10px
-    } 
-    #divcss5 li{
-        width:100%; height:24px;
-        line-height:24px; font-size:12px; 
-        color:#6699ff; 
-    } 
-    #divcss5 li a:hover{ color:#333} 
-
-    .text-clip     {overflow: hidden; white-space: normal; text-overflow: clip; }
-    .text-ellipsis {overflow: hidden; white-space: normal; text-overflow: ellipsis;}
-</style>
+    <title>text-overflow案例在线演示 www.divcss5.com</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+    <link rel="stylesheet" href="css/init.css">
+    <style type="text/css">
+        .text-left      { text-align: left; }
+        .text-right     { text-align: right; }
+        .text-center    { text-align: center; }
+        .text-justified { text-align: justify;}
+        .text-wrap      { overflow: hidden; text-wrap: wrap;}
+        .text-clip      { overflow: hidden; white-space: nowrap; text-overflow: clip; }
+        .text-ellipsis  { overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+    </style>
 </head>
-<body>
-    <ul id="divcss5">
-        <li class="text-ellipsis">
-            <a href="#">&#8226; 超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容</a>
-        </li>
-    <li class="text-clip">
-        <nobr>
-            <a href="#">&#8226; 超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容</a>
-        </nobr>
-    </li>
-    <li class="text-ellipsis">
-        <nobr>
-            <a href="#">&#8226; 超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容</a>
-        </nobr>
-    </li>
-    <li><a href="#">&#8226; 完整显示</a></li>
-</ul> 
+<body class="container">
+    <h1>Text horizontal align</h1>
+    <div class="rect text-left">This is left-aligned text.</div>
+    <div class="rect text-right">This is right-aligned text.</div>
+    <div class="rect text-center">This is center-aligned text.</div>
+    <div class="rect text-justified">This is a long paragraph of text that will be justified. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+
+    <h1>Text overflow</h1>
+    <div class="rect text-wrap">（会换行）超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容</div>
+    <div class="rect text-clip">（会截断）超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容</div>
+    <div class="rect text-ellipsis">（会省略）超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容超长内容</div>
 </body> 
 </html> 

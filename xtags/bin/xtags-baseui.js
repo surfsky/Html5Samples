@@ -18,13 +18,14 @@ export class Rect extends HTMLElement {
     //-----------------------------------------------------
     // supported attribute. Notice these names must be all small chars.
     static _attrs = [
-        'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'box', 'cursor',
-        'position', 'display', 'anchor', 'childanchor', 'top', 'bottom', 'left', 'right', 'flex',
-        'width', 'height', 'radius',  'minwidth', 'minheight',
-        'border', 'borderwidth', 'bordercolor', 'borderstyle',
-        'margin', 'padding',
-        'bgcolor', 'color', 'hovercolor', 'theme', 'background',
-        'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
+        'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'cursor',
+        'width', 'height', 'minwidth', 'minheight', 'maxwidth', 'maxheight',
+        'position', 'anchor', 'top', 'bottom', 'left', 'right',  
+        'display', 'childanchor', 'textalign', 'flex',
+        'border', 'borderwidth', 'bordercolor', 'borderstyle', 'radius',  
+        'box', 'margin', 'padding',
+        'background','bgcolor', 'hoverbgcolor', 'theme', 
+        'color', 'hovercolor', 'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
         'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
         'click', 'draggable'
     ];
@@ -412,7 +413,6 @@ export class Rect extends HTMLElement {
             case 'opacity':           this.root.style.opacity = newValue;  break;
             case 'visible':           this.setVisible(newValue); break;
             case 'overflow':          this.root.style.overflow = newValue; break;
-            case 'box':               this.root.style.boxSizing = newValue; break;
             case 'cursor':            this.root.style.cursor = newValue; break;
 
             // size
@@ -420,17 +420,22 @@ export class Rect extends HTMLElement {
             case 'height':            this.root.style.height = newValue;  break;
             case 'minwidth':          this.root.style.minWidth = newValue;  break;
             case 'minheight':         this.root.style.minHeight = newValue;  break;
+            case 'maxwidth':          this.root.style.maxWidth = newValue;  break;
+            case 'maxheight':         this.root.style.maxHeight = newValue;  break;
 
-            // position
-            case 'anchor':            this.setAnchor(newValue); break;
-            case 'childanchor':       this.setChildAnchor(newValue); break;
+            // anchor(position)
             case 'position':          this.root.style.position = newValue; break;
-            case 'display':           this.root.style.display = newValue; break;
+            case 'anchor':            this.setAnchor(newValue); break;
             case 'top':               this.root.style.top = newValue;  break;
             case 'bottom':            this.root.style.bottom = newValue;  break;
             case 'left':              this.root.style.left = newValue;  break;
             case 'right':             this.root.style.right = newValue;  break;
             case 'flex':              this.root.style.flex = newValue;  break;
+
+            // child anchor
+            case 'display':           this.root.style.display = newValue; break;
+            case 'childanchor':       this.setChildAnchor(newValue); break;
+            case 'textalign':         this.root.style.textAlign = newValue; break;
 
             // border
             case 'border':            this.root.style.border = newValue;  break;
@@ -439,20 +444,22 @@ export class Rect extends HTMLElement {
             case 'borderstyle':       this.root.style.borderStyle = newValue;  break;
             case 'radius':            this.root.style.borderRadius = newValue;  break;
 
-            // margin & padding
+            // box & margin & padding
+            case 'box':               this.root.style.boxSizing = newValue; break;
             case 'margin':            this.root.style.margin = newValue;  break;
             case 'padding':           this.root.style.padding = newValue;  break;
 
             // theme
             case 'theme':             this.setThemeCls(newValue); break;
 
-            // color
+            // background
             case 'bgcolor':           this.root.style.backgroundColor = newValue;  break;
-            case 'hovercolor':        this.setHoverBgColor(newValue); break;
+            case 'hoverbgcolor':      this.setHoverBgColor(newValue); break;
             case 'background':        this.root.style.background = newValue; break;
 
             // text
             case 'color':             this.root.style.color = newValue;  break;
+            case 'hovercolor':        this.setHoverTextColor(newValue);  break;
             case 'font':              this.root.style.font = newValue;  break;
             case 'fontsize':          this.root.style.fontSize = newValue;  break;
             case 'fontfamily':        this.root.style.fontFamily = newValue;  break;

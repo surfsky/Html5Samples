@@ -3,7 +3,7 @@
 https://www.github.com/surfsky/
 2024-09
 */
-@import url("./rem.css");
+/*@import url("./rem.css");*/
 
 /*************************************************
 预设
@@ -210,14 +210,14 @@ Grid 网格容器布局，控制子元素布局
 /* 自动网格（统统放在一行） */
 .gridRow{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
     padding: 10px;
     }
 /* 自动网格（统统放在一列） */
 .gridColumn{
     display: grid;
-    grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
     padding: 10px;
     }
@@ -244,21 +244,17 @@ Grid 网格容器布局，控制子元素布局
     }
     
       
-/*网格项（占2个网格）*/
-.gridItem2 {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    }
-/*网格项（占3个网格）*/
-.gridItem3 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    }
-/*网格项（占4个网格）*/
-.gridItem4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    }
+/*网格项（占几个网格，看图）*/
+.grid4-1000 { grid-column-start: 1; grid-column-end: 2; }
+.grid4-1100 { grid-column-start: 1; grid-column-end: 3; }
+.grid4-1110 { grid-column-start: 1; grid-column-end: 4; }
+.grid4-1111 { grid-column-start: 1; grid-column-end: 5; }
+.grid4-0100 { grid-column-start: 2; grid-column-end: 3; }
+.grid4-0110 { grid-column-start: 2; grid-column-end: 4; }
+.grid4-0111 { grid-column-start: 2; grid-column-end: 5; }
+.grid4-0010 { grid-column-start: 3; grid-column-end: 4; }
+.grid4-0011 { grid-column-start: 3; grid-column-end: 5; }
+.grid4-0001 { grid-column-start: 4; grid-column-end: 5; }
 
     
 

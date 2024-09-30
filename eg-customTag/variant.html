@@ -7,25 +7,28 @@
   <style>
     :root{
         --box-sizing: border-box;  /*采用变量*/
+        --color: orange;
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;  /*无法影响到自定义控件*/
-    }
+    /*由于自定义控件shadow dom的影响，全局的css设置无法自动影响到自定义控件，必须自己用代码传递参数*/
+    *, *::before, *::after { box-sizing: border-box; }
   </style>
   <script>
     class Rect extends HTMLElement {
       constructor() {
         super();
+        this.shadow = this.attachShadow({mode: 'open'});
+
+        // 创建一个元素
         const rect = document.createElement('div');
         rect.style.width = '200px';
         rect.style.height = '200px';
-        rect.style.backgroundColor = 'blue';
         rect.style.padding = '10px';
-        rect.style.boxSizing = 'var(--box-sizing)';  // 传递变量
-        this.shadow = this.attachShadow({mode: 'open'});
+        rect.style.backgroundColor = 'var(--color)';  // 传入页面变量
+        rect.style.boxSizing = 'var(--box-sizing)';   // 传入页面变量
+        rect.innerHTML = this.shadow.innerHTML;
+
+        // 附加到 shadow root 上
         this.shadow.appendChild(rect);
       }
     }

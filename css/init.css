@@ -1,0 +1,73 @@
+/*
+Common css setting
+https://www.github.com/surfsky/
+2024-03
+*/
+
+/*预设为边框盒式模型：尺寸包括内边距和边框，便于精准控制位置*/
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/*Full screen*/
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-size : 16px;  /*1rem*/
+}
+
+
+/***************************************************
+* 常用容器
+***************************************************/
+/*标准容器，水平居中放置，留左右内边距*/
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* 标准容器自适应阶梯式设置宽度：540-720-960-1140 */
+@media (min-width: 576px)  { .container   {max-width: 540px;}}  /*手机竖屏 （xs）*/
+@media (min-width: 768px)  { .container   {max-width: 720px;}}  /*平板电脑竖屏（s）*/
+@media (min-width: 992px)  { .container   {max-width: 960px;}}  /*桌面显示器（m）*/
+@media (min-width: 1200px) { .container   {max-width: 1140px;}} /*桌面显示器（l）*/
+@media (min-width: 1500px) { .container   {max-width: 1400px;}} /*桌面显示器（xl）*/
+@media (min-width: 1800px) { .container   {max-width: 1700px;}} /*桌面显示器（xxl）*/
+@media (min-width: 2000px) { .container   {max-width: 1900px;}} /*桌面显示器（xxxl）*/
+
+
+/*标准容器2，左右占满，留左右内边距*/
+.container-fluid {
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/*行列容器*/
+.row              {display: flex; flex-direction: row; flex-wrap: wrap;}
+.column           {display: flex; flex-direction: column;}
+.rowreverse       {display: flex; flex-direction: row-reverse; flex-wrap: wrap; }
+.columnreverse    {display: flex; flex-direction: column-reverse;}
+
+
+/***************************************************
+* 辅助
+***************************************************/
+/*矩形：宽度占满，高度100，文本白，内边距15*/
+.demo {
+    width: 100%;
+    height: 100px;
+    background-color: #007bff;
+    color: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    overflow: hidden; 
+}
+

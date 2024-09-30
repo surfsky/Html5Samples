@@ -10,8 +10,9 @@
 </head>
 <body>
     <x-row width="300px" anchor="center">
-        <x-btn click="Toast.show('white-bulb', 'hello world!')" >Toast</x-btn>
+        <x-btn click="Toast.show('hello world!')" >Toast</x-btn>
         <x-btn click="showDialog(true)">Diaog</x-btn>
+        <x-rect id="btnTooltip">Tooltip</x-rect>
     </x-row>
 
     <x-rect bgcolor="white" id="dlg" anchor="center" radius="16px" width="400px" height="600px" visible="false" z="200" shadow="true" draggable="true">
@@ -26,7 +27,10 @@
 </body>
 </html>
 
-<script>
+<script type="module">
+    import { Tooltip } from "../bin/xtags-control.js";
+    Tooltip.bind('#btnTooltip');
+
     function showDialog(b){
         var ele = document.getElementById('dlg');
         ele.setVisible(b);

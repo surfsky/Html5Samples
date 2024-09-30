@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="./css/position.css" type="stylesheet" />
+  <style>
+    .arrow-link {
+      position: relative;
+      display: inline-block;
+      padding-right: 20px;
+      text-decoration: none;
+    }
+
+    /*后面跟了一个箭头*/
+    .arrow-link::after {
+      content: " →";  
+      position: absolute;
+      right: 0;
+      color: red;
+    }
+
+    /*前面绘制一个星号*/
+    .starred-item::before {
+      content: "★";
+      color: gold;
+      margin-right: 5px;
+    }
+
+    /*绘制双重边框*/
+    .double-border-box {
+      position: relative;
+      padding: 20px;
+      border: 2px solid gray;
+    }
+    .double-border-box::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border: 2px solid blue;
+    }
+
+    /*绘制双重边框（虚线）*/
+    .dashed-border-box {
+      position: relative;
+      padding: 20px;
+      border: 1px solid gray;
+    }
+    .dashed-border-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px dashed blue;
+    }
+
+    /*补充美元符号*/
+    .price::before {
+      content: "$";
+    }
+  </style>
+</head>
+
+<body class="cmm">
+  <a href="#" class="arrow-link">Click me</a><br/>
+  <div class="starred-item">Important item</div>
+  <div class="price">99.99</div>
+  <div class="double-border-box">This has a double border.</div>
+  <div class="dashed-border-box">This has a dashed border overlay.</div>
+</body>
+
+</html>

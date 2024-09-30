@@ -265,9 +265,9 @@ export class Toast{
     /**
      * Show toast
      * @param {string} icon iconname without extension
-     * @param {string} info information 
+     * @param {string} text information 
      */
-    static async show(icon, info){
+    static async show(text, icon='white-bulb'){
         var toast = new Rect()
             .setSize('400px', '26px')
             .setRadius('6px')
@@ -275,7 +275,7 @@ export class Toast{
             //.setShadow(true)
             .setAnchor(Anchor.T)
             .setChildAnchor(Anchor.CT)
-            .setInnerHTML(`<x-row height="100%"><img src='${XTags.getIconUrl(icon)}' width='24px'/><div>${info}<div></x-row>`)
+            .setInnerHTML(`<x-row height="100%"><img src='${XTags.getIconUrl(icon)}' width='24px'/><div>${text}<div></x-row>`)
             ;
         toast.style.border = '0';
         toast.style.top = '-100px';
@@ -289,3 +289,51 @@ export class Toast{
     }
 }
 
+/************************************************************
+ * Tooltip
+ * @example
+ *     Tooltip.show(ele, 'message info');
+ *     Tooltip.hide();
+ ***********************************************************/
+export class Tooltip {
+    /** Bind all matched elements to show tooltip with element's textcontent 
+     * @param {string} selector Element selector 
+    */
+    static bind(selector){
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(ele => {
+            var o = (ele.root == null) ? ele : ele.root;
+            o.addEventListener('mouseover', () => Tooltip.show(ele));
+            o.addEventListener('mouseout',  () => Tooltip.hide());
+        });
+    }
+
+    /**
+     * Show tooltip under element. If text is null, show element's text content.
+     * @param {Tag} element 
+     * @param {string} text 
+     */
+    static show(element, text="") {
+        if (text == "") text = element.textContent;
+        const tooltip = document.createElement('div');
+        tooltip.id = 'tooltip';
+        tooltip.textContent = text;
+        tooltip.style.display = 'block';
+        tooltip.style.position = "absolute";
+        tooltip.style.backgroundColor = "#f9f9f9";
+        tooltip.style.border= "1px solid #ccc";
+        tooltip.style.borderRadius = '4px';
+        tooltip.style.padding= "5px";
+        tooltip.style.zIndex= "999";
+        tooltip.style.left = element.offsetLeft + 'px';
+        tooltip.style.top  = element.offsetTop + element.offsetHeight + 'px';
+        document.body.appendChild(tooltip);
+    }
+
+    /** Hide tooltip */
+    static hide() {
+        const tooltip = document.getElementById('tooltip');
+        if (tooltip != null)
+            document.body.removeChild(tooltip);
+    }
+}

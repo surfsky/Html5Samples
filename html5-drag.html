@@ -27,28 +27,13 @@
                 div3 = document.getElementById("div3");
                 msg = document.getElementById("msg");
                 
-                div2.ondragstart=function(){
-                    msg.innerHTML+="div2开始拖动了<br/>";
-                }
-                div2.ondrag=function(){
-                    msg.innerHTML+="拖动中<br/>";
-                }
-                div2.ondragend=function(){
-                    msg.innerHTML+="拖动结束<br/>";
-                }
-                
-                div1.ondragover = function(e) {
-                    e.preventDefault();
-                }
-                div1.ondrop = function(e) {
-                    div1.appendChild(div2);
-                }
-                div3.ondragover = function(e) {
-                    e.preventDefault();
-                }
-                div3.ondrop = function(e) {
-                    div3.appendChild(div2);
-                }
+                div2.ondragstart = function(){ msg.innerHTML+="div2开始拖动了<br/>"; }
+                div2.ondrag      = function(){ msg.innerHTML+="拖动中<br/>"; }
+                div2.ondragend   = function(){ msg.innerHTML+="拖动结束<br/>"; }
+                div1.ondragover  = function(e) {  e.preventDefault(); }
+                div1.ondrop      = function(e) { div1.appendChild(div2); }
+                div3.ondragover  = function(e) { e.preventDefault(); }
+                div3.ondrop      = function(e) { div3.appendChild(div2); }
                 
                 $("#div1").data("name","电池");
                 alert($("#div1").data("name"));

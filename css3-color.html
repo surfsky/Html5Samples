@@ -1,17 +1,78 @@
 <html>
 <head>
-    <link href="css/color.css" rel="stylesheet" />
-    <link href="css/position.css" rel="stylesheet" />
+    <link href="css/all.css" rel="stylesheet" />
+    <style>
+    :root{ --base-color : rgba(128, 0, 128, 1); }
+
+    /*经测试，不支持lighter, darker方法*/
+    /*
+    .bg-lighter { background-color: orange lighter(20%); }
+    .bg-darker  { background-color: orange darker(20%); }
+    */
+    .bg-base    { background-color: var(--base-color); }
+    .bg-lighter { background-color: var(--base-color); filter: brightness(140%);}
+    .bg-darker  { background-color: var(--base-color); filter: brightness(80%);}
+
+
+   .lighter-color {
+      position: relative;
+      padding: 10px;
+      color: white; /* 设置文字颜色 */
+    }
+   .darker-color {
+      position: relative;
+      padding: 10px;
+      color: white; /* 设置文字颜色 */
+    }
+
+    /*
+    ::before是一个伪元素选择器，它用于在被选中元素的内容前面插入生成的内容。
+    使用 ::before 可以在不修改 HTML 结构的情况下，为元素添加额外的装饰或效果。可以通过 content 属性来指定要插入的内容，这个内容可以是文本、图像或其他 CSS 生成的内容。
+    */
+   .lighter-color::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--base-color);
+      filter: brightness(140%);
+      z-index: -1;
+    }
+
+  .darker-color::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--base-color);
+      filter: brightness(60%);
+      z-index: -1;
+    }
+    </style>
 </head>
 
 <body>
   <main class="p4 cmm cp2">
+    <h1>使用样式色彩</h1>
     <div class="white rm bg-primary">Hello, world!</div>
     <div class="white rm bg-secondary">Hello, world!</div>
     <div class="white rm bg-success">Hello, world!</div>
     <div class="white rm bg-warning">Hello, world!</div>
     <div class="white rm bg-dark">Hello, world!</div>
     <div class="white rm bg-light">Hello, world!</div>
+
+    <h1>使用filter变色</h1>
+    <div class="white rm bg-lighter">lighter。整个元素都变亮了。</div>
+    <div class="white rm bg-base">base</div>
+    <div class="white rm bg-darker">darker。整个元素都变暗了。</div>
+
+    <h1>使用::before变色</h1>
+    <div class="lighter-color">Lighter Color with normal text. 文字色彩不变。</div>
+    <div class="darker-color">Darker Color with normal text. 文字色彩不变。</div>
   </main>
 </body>
 </html>

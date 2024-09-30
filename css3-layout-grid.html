@@ -1,41 +1,110 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"> 
-    <style>
-    .container{
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
-        grid-gap: 12px;
-      }
+  <link rel="stylesheet" href="css/all.css">
+  <style>
 
-    .grid > div {
-        height: 3rem;
-        border-radius: 0.5rem;
-        color: white;
-        background: green;
-        text-align: center;
-        padding-top: 1.2rem;
-      }
-    </style>
+/*网格子项*/
+.bg-primary > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 5px 0 5px 0;
+  font-size: 20px;
+  height: 40px;
+  overflow: hidden;
+}
+
+/*网格容器(左右固定，中间自动拉伸）*/
+.gridSitebars {
+  display: grid;
+  grid-template-columns: 100px minmax(200px, 1fr) 100px;
+  gap: 10px;  /*子项间距*/
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+
+/*表单容器（自适应1-4列）*/
+.gridFormAuto {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+    @media (min-width: 400px)  {.gridFormAuto { grid-template-columns: auto; }}
+    @media (min-width: 800px)  {.gridFormAuto { grid-template-columns: 100px auto; }}
+    @media (min-width: 1000px) {.gridFormAuto { grid-template-columns: 100px auto 100px auto; }}
+    .gridFormAuto > * {text-align: left; height: 40px;}
+
+
+</style>
 </head>
 
-<body>
-    <main class="container">
-      <h1>Grid</h1>
-      <div class="grid">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        <div>6</div>
-      </div>
-  </main>
-  </body>
+<body class="container">
+  <h1>GridRow 网格布局： 自动等宽分布为一行, 列宽最小为100px, 若不足自动换行</h1>
+  <div class="gridRow bg-primary">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+  </div>
+
+  <h1>固定3列等宽网格</h1>
+  <div class="grid3 bg-primary">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>  
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>  
+    <div>9</div>
+    <div>10</div>
+    <div>11</div>
+  </div>
+
+  <h1>固定4列等宽网格（网格子元素可设置位置和宽度）</h1>
+  <div class="grid4 bg-primary">
+    <div>1</div>
+    <div class="grid4-0110">0110</div>
+    <div>3</div>  
+    <div class="grid4-1100">1100</div>
+    <div class="grid4-0011">0011</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>  
+    <div>9</div>
+    <div>10</div>
+    <div class="grid4-0111">0111</div>
+  </div>
+
+  <h1>GridSitebars: 左右各有一个Sidebar，中间部分可拉伸</h1>
+  <div class="gridSitebars bg-primary">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>  
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>  
+    <div>9</div>
+    <div>10</div>
+    <div>11</div>
+  </div>
+
+
+  <h1>GridForm: 响应式表单布局</h1>
+  <div class="gridFormAuto bg-primary">
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+    <div>Name</div> <input type="text"></input>
+  </div>
+
+  <p></p>
+</body>
 </html>
-
-

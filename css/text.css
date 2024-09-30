@@ -1,0 +1,14 @@
+/*
+Common text setting
+https://www.github.com/surfsky/
+2024-03
+*/
+
+.text-left      { text-align: left;   }  /*文字靠左对齐*/
+.text-right     { text-align: right;  }  /*文字靠右对齐*/
+.text-center    { text-align: center; }  /*文字水平居中对齐*/
+.text-justified { text-align: justify;}  /*文字两端对齐*/
+.text-wrap      { overflow: hidden; text-wrap: wrap;}                               /*超宽换行*/
+.text-clip      { overflow: hidden; white-space: nowrap; text-overflow: clip; }     /*超宽截断*/
+.text-ellipsis  { overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}  /*超宽显示省略号*/
+
