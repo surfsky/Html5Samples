@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <button onclick="Mask.show(2)">打开遮罩层</button>
+
+  <script>
+    class Mask {
+      static show(z) {
+          var mask = document.querySelector('.mask');
+          if (mask == null) {
+            mask = document.createElement('div');
+            mask.classList.add('mask');
+            mask.style.position = 'fixed';
+            mask.style.left = '0';
+            mask.style.top = '0';
+            mask.style.width = '100%';
+            mask.style.height = '100%';
+            mask.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+            mask.style.zIndex = z;
+            document.body.appendChild(mask);
+          }
+          mask.style.display = 'block';
+      }
+
+      static hide(){
+        var mask = document.querySelector('.mask');
+        if (mask != null)
+          mask.style.display = 'none';
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>

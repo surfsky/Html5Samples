@@ -1,7 +1,7 @@
 /*
-用 Flex 实现的简易 12 列网格系统，参考bootstrap 4
+用 Flex 实现的 12 列网格系统，参考bootstrap 4，2019-07
 https://www.github.com/surfsky/
-2019-07
+过于复杂，建议用 grid12.css 用 grid 布局实现（2024-10）
 */
 
 
@@ -27,10 +27,6 @@ body
 .columnreverse    {display: flex; flex-direction: column-reverse;}
 
 
-.flex             {display: flex;}
-.block            {display: block;}
-.inline           {display: inline-block;}
-.clearfix::after  {display: block; clear: both; content: "";}
 
 
 
@@ -73,16 +69,6 @@ body
     padding-right: 15px;
     padding-left: 15px;
 }
-
-/* 预设设备宽度 */
-.w-xs            {width: 576px;}   /*手机竖屏*/
-.w-s             {width: 768px;}   /*平板竖屏*/
-.w-m             {width: 992px;}   /*电脑*/
-.w-l             {width: 1200px;}  /*电脑宽*/
-.w-xl            {width: 1500px;}  /*电脑超宽*/
-.w-xxl           {width: 1800px;}  /*电脑超超宽*/
-.w-xxxl          {width: 2000px;}  /*电脑超超超宽*/
-
 
 /* 自适应布局（使用媒体查询语法） */
 /* container 会自适应设置阶梯式宽度：540-720-960-1140 */

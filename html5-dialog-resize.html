@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* 遮罩层样式 */
+   .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+
+    /* 弹出窗口样式 */
+   .popup {
+      position: absolute;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      display: none;
+      overflow: auto;
+      box-sizing: border-box;  /*采用边框模型精准匹配*/
+      width: 600px;
+      height: 400px;
+    }
+
+   .popup-content{
+      text-align: center;
+      user-select: none;  /*禁止选择文字*/
+   }
+
+    /* 关闭按钮样式 */
+   .btn-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      user-select: none;  /*禁止选择文字*/
+    }
+
+    /* 调整大小的边框样式 */
+   .resizer {
+      position: absolute;
+      cursor: pointer;
+      /*border: 1px solid red;*/
+    }
+
+   .resizer-top {
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      cursor: ns-resize;
+    }
+
+   .resizer-bottom {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      cursor: ns-resize;
+    }
+
+   .resizer-left {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 10px;
+      cursor: ew-resize;
+    }
+
+   .resizer-right {
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      cursor: ew-resize;
+    }
+
+   .resizer-topleft {
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      cursor: nwse-resize;
+    }
+
+   .resizer-topright {
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      cursor: nesw-resize;
+    }
+
+   .resizer-bottomleft {
+      bottom: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      cursor: nesw-resize;
+    }
+
+   .resizer-bottomright {
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      cursor: nwse-resize;
+    }
+  </style>
+</head>
+
+<body>
+  <button onclick="showPopup()">打开弹出窗口</button>
+
+  <div class="overlay"></div>
+  <div class="popup">
+    <span class="btn-close">×</span>
+    <p class="popup-content">This is a popup window.</p>
+    <div class="resizer resizer-top"></div>
+    <div class="resizer resizer-bottom"></div>
+    <div class="resizer resizer-left"></div>
+    <div class="resizer resizer-right"></div>
+    <div class="resizer resizer-topleft"></div>
+    <div class="resizer resizer-topright"></div>
+    <div class="resizer resizer-bottomleft"></div>
+    <div class="resizer resizer-bottomright"></div>
+  </div>
+
+  <script>
+    function showPopup() {
+      // 显示遮罩层和弹出窗口
+      document.querySelector('.overlay').style.display = 'block';
+      document.querySelector('.popup').style.display = 'block';
+
+      // 计算弹出窗口居中位置
+      const popup = document.querySelector('.popup');
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const popupWidth = popup.offsetWidth;
+      const popupHeight = popup.offsetHeight;
+      popup.style.left = (viewportWidth - popupWidth) / 2 + 'px';
+      popup.style.top = (viewportHeight - popupHeight) / 2 + 'px';
+    }
+
+    document.querySelector('.btn-close').addEventListener('click', function () {
+      document.querySelector('.overlay').style.display = 'none';
+      document.querySelector('.popup').style.display = 'none';
+    });
+
+    let popup = document.querySelector('.popup');
+    let rawX, rawY;  // 鼠标初始位置
+    let rawTop, rawLeft, rawWidth, rawHeight;  // 窗口初始位置和大小
+    let handler = '';  // 当前操作
+
+
+    popup.addEventListener('mousedown', function (e) {
+      // 记录鼠标初始位置，窗体初始坐标和尺寸
+      // offsetWidth是一个元素的属性，它表示元素的布局宽度，包括元素内容的宽度、内边距（padding）和边框（border）的宽度
+      // offsetXXX 属性是始终有值的。
+      rawX = e.clientX;
+      rawY = e.clientY;
+      rawTop    = popup.offsetTop;
+      rawLeft   = popup.offsetLeft;
+      rawWidth  = popup.offsetWidth;
+      rawHeight = popup.offsetHeight;
+
+      //
+      if      (e.target.classList.contains('resizer-topleft'))       { handler='TL'; document.documentElement.style.cursor = 'nwse-resize';  }
+      else if (e.target.classList.contains('resizer-topright'))      { handler='TR'; document.documentElement.style.cursor = 'nesw-resize';  }
+      else if (e.target.classList.contains('resizer-bottomleft'))    { handler='BL'; document.documentElement.style.cursor = 'nesw-resize';  }
+      else if (e.target.classList.contains('resizer-bottomright'))   { handler='BR'; document.documentElement.style.cursor = 'nwse-resize';  }
+      else if (e.target.classList.contains('resizer-top'))           { handler='T'; document.documentElement.style.cursor = 'ns-resize';    }
+      else if (e.target.classList.contains('resizer-bottom'))        { handler='B'; document.documentElement.style.cursor = 'ns-resize';    }
+      else if (e.target.classList.contains('resizer-left'))          { handler='L'; document.documentElement.style.cursor = 'ew-resize';    }
+      else if (e.target.classList.contains('resizer-right'))         { handler='R'; document.documentElement.style.cursor = 'ew-resize';    }
+      else {
+        handler = 'DRAG';
+        document.documentElement.style.cursor = 'pointer';
+      }
+
+      //
+      console.log(`DOWN : (${rawLeft}, ${rawTop}, ${rawWidth}, ${rawHeight}), (${rawX}, ${rawY}), ${handler}`);
+    });
+
+
+    // 鼠标移动是拖动或变更窗体大小
+    document.addEventListener('mousemove', function (e) {
+      if (handler == '') return;
+
+      let dx = e.clientX - rawX;
+      let dy = e.clientY - rawY;
+      switch (handler){
+        case 'DRAG':
+          popup.style.left = rawLeft + dx + 'px';
+          popup.style.top  = rawTop  + dy + 'px';
+          break;
+        case 'TL':
+          popup.style.left   = rawLeft + dx + 'px';
+          popup.style.top    = rawTop + dy + 'px';
+          popup.style.width  = rawWidth - dx + 'px';
+          popup.style.height = rawHeight - dy + 'px';
+          break;
+        case 'T':
+          popup.style.top    = rawTop + dy + 'px';
+          popup.style.height = rawHeight - dy + 'px';
+          break;
+        case 'TR':
+          popup.style.top    = rawTop + dy + 'px';
+          popup.style.width  = rawWidth + dx + 'px';
+          popup.style.height = rawHeight - dy + 'px';
+          break;
+        case 'L':
+          popup.style.left   = rawLeft + dx + 'px';
+          popup.style.width  = rawWidth - dx + 'px';
+          break;
+        case 'R':
+          popup.style.width  = rawWidth + dx + 'px';
+          //popup.offsetWidth  = rawWidth + dx + 'px';   // fail
+          break;
+        case 'BL':
+          popup.style.left   = rawLeft + dx + 'px';
+          popup.style.width  = rawWidth - dx + 'px';
+          popup.style.height = rawHeight + dy + 'px';
+          break;
+        case 'B':
+          popup.style.height = rawHeight + dy + 'px';
+          break;
+        case 'BR':
+          popup.style.width  = rawWidth + dx + 'px';
+          popup.style.height = rawHeight + dy + 'px';
+          break;
+      }
+      //console.trace('(', handler, ')', 'dx:', dx, 'dy:', dy, 'left:', popup.offsetLeft, 'top:', popup.offsetTop, 'x:', e.clientX, 'y:', e.clientY);
+      console.log(`${handler} : (${dx}, ${dy}), (${popup.offsetLeft}, ${popup.offsetTop}, ${popup.offsetWidth}, ${popup.offsetHeight}), (${e.clientX}, ${e.clientY})`);
+    });
+
+
+    // mouse up to clear
+    document.addEventListener('mouseup', function () {
+      handler = '';
+      document.documentElement.style.cursor = 'auto';
+    });
+  </script>
+</body>
+
+</html>

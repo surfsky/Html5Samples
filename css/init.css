@@ -18,6 +18,17 @@ html, body {
     font-size : 16px;  /*1rem*/
 }
 
+/* 预设设备宽度 */
+:root{
+    --w-xs   : 576px;   /*手机竖屏*/
+    --w-s    : 768px;   /*平板竖屏*/
+    --w-m    : 992px;   /*电脑*/
+    --w-l    : 1200px;  /*电脑宽*/
+    --w-xl   : 1500px;  /*电脑超宽*/
+    --w-xxl  : 1800px;  /*电脑超超宽*/
+    --w-xxxl : 2000px;  /*电脑超超超宽*/
+}
+
 
 /***************************************************
 * 常用容器
@@ -29,16 +40,15 @@ html, body {
     margin-right: auto;
     padding-left: 15px;
     padding-right: 15px;
-}
-
-/* 标准容器自适应阶梯式设置宽度：540-720-960-1140 */
-@media (min-width: 576px)  { .container   {max-width: 540px;}}  /*手机竖屏 （xs）*/
-@media (min-width: 768px)  { .container   {max-width: 720px;}}  /*平板电脑竖屏（s）*/
-@media (min-width: 992px)  { .container   {max-width: 960px;}}  /*桌面显示器（m）*/
-@media (min-width: 1200px) { .container   {max-width: 1140px;}} /*桌面显示器（l）*/
-@media (min-width: 1500px) { .container   {max-width: 1400px;}} /*桌面显示器（xl）*/
-@media (min-width: 1800px) { .container   {max-width: 1700px;}} /*桌面显示器（xxl）*/
-@media (min-width: 2000px) { .container   {max-width: 1900px;}} /*桌面显示器（xxxl）*/
+    }
+    /* 标准容器自适应阶梯式设置宽度：540-720-960-1140 。经测试 media 查询语句不支持 root 变量*/
+    @media (min-width: 576px)  { .container   {max-width: 540px;}}  /*手机竖屏 （xs）*/
+    @media (min-width: 768px)  { .container   {max-width: 720px;}}  /*平板电脑竖屏（s）*/
+    @media (min-width: 992px)  { .container   {max-width: 960px;}}  /*桌面显示器（m）*/
+    @media (min-width: 1200px) { .container   {max-width: 1140px;}} /*桌面显示器（l）*/
+    @media (min-width: 1500px) { .container   {max-width: 1400px;}} /*桌面显示器（xl）*/
+    @media (min-width: 1800px) { .container   {max-width: 1700px;}} /*桌面显示器（xxl）*/
+    @media (min-width: 2000px) { .container   {max-width: 1900px;}} /*桌面显示器（xxxl）*/
 
 
 /*标准容器2，左右占满，留左右内边距*/
@@ -55,6 +65,10 @@ html, body {
 .column           {display: flex; flex-direction: column;}
 .rowreverse       {display: flex; flex-direction: row-reverse; flex-wrap: wrap; }
 .columnreverse    {display: flex; flex-direction: column-reverse;}
+.flex             {display: flex;}
+.block            {display: block;}
+.inline           {display: inline-block;}
+.clearfix::after  {display: block; clear: both; content: "";}
 
 
 /***************************************************

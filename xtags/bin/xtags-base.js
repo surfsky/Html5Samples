@@ -114,11 +114,90 @@ export class XTags {
      * @param {number} ms
      * @example await delay(20);
      */
-    static delay(ms) {
+    static sleep(ms) {
       return new Promise((resolve) => {
           setTimeout(resolve, ms);
       });
     }      
+
+
+    /** Get element by class or id */
+    static ele(selector){
+        return document.querySelector(selector);
+    }
+
+    /** Get all elements by class or id */
+    static eles(selector){
+       return document.querySelectorAll(selector);
+    }
+
+    /** Get view width */
+    static get vw() { return  window.innerWidth || document.documentElement.clientWidth;}
+
+    /** Get view height */
+    static get vh() { return window.innerHeight || document.documentElement.clientHeight;}
+
+    /** Center element in window */
+    static centerlize(selector){
+      const popup = document.querySelector(selector);
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const popupWidth = popup.offsetWidth;
+      const popupHeight = popup.offsetHeight;
+      popup.style.transform = '';
+      popup.style.left = (viewportWidth - popupWidth) / 2 + 'px';
+      popup.style.top = (viewportHeight - popupHeight) / 2 + 'px';
+      popup.style.display = 'block';
+    }
+
+    /**
+     * Let element to screen center
+     * @param {string} elementSelector 
+     * @param {string} width  element width, suppoort px, em , rem
+     * @param {string} height element height, suppoort px, em , rem
+     * @returns 
+     */
+    static centerElement(elementSelector, width, height) {
+      const element = document.querySelector(elementSelector);
+      if (!element) return;
+
+      // 获取视口宽度和高度
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      let parsedWidth, parsedHeight;
+
+      // 解析宽度和高度值
+      if (width.endsWith('px')) {
+        parsedWidth = parseInt(width, 10);
+      } else if (width.endsWith('rem')) {
+        const rootFontSize = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
+        parsedWidth = parseInt(width, 10) * rootFontSize;
+      } else if (width.endsWith('em')) {
+        const parentFontSize = parseInt(getComputedStyle(element.parentNode).fontSize, 10);
+        parsedWidth = parseInt(width, 10) * parentFontSize;
+      } else {
+        console.error('Unsupported width unit');
+        return;
+      }
+
+      if (height.endsWith('px')) {
+        parsedHeight = parseInt(height, 10);
+      } else if (height.endsWith('rem')) {
+        const rootFontSize = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
+        parsedHeight = parseInt(height, 10) * rootFontSize;
+      } else if (height.endsWith('em')) {
+        const parentFontSize = parseInt(getComputedStyle(element.parentNode).fontSize, 10);
+        parsedHeight = parseInt(height, 10) * parentFontSize;
+      } else {
+        console.error('Unsupported height unit');
+        return;
+      }
+
+      // 计算并设置元素的位置
+      element.style.top = ((viewportHeight - parsedHeight) / 2) + 'px';
+      element.style.left = ((viewportWidth - parsedWidth) / 2) + 'px';
+    }
 
     //-----------------------------------------
     // Theme

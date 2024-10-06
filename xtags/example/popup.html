@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xtags rect</title>
+    <!-- Use xtags.js. Notice here must attach 'defer' attribute -->
+    <script src="../bin/xtags.js" type="module" defer></script>
+</head>
+<body>
+    <x-row width="500px" anchor="center">
+        <x-btn click="Toast.show('hello world!')" >Toast</x-btn>
+        <x-btn click="showDialog()">Diaog</x-btn>
+        <x-btn click="MessageBox.show('This is message')">MessageBox</x-btn>
+        <x-rect id="btnTooltip" height="24px">Tooltip</x-rect>
+        <x-btn click="Mask.show(100)" >Mask</x-btn>
+    </x-row>
+
+    <x-dialog id="dlg">
+        <h1>Title</h1>
+        <p>This is body</p>
+        <x-btn click="document.querySelector('#dlg').close()" anchor="bottom" bottom="16px">Close</x-btn>
+    </x-dialog>
+</body>
+</html>
+
+<script type="module">
+    import { Tooltip } from "../bin/xtags-control.js";
+    Tooltip.bind('#btnTooltip');
+</script>
+<script>
+    // show dialog
+    function showDialog() {
+      //const dlg = document.createElement('x-dialog');
+      //dlg.content = '<h1>Title</h1><p>hello world!</p>';
+      //document.body.appendChild(dlg);
+      var dlg = document.querySelector('#dlg');
+      dlg.show();
+    }
+</script>

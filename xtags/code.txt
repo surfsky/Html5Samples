@@ -245,3 +245,149 @@ customElements.define("x-link", Link);
     <div>Name</div> <input type="text"></input>
     <div>Name</div> <input type="text"></input>
   </div>
+
+      
+/*Grid item 网格项（占几个网格，看图）*/
+.gi-1000 { grid-column-start: 1; grid-column-end: 2; }
+.gi-1100 { grid-column-start: 1; grid-column-end: 3; }
+.gi-1110 { grid-column-start: 1; grid-column-end: 4; }
+.gi-1111 { grid-column-start: 1; grid-column-end: 5; }
+.gi-0100 { grid-column-start: 2; grid-column-end: 3; }
+.gi-0110 { grid-column-start: 2; grid-column-end: 4; }
+.gi-0111 { grid-column-start: 2; grid-column-end: 5; }
+.gi-0010 { grid-column-start: 3; grid-column-end: 4; }
+.gi-0011 { grid-column-start: 3; grid-column-end: 5; }
+.gi-0001 { grid-column-start: 4; grid-column-end: 5; }
+
+
+
+export class Mask {
+    /**
+     * Show transparent gray mask
+     * @param {number} z zIndex value
+     */
+    static show(z=2) {
+        var mask = document.querySelector('.mask');
+        if (mask == null) {
+          mask = document.createElement('div');
+          mask.classList.add('mask');
+          mask.style.position = 'fixed';
+          mask.style.left = '0';
+          mask.style.top = '0';
+          mask.style.width = '100%';
+          mask.style.height = '100%';
+          mask.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+          mask.style.zIndex = z;
+          document.body.appendChild(mask);
+        }
+        mask.style.display = 'block';
+    }
+
+    /**Hide mask */
+    static hide(){
+        var mask = document.querySelector('.mask');
+        if (mask != null)
+            mask.style.display = 'none';
+    }
+}
+
+    
+    <x-rect bgcolor="white" id="dlg" anchor="center" radius="16px" width="400px" height="600px" visible="false" z="200" shadow="true" draggable="true">
+        <svg id="close-icon" width="24" height="24" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="gray" stroke-width="2" fill="none" />
+            <line x1="8" y1="8" x2="16" y2="16" stroke="gray" stroke-width="2" />
+            <line x1="16" y1="8" x2="8" y2="16" stroke="gray" stroke-width="2" />
+        </svg>
+        This is dialog
+        <x-btn click="showDialog(false)" anchor="bottom" bottom="16px">Close</x-btn>
+    </x-rect>
+    function showDialog(b){
+        var ele = document.getElementById('dlg');
+        ele.setVisible(b);
+        if (b){
+            ele.root.style.top = '400px';
+            //ele.root.style.left = '400px';
+        }
+        else{
+            ele.root.style.top = '-300px';
+            //ele.root.style.left = '100px';
+        }
+    }
+
+
+/************************************************************
+ * MessageBox
+ * @example
+ *     MessageBox.show('info', 'message info');
+ ***********************************************************/
+export class MessageBox {
+    /**
+     * Show toast
+     * @param {string} icon iconname without extension
+     * @param {string} text information 
+     */
+    static async show(text, icon = 'white-bulb') {
+        /*
+        <x-rect id='dlg' bgcolor="white" anchor="center" radius="16px" width="400px" height="600px" visible="false" z="200" shadow="true" draggable="true">
+            {icon}<br/>
+            {Text}
+            <x-btn click="showDialog(false)" anchor="bottom" bottom="16px">Close</x-btn>
+        </x-rect>
+        function showDialog(b){
+            var ele = document.getElementById('dlg');
+            ele.setVisible(b);
+            ele.root.style.top = (b) ? '400px'  : '-300px';
+        }
+        */
+        var width = '400px';
+        var height = '300px';
+        var dlg = new Rect()
+            .setSize(width, height)
+            .setRadius('16px')
+            .setColors(XTags.theme.success, XTags.theme.light)
+            .setShadow(true)
+            .setChildAnchor(Anchor.CT)
+            .setInnerHTML(`<x-row height="100%"><img src='${XTags.getIconUrl(icon)}' width='24px'/><div>${text}<div></x-row>`)
+            .setDraggable(true)
+            ;
+        var popup = dlg.root;
+        popup.style.transform = '';
+        popup.id = 'MessageBox';
+        popup.style.border = '0';
+        popup.style.position = 'fixed';
+        popup.style.zIndex = '100';
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const popupWidth = popup.offsetWidth;
+        const popupHeight = popup.offsetHeight;
+        popup.style.left = (viewportWidth - popupWidth) / 2 + 'px';
+        popup.style.top = (viewportHeight - popupHeight) / 2 + 'px';
+        popup.style.display = 'block';
+        document.body.appendChild(dlg);
+
+        //
+        var img = new Image();
+        img.setAttribute('icon', icon);
+        img.setAttribute('width', '100px');
+        img.setAttribute('height', '100px');
+        dlg.appendChild(img);
+
+        //
+        var txt = new Text(text);
+        dlg.appendChild(txt);
+
+        // 
+        var btn = new Button();
+        btn.setAnchor('bottom');
+        btn.setThemeCls('primary');
+        btn.setAttribute('click', 'dlg.setVisible(false);document.body.removeChild(dlg);');
+        dlg.appendChild(btn);
+
+        //
+        //await XTags.sleep(200);
+        //dlg.setAttribute('position', 'absolute');
+        //dlg.setAttribute("top", top);
+        //dlg.setAttribute("left", left);
+    }
+}
+

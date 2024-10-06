@@ -174,16 +174,16 @@ export class Rect extends HTMLElement {
     setAnchor(anchor){
         var s = this.root.style;
         switch (anchor){
-            case Anchor.TL  : s.position='fixed'; s.top='0px';    s.left='0px';  break;
-            case Anchor.T   : s.position='fixed'; s.top='0px';    s.left='50%';  s.transform='translateX(-50%)';break;
-            case Anchor.TR  : s.position='fixed'; s.top='0px';    s.right='0px'; break;
-            case Anchor.BL  : s.position='fixed'; s.bottom='0px'; s.left='0px';  break;
-            case Anchor.B   : s.position='fixed'; s.bottom='0px'; s.left='50%';  s.transform='translateX(-50%)'; break;
-            case Anchor.BR  : s.position='fixed'; s.bottom='0px'; s.right='0px'; break;
-            case Anchor.L   : s.position='fixed'; s.top='50%';    s.left='0px';  s.transform='translateY(-50%)';           break;
-            case Anchor.CT  : s.position='fixed'; s.top='50%';    s.left='50%';  s.transform='translate3D(-50%, -50%, 0)'; break;
-            case Anchor.R   : s.position='fixed'; s.top='50%';    s.right='0px'; s.transform='translateY(-50%)';           break;
-            case Anchor.F   : s.position='fixed'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
+            case Anchor.TL  : s.position='absolute'; s.top='0px';    s.left='0px';  break;
+            case Anchor.T   : s.position='absolute'; s.top='0px';    s.left='50%';  s.transform='translateX(-50%)';break;
+            case Anchor.TR  : s.position='absolute'; s.top='0px';    s.right='0px'; break;
+            case Anchor.BL  : s.position='absolute'; s.bottom='0px'; s.left='0px';  break;
+            case Anchor.B   : s.position='absolute'; s.bottom='0px'; s.left='50%';  s.transform='translateX(-50%)'; break;
+            case Anchor.BR  : s.position='absolute'; s.bottom='0px'; s.right='0px'; break;
+            case Anchor.L   : s.position='absolute'; s.top='50%';    s.left='0px';  s.transform='translateY(-50%)';           break;
+            case Anchor.CT  : s.position='absolute'; s.top='50%';    s.left='50%';  s.transform='translate3D(-50%, -50%, 0)'; break;
+            case Anchor.R   : s.position='absolute'; s.top='50%';    s.right='0px'; s.transform='translateY(-50%)';           break;
+            case Anchor.F   : s.position='absolute'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
             //case Anchor.F   : s.position='absolute'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
         }
         return this;
@@ -384,6 +384,17 @@ export class Rect extends HTMLElement {
         return this;
     }
 
+    /**
+     * Set draggable
+     * @param {boolean} b 
+     */
+    setDraggable(b){
+        this.root.draggable = b;
+        if (b){
+            // TODO：根据当前位置拖动div位置
+        }
+        return this;
+    }
 
     //-----------------------------------------------------
     // Event

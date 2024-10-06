@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+  <button onclick="showDialog()">打开弹出窗口</button>
+  <x-dialog id="dlg">
+    <h1>Title</h1>
+    <p>This is body</p>
+  </x-dialog>
+
+  <script>
+    /**Transparent gray full screen mask*/
+    class Mask {
+      static show() {
+        if (this.overlay == null) {
+          this.overlay = document.createElement('div');
+          this.overlay.style.position = 'fixed';
+          this.overlay.style.top = 0;
+          this.overlay.style.left = 0;
+          this.overlay.style.width = '100%';
+          this.overlay.style.height = '100%';
+          this.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+          this.overlay.style.display = 'none';
+          this.overlay.style.transition = 'all 0.5s';
+          this.overlay.style.zIndex = 99;
+          document.body.appendChild(this.overlay);
+        }
+        this.overlay.style.display = 'block';
+      }
+
+      static hide() {
+        if (this.overlay != null) {
+          this.overlay.style.display = 'none';
+          document.body.removeChild(this.overlay);
+          this.overlay = null;
+        }
+      }
+    }
+
+    /**Dialog with mask*/
+    class XDialog extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        // 内联样式
+        const style = document.createElement('style');
+        style.textContent = `
+          /* 弹出窗口样式 */
+        .popup {
+            position: absolute;
+            background-color: white;
+            padding: 40px 20px 20px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+            display: none;
+            overflow: auto;
+            box-sizing: border-box;
+            width: 500px;
+            height: 400px;
+            z-index: 999;
+            transition = 'all 0.5s';
+          }
+        .popup-content {
+            text-align: center;
+            user-select: none;
+          }
+          /* 关闭按钮样式 */
+        .btn-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            user-select: none;
+          }
+          /* 调整大小的边框样式 */
+        .resizer {
+            position: absolute;
+            cursor: pointer;
+          }
+        .resizer-top {
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            cursor: ns-resize;
+          }
+        .resizer-bottom {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            cursor: ns-resize;
+          }
+        .resizer-left {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 10px;
+            cursor: ew-resize;
+          }
+        .resizer-right {
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            cursor: ew-resize;
+          }
+        .resizer-topleft {
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            cursor: nwse-resize;
+          }
+        .resizer-topright {
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            cursor: nesw-resize;
+          }
+        .resizer-bottomleft {
+            bottom: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            cursor: nesw-resize;
+          }
+        .resizer-bottomright {
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            cursor: nwse-resize;
+          }
+        `;
+        shadow.appendChild(style);
+
+        // popup
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
+        shadow.appendChild(popup);
+
+        // close button
+        const closeButton = document.createElement('span');
+        closeButton.classList.add('btn-close');
+        closeButton.textContent = '×';
+        closeButton.addEventListener('click', () => {
+          this.close();
+        });
+        popup.appendChild(closeButton);
+
+        // content
+        this.contentDiv = document.createElement('div');
+        this.contentDiv.classList.add('popup-content');
+        //this.innerHTML.split('\n').forEach(line => {
+        //  const element = document.createElement('div');
+        //  element.innerHTML = line.trim();
+        //  popupContent.appendChild(element);
+        //});
+        this.contentDiv.innerHTML = this.innerHTML;
+        popup.appendChild(this.contentDiv);
+
+        // resizer
+        const resizerTop = document.createElement('div');
+        resizerTop.classList.add('resizer', 'resizer-top');
+        popup.appendChild(resizerTop);
+        const resizerBottom = document.createElement('div');
+        resizerBottom.classList.add('resizer', 'resizer-bottom');
+        popup.appendChild(resizerBottom);
+        const resizerLeft = document.createElement('div');
+        resizerLeft.classList.add('resizer', 'resizer-left');
+        popup.appendChild(resizerLeft);
+        const resizerRight = document.createElement('div');
+        resizerRight.classList.add('resizer', 'resizer-right');
+        popup.appendChild(resizerRight);
+        const resizerTopLeft = document.createElement('div');
+        resizerTopLeft.classList.add('resizer', 'resizer-topleft');
+        popup.appendChild(resizerTopLeft);
+        const resizerTopRight = document.createElement('div');
+        resizerTopRight.classList.add('resizer', 'resizer-topright');
+        popup.appendChild(resizerTopRight);
+        const resizerBottomLeft = document.createElement('div');
+        resizerBottomLeft.classList.add('resizer', 'resizer-bottomleft');
+        popup.appendChild(resizerBottomLeft);
+        const resizerBottomRight = document.createElement('div');
+        resizerBottomRight.classList.add('resizer', 'resizer-bottomright');
+        popup.appendChild(resizerBottomRight);
+
+        // mouse, popup, handler
+        let rawX, rawY;
+        let rawTop, rawLeft, rawWidth, rawHeight;
+        let handler = '';
+
+        // mouse down to record data
+        popup.addEventListener('mousedown', (e) => {
+          rawX = e.clientX;
+          rawY = e.clientY;
+          rawTop = popup.offsetTop;
+          rawLeft = popup.offsetLeft;
+          rawWidth = popup.offsetWidth;
+          rawHeight = popup.offsetHeight;
+
+          if (e.target.classList.contains('resizer-topleft')) {
+            handler = 'TL';
+            document.documentElement.style.cursor = 'nwse-resize';
+          } else if (e.target.classList.contains('resizer-topright')) {
+            handler = 'TR';
+            document.documentElement.style.cursor = 'nesw-resize';
+          } else if (e.target.classList.contains('resizer-bottomleft')) {
+            handler = 'BL';
+            document.documentElement.style.cursor = 'nesw-resize';
+          } else if (e.target.classList.contains('resizer-bottomright')) {
+            handler = 'BR';
+            document.documentElement.style.cursor = 'nwse-resize';
+          } else if (e.target.classList.contains('resizer-top')) {
+            handler = 'T';
+            document.documentElement.style.cursor = 'ns-resize';
+          } else if (e.target.classList.contains('resizer-bottom')) {
+            handler = 'B';
+            document.documentElement.style.cursor = 'ns-resize';
+          } else if (e.target.classList.contains('resizer-left')) {
+            handler = 'L';
+            document.documentElement.style.cursor = 'ew-resize';
+          } else if (e.target.classList.contains('resizer-right')) {
+            handler = 'R';
+            document.documentElement.style.cursor = 'ew-resize';
+          } else {
+            handler = 'DRAG';
+            document.documentElement.style.cursor = 'pointer';
+          }
+
+          console.log(`DOWN : (${rawLeft}, ${rawTop}, ${rawWidth}, ${rawHeight}), (${rawX}, ${rawY}), ${handler}`);
+        });
+
+        // mouse move to drag or resize
+        document.addEventListener('mousemove', (e) => {
+          if (handler === '') return;
+
+          let dx = e.clientX - rawX;
+          let dy = e.clientY - rawY;
+          switch (handler) {
+            case 'DRAG':
+              popup.style.left = rawLeft + dx + 'px';
+              popup.style.top = rawTop + dy + 'px';
+              break;
+            case 'TL':
+              popup.style.left = rawLeft + dx + 'px';
+              popup.style.top = rawTop + dy + 'px';
+              popup.style.width = rawWidth - dx + 'px';
+              popup.style.height = rawHeight - dy + 'px';
+              break;
+            case 'T':
+              popup.style.top = rawTop + dy + 'px';
+              popup.style.height = rawHeight - dy + 'px';
+              break;
+            case 'TR':
+              popup.style.top = rawTop + dy + 'px';
+              popup.style.width = rawWidth + dx + 'px';
+              popup.style.height = rawHeight - dy + 'px';
+              break;
+            case 'L':
+              popup.style.left = rawLeft + dx + 'px';
+              popup.style.width = rawWidth - dx + 'px';
+              break;
+            case 'R':
+              popup.style.width = rawWidth + dx + 'px';
+              break;
+            case 'BL':
+              popup.style.left = rawLeft + dx + 'px';
+              popup.style.width = rawWidth - dx + 'px';
+              popup.style.height = rawHeight + dy + 'px';
+              break;
+            case 'B':
+              popup.style.height = rawHeight + dy + 'px';
+              break;
+            case 'BR':
+              popup.style.width = rawWidth + dx + 'px';
+              popup.style.height = rawHeight + dy + 'px';
+              break;
+          }
+
+          console.log(`${handler} : (${dx}, ${dy}), (${popup.offsetLeft}, ${popup.offsetTop}, ${popup.offsetWidth}, ${popup.offsetHeight}), (${e.clientX}, ${e.clientY})`);
+        });
+
+        // mouse up to clear
+        document.addEventListener('mouseup', () => {
+          handler = '';
+          document.documentElement.style.cursor = 'auto';
+        });
+      }
+
+      /**Show dialog with mask and center in screen*/
+      show() {
+        Mask.show();
+        this.shadowRoot.querySelector('.popup').style.display = 'block';
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const popup = this.shadowRoot.querySelector('.popup');
+        const popupWidth = popup.offsetWidth;
+        const popupHeight = popup.offsetHeight;
+        popup.style.left = (viewportWidth - popupWidth) / 2 + 'px';
+        popup.style.top = (viewportHeight - popupHeight) / 2 + 'px';
+      }
+
+      /**Close dialog*/
+      close() {
+        Mask.hide();
+        this.shadowRoot.querySelector('.popup').style.display = 'none';
+        //this.remove();
+      }
+
+      /*Content*/
+      get content()    {return this.contentDiv.innerHTML;}
+      set content(val) {this.contentDiv.innerHTML = val;}
+    }
+
+    customElements.define('x-dialog', XDialog);
+
+
+    // show dialog
+    function showDialog() {
+      //const dlg = document.createElement('x-dialog');
+      //dlg.content = '<h1>Title</h1><p>hello world!</p>';
+      //document.body.appendChild(dlg);
+
+      var dlg = document.querySelector('#dlg');
+      dlg.show();
+    }
+  </script>
+</body>
+
+</html>

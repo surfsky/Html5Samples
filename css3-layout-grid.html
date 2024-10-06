@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="css/all.css">
+  <link rel="stylesheet" href="css/atom.css">
   <style>
 
 /*网格子项*/
@@ -22,20 +22,6 @@
   background-color: #2196F3;
   padding: 10px;
 }
-
-
-/*表单容器（自适应1-4列）*/
-.gridFormAuto {
-      display: grid;
-      gap: 10px;
-      padding: 10px;
-    }
-    @media (min-width: 400px)  {.gridFormAuto { grid-template-columns: auto; }}
-    @media (min-width: 800px)  {.gridFormAuto { grid-template-columns: 100px auto; }}
-    @media (min-width: 1000px) {.gridFormAuto { grid-template-columns: 100px auto 100px auto; }}
-    .gridFormAuto > * {text-align: left; height: 40px;}
-
-
 </style>
 </head>
 
@@ -68,16 +54,32 @@
   <h1>固定4列等宽网格（网格子元素可设置位置和宽度）</h1>
   <div class="grid4 bg-primary">
     <div>1</div>
-    <div class="grid4-0110">0110</div>
+    <div class="gi-2-2">2-2</div>
     <div>3</div>  
-    <div class="grid4-1100">1100</div>
-    <div class="grid4-0011">0011</div>
+    <div class="gi-1-2">1-2</div>
+    <div class="gi-3-2">2-2</div>
     <div>6</div>
     <div>7</div>
     <div>8</div>  
     <div>9</div>
     <div>10</div>
-    <div class="grid4-0111">0111</div>
+    <div class="gi-2-3">2-3</div>
+  </div>
+
+  <h1>12列网格系统</h1>
+  <div class="grid12 bg-primary">
+    <div class="gi-1-1">1  </div><div class="gi-2-11"></div>
+    <div class="gi-2-1">2  </div><div class="gi-3-10"></div>
+    <div class="gi-3-1">3  </div><div class="gi-4-9"></div>
+    <div class="gi-4-1">4  </div><div class="gi-5-8"></div>
+    <div class="gi-5-1">5  </div><div class="gi-6-7"></div>
+    <div class="gi-6-1">6  </div><div class="gi-7-6"></div>
+    <div class="gi-7-1">7  </div><div class="gi-8-5"></div>
+    <div class="gi-8-1">8  </div><div class="gi-9-4"></div> 
+    <div class="gi-9-1">9  </div><div class="gi-10-3"></div>
+    <div class="gi-10-1">10</div><div class="gi-11-2"></div>
+    <div class="gi-11-1">11</div><div class="gi-12-1"></div>
+    <div class="gi-12-1">12</div>
   </div>
 
   <h1>GridSitebars: 左右各有一个Sidebar，中间部分可拉伸</h1>
@@ -97,12 +99,12 @@
 
 
   <h1>GridForm: 响应式表单布局</h1>
-  <div class="gridFormAuto bg-primary">
-    <div>Name</div> <input type="text"></input>
-    <div>Name</div> <input type="text"></input>
-    <div>Name</div> <input type="text"></input>
-    <div>Name</div> <input type="text"></input>
-    <div>Name</div> <input type="text"></input>
+  <div class="gridForm bg-primary">
+    <label>Name</label> <input type="text"></input>
+    <label>Name</label> <input type="text"></input>
+    <label>Name</label> <input type="text"></input>
+    <label>Name</label> <input type="text"></input>
+    <label>Name</label> <input type="text"></input>
   </div>
 
   <p></p>

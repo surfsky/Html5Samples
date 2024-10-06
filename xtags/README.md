@@ -79,7 +79,7 @@ Features
 - Support animation for position, size, color
 - Support click event
 - Support theme: Just use XTags.showTheme(.)
-- Support popup: toast
+- Support popup: Mask, Toast, MessageBox, Dialog, Popup
 - Button
     - Show ripple effect when click.
     - Disable when click before execute callback
@@ -88,20 +88,20 @@ Features
 -----------------------------------------------------
 Task
 -----------------------------------------------------
-/尝试用grid布局来写index.html
-Link hover、visited color
-dragable
-responsive
+/dragable
+/resizable
+/messagebox
+/dialog
+/unique id 对于动态创建的控件，自动生成一个唯一性ID，或者不用也行，用this.root 保存吧。
+tooltip
+responsive: gridForm; gridBackend, gridDashboard
 弄个虚拟基类，实现所有css
     Rect、Circle，butten
     Style、
     row、col，grid
+备选名称：classless.js, noclass.js, cssless.js, onlytags.js
 
-备选名称：classless.js, noclass.js, cssless.js
-popup: x, y, width, height, closeicon
-    - messagebox
-    - dialog: module mask, pure code invoke to show a dialog
-    - dropdown
+
 child sortable
 build min.js
 
@@ -109,6 +109,9 @@ build min.js
 -----------------------------------------------------
 history
 -----------------------------------------------------
+/尝试用grid布局来写index.html
+/Link hover、visited color
+/Mask
 /注入全局样式。或弄一个全局配置标签。
 /x-img 也可以考虑支持icon，命名方式如：theme-iconname.xxx
 /用 ITheme 接口改造 Rect，算了用约定吧
