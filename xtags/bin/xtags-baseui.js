@@ -1,515 +1,24 @@
 /**
- * xtags base custom tags.
+ * xtags basic custom tags.
  * @author surfsky.github.com 2024
  */
-import { XTags, Theme, Anchor } from "./xtags-base.js";
+import { XTags, Tag, Style, Theme, Anchor } from "./xtags-base.js";
 
 
 
 /************************************************************
- * Rectangle
- * @example  <x-rect width="100px" height="100px" bgcolor="green" color="white" radius="10px" borderwidth="2px" bordercolor="yellow" borderstyle="solid" ></rect-tag>
- * @author surfsky.github.com 2024
- * @property {string} theme Set theme such as primary, secondary, success...
+ * Rect
+ * @example
+ *     <x-rect width='100px'></x-rect>
  ***********************************************************/
-export class Rect extends HTMLElement {
-    //-----------------------------------------------------
-    // Constructor
-    //-----------------------------------------------------
-    // supported attribute. Notice these names must be all small chars.
-    static _attrs = [
-        'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'cursor',
-        'box', 'margin', 'padding',
-        'width', 'height', 'minwidth', 'minheight', 'maxwidth', 'maxheight',
-        'position', 'anchor', 'top', 'bottom', 'left', 'right',  
-        'display', 'childanchor', 'textalign', 
-        'flex', 'gridcolumn',
-        'border', 'borderwidth', 'bordercolor', 'borderstyle', 'radius',  
-        'background','bgcolor', 'hoverbgcolor', 'theme', 
-        'color', 'hovercolor', 'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
-        'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
-        'click', 'draggable'
-    ];
-
-    /**Constructor. Build a frame rectangle with content in center.*/
+export class Rect extends Tag {
     constructor() {
         super();
-        this.shadow = this.attachShadow({mode: 'open'});
-        this.root = document.createElement("div");
-        this.root.innerHTML = this.innerHTML;   // contain child items
-        //this.root.style.boxSizing = 'border-box';  // size = content + padding + border, margin is outside.
-        this.style.padding = "10px";
-        this.style.width = '100px';
-        this.style.height = '100px';
-        this.style.border = '1px solid lightgray';
-        this.style.transition = 'all 0.5s';  // animation
-        if (this.root.innerHTML != '')
-            this.setChildAnchor(Anchor.CT);
-        this.shadow.appendChild(this.root);
-    }
-
-    /**Support attributes.*/
-    static get observedAttributes() {
-        return this._attrs;
-    }
-
-    //-----------------------------------------------------
-    // Css Property Getter & Setter
-    //-----------------------------------------------------
-    /** Insert style tag into shadow root. And use this.styleTag.contentText = ...; */
-    writeStyleTag(){
-        this.styleTag = document.createElement('style');
-        this.shadow.appendChild(this.styleTag);
-    }
-
-    /** This root div's style */
-    get style(){
-        return this.root.style;
-    }
-
-
-    /** Css property getter */
-    //get(property){
-    //    return this.root.style.getPropertyValue(property);
-    //}
-    /** Css property setter */
-    //set(property, val){
-    //    this.root.style.setProperty(property, val);
-    //    return this;
-    //}
-
-    //-----------------------------------------------------
-    // Content
-    //-----------------------------------------------------
-    /**Clear all children */
-    clear() {
-        while (this.shadowRoot.firstChild) {
-            this.shadowRoot.removeChild(this.shadowRoot.firstChild);
-        }
-    }
-
-    getInnerHTML(){
-        return this.root.innerHTML;
-    }
-    setInnerHTML(val){
-        this.root.innerHTML = val;
-        return this;
-    }
-
-    /** Child content object (equal innerHTML) */
-    get content(){
-        return this.root.innerHTML;
-    }
-    set content(val){
-        this.root.innerHTML = val;
-    }
-
-
-    //-----------------------------------------------------
-    // Theme
-    //-----------------------------------------------------
-    /** Theme class, eg. primary, secondary, info, warning...*/
-    _themeCls = "";
-
-    /** Set theme class, eg. primary, secondary, info, warning...*/
-    setThemeCls(cls){
-        this._themeCls = cls;
-        this.setTheme(XTags.theme);
-        return this;
-    }
-
-    /**
-     * Set theme for background and text color. Other settings is setted in child class.
-     * @param {Theme} t 
-     */
-    setTheme(t){
-        this.root.style.color = t.text;
-        switch (this._themeCls){
-            case "primary":   this.root.style.backgroundColor = t.primary;     break;
-            case "secondary": this.root.style.backgroundColor = t.secondary;   break;
-            case "success":   this.root.style.backgroundColor = t.success;     break;
-            case "info":      this.root.style.backgroundColor = t.info;        break;
-            case "warning":   this.root.style.backgroundColor = t.warning;     break;
-            case "danger":    this.root.style.backgroundColor = t.danger;      break;
-            default:          this.root.style.backgroundColor = t.background;  break;
-        }
-        return this;
-    }
-
-    setColors(bgColor, textColor){
-        this.root.style.backgroundColor = bgColor;
-        this.root.style.color = textColor;
-        return this;
-    }
-
-    //-----------------------------------------------------
-    // Position
-    //-----------------------------------------------------
-    /** Set size */
-    setSize(w, h){
-        this.root.style.width = w;
-        this.root.style.height = h;
-        return this;
-    }
-
-    /** Set radius */
-    setRadius(r){
-        this.root.style.borderRadius = r;
-        return this;
-    }
-
-    /**
-     * Set anchor
-     * @param {Anchor} anchor 
-        .fixTopLeft    {position:fixed; top:0px;    left:0px; }
-        .fixTop        {position:fixed; top:0px;    left:50%; transform: translateX(-50%);}
-        .fixTopRight   {position:fixed; top:0px;    right:0px; }
-        .fixBottomLeft {position:fixed; bottom:0px; left:0px; }
-        .fixBottom     {position:fixed; bottom:0px; left:50%; transform: translateX(-50%); }
-        .fixBottomRight{position:fixed; bottom:0px; right:0px; }
-        .fixLeft       {position:fixed; top:50%;    transform: translateY(-50%); left:0px; }
-        .fixCenter     {position:fixed; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
-        .fixRight      {position:fixed; top:50%;    transform: translateY(-50%); right:0px; }
-        .fill          {position:fixed; top:0px;    bottom:0px; left:0px;  right:0px;}
-     */
-    setAnchor(anchor){
-        var s = this.root.style;
-        switch (anchor){
-            case Anchor.TL  : s.position='absolute'; s.top='0px';    s.left='0px';  break;
-            case Anchor.T   : s.position='absolute'; s.top='0px';    s.left='50%';  s.transform='translateX(-50%)';break;
-            case Anchor.TR  : s.position='absolute'; s.top='0px';    s.right='0px'; break;
-            case Anchor.BL  : s.position='absolute'; s.bottom='0px'; s.left='0px';  break;
-            case Anchor.B   : s.position='absolute'; s.bottom='0px'; s.left='50%';  s.transform='translateX(-50%)'; break;
-            case Anchor.BR  : s.position='absolute'; s.bottom='0px'; s.right='0px'; break;
-            case Anchor.L   : s.position='absolute'; s.top='50%';    s.left='0px';  s.transform='translateY(-50%)';           break;
-            case Anchor.CT  : s.position='absolute'; s.top='50%';    s.left='50%';  s.transform='translate3D(-50%, -50%, 0)'; break;
-            case Anchor.R   : s.position='absolute'; s.top='50%';    s.right='0px'; s.transform='translateY(-50%)';           break;
-            case Anchor.F   : s.position='absolute'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
-            //case Anchor.F   : s.position='absolute'; s.top='0';      s.right='0';   s.bottom='0';   s.left='0'; s.width='100%'; s.height='100%';              break;  //
-        }
-        return this;
-    }
-
-
-    /**
-     * Set child anchor
-     * @param {Anchor} anchor 
-    .childTopLeft       {display: flex; justify-content: flex-start;  align-items: flex-start;}
-    .childTop           {display: flex; justify-content: center;      align-items: flex-start;}
-    .childTopRight      {display: flex; justify-content: flex-end;    align-items: flex-start;}
-    .childBottomLeft    {display: flex; justify-content: flex-start;  align-items: flex-end;}
-    .childBottom        {display: flex; justify-content: center;      align-items: flex-end;}
-    .childBottomRight   {display: flex; justify-content: flex-end;    align-items: flex-end;}
-    .childLeft          {display: flex; justify-content: flex-start;  align-items: center;}
-    .childCenter        {display: flex; justify-content: center;      align-items: center; flex-direction: column;}
-    .childRight         {display: flex; justify-content: flex-end;    align-items: center;}
-     */
-    setChildAnchor(anchor){
-        var s = this.root.style;
-        if (anchor == null || anchor == ""){
-            s.display = '';
-            s.flexDirection  = '';     
-            s.justifyContent = '';  
-            s.alignItems = '';
-        }
-        else{
-            s.display = 'flex';
-            switch (anchor){
-                case Anchor.TL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-start'; break;
-                case Anchor.T   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-start'; break;
-                case Anchor.TR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-start'; break;
-                case Anchor.L   : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='center';     break;
-                case Anchor.CT  : s.flexDirection='column';  s.justifyContent='center';      s.alignItems='center';     break;
-                case Anchor.R   : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='center';     break;
-                case Anchor.BL  : s.flexDirection='row';     s.justifyContent='flex-start';  s.alignItems='flex-end';   break;
-                case Anchor.B   : s.flexDirection='row';     s.justifyContent='center';      s.alignItems='flex-end';   break;
-                case Anchor.BR  : s.flexDirection='row';     s.justifyContent='flex-end';    s.alignItems='flex-end';   break;
-                case Anchor.F   : this.setChildFill();   break;
-            }
-        }
-        return this;
-    }
-
-    /** Set child fill parent. Add css. */
-    setChildFill(){
-        this.root.style.display = 'flex';
-        this.root.classList.add('x-container');
-        if (this.childStyleTag == null){
-            this.childStyleTag = document.createElement('style');
-            this.childStyleTag.textContent = `
-                x-container > * { flex: 1}
-                `;
-            this.shadow.appendChild(this.childStyleTag);
-        }
-    }
-
-    //-----------------------------------------------------
-    // Effect
-    //-----------------------------------------------------
-    /** Set box shadow*/
-    setShadow(newValue){
-        if (newValue == 'true' || newValue == true)
-            this.root.style.boxShadow = '5px 5px 10px lightgray';
-        else if (newValue == 'false' || newValue == false)
-            this.root.style.boxShadow = '';
-        else
-            this.root.style.boxShadow = newValue;
-        return this;
-    }
-
-    /** Set text shadow*/
-    setTextShadow(newValue){
-        if (newValue == 'true' || newValue == true)
-            this.root.style.textShadow = '5px 5px 10px black';
-        else if (newValue == 'false' || newValue == false)
-            this.root.style.textShadow = '';
-        else
-            this.root.style.textShadow = newValue;
-        return this;
-    }
-
-    /**
-     * Set hover background color
-     * @param {Color} color 
-     */
-    setHoverBgColor(color){
-        var element = this.root;
-        var oldColor = element.style.backgroundColor;
-        var oldCursor = element.style.cursor;
-        element.addEventListener('mouseover', function() {
-            element.style.backgroundColor = color;
-            element.style.cursor = 'pointer';
-        });
-        element.addEventListener('mouseout', function() {
-            element.style.backgroundColor = oldColor;
-            element.style.cursor = oldCursor;
-        });
-        return this;
-    }
-
-    /**
-     * Set hover text color
-     * @param {Color} color 
-     */
-    setHoverTextColor(color){
-        var element = this.root;
-        var oldColor = element.style.Color;
-        var oldCursor = element.style.cursor;
-        element.addEventListener('mouseover', function() {
-            element.style.Color = color;
-            element.style.cursor = 'pointer';
-        });
-        element.addEventListener('mouseout', function() {
-            element.style.Color = oldColor;
-            element.style.cursor = oldCursor;
-        });
-        return this;
-    }
-
-    /**
-     * Set hover opacity color
-     * @param {Color} color 
-     */
-    setHoverOpacity(opacity){
-        var element = this.root;
-        var oldValue = element.style.opacity;
-        var oldCursor = element.style.cursor;
-        element.addEventListener('mouseover', function() {
-            element.style.opacity = opacity;
-            element.style.cursor = 'pointer';
-        });
-        element.addEventListener('mouseout', function() {
-            element.style.opacity = oldValue;
-            element.style.cursor = oldCursor;
-        });
-        return this;
-    }
-    
-    /**
-     * Show ripple
-     * @param {number} x 
-     * @param {number} y 
-     */
-    showRipple(x, y){
-        // style
-        if (this._rippleStyle == null){
-            this._rippleStyle = document.createElement('style');
-            this._rippleStyle.textContent = `
-                @keyframes ripple-effect {
-                    to { transform: scale(10); opacity: 0;}
-                }`;
-            this.shadow.appendChild(this._rippleStyle);
-        }
-
-        // ripple div
-        const ripple = document.createElement('div');
-        ripple.style.width = "40px";
-        ripple.style.height = "40px";
-        ripple.style.borderRadius = "20px";
-        ripple.style.position = 'absolute';
-        ripple.style.left = `${x-20}px`;
-        ripple.style.top  = `${y-20}px`;
-        ripple.style.backgroundColor = 'white';
-        ripple.style.opacity = '0.9';
-        ripple.style.animation = 'ripple-effect 0.3s linear';
-        this.root.appendChild(ripple);
-        ripple.addEventListener('animationend', function () {
-            this.remove();
-        });
-    }
-    
-    /**
-     * Set visible
-     * @param {boolean} newValue 
-     */
-    setVisible(newValue){
-        var b = (newValue=='true' || newValue==true);
-        this.root.style.visibility = b ? 'visible' : 'hidden';
-        return this;
-    }
-
-
-    /**
-     * Set enable. If disable, it become gray, and cannot click. 
-     * @param {boolean} b 
-     */
-    setEnable(b){
-        if (b){
-            this.root.style.pointerEvents = '';
-            this.root.style.filter = '';
-        }
-        else{
-            this.root.style.pointerEvents = 'none';
-            this.root.style.filter = 'grayscale(100%)';
-        }
-        return this;
-    }
-
-    /**
-     * Set draggable
-     * @param {boolean} b 
-     */
-    setDraggable(b){
-        this.root.draggable = b;
-        if (b){
-            // TODO：根据当前位置拖动div位置
-        }
-        return this;
-    }
-
-    //-----------------------------------------------------
-    // Event
-    //-----------------------------------------------------
-    /** Set click event */
-    setClick(func){
-        this.root.addEventListener('click', ()=>eval(func));
-        return this;
-    }
-
-
-    /**Set grid column 
-     * @param {string} expr start-length or start/end
-    */
-    setGridColumn(expr){
-        if (expr.indexOf('-') != -1){
-            // start-length
-            const parts = expr.split("-");
-            this.root.style.gridColumnStart = parts[0];
-            this.root.style.gridColumnEnd = parseInt(parts[1]) + 1;
-        }
-        else{
-            // start/end
-            this.root.style.gridColumn = expr;
-        }
-    }
-    
-    //-----------------------------------------------------
-    // Attribute change event
-    //-----------------------------------------------------
-    /**
-     * Call when attribute changed 
-     * @param {string} name attribute name 
-     * @param {string} oldValue old attribute value
-     * @param {string} newValue new attribute value
-     */
-    attributeChangedCallback(name, oldValue, newValue) {
-        switch(name){
-            // common
-            case 'id':                this.root.setAttribute('id', newValue); break;
-            case 'class':             this.root.setAttribute('class', newValue); break;
-            case 'newclass':          this.root.setAttribute('class', newValue + ' ' + this.root.getAttribute('class')); break;
-            case 'z':                 this.root.style.zIndex = newValue; break;
-            case 'opacity':           this.root.style.opacity = newValue;  break;
-            case 'visible':           this.setVisible(newValue); break;
-            case 'overflow':          this.root.style.overflow = newValue; break;
-            case 'cursor':            this.root.style.cursor = newValue; break;
-
-            // size
-            case 'width':             this.root.style.width = newValue;  break;
-            case 'height':            this.root.style.height = newValue;  break;
-            case 'minwidth':          this.root.style.minWidth = newValue;  break;
-            case 'minheight':         this.root.style.minHeight = newValue;  break;
-            case 'maxwidth':          this.root.style.maxWidth = newValue;  break;
-            case 'maxheight':         this.root.style.maxHeight = newValue;  break;
-
-            // anchor(position)
-            case 'position':          this.root.style.position = newValue; break;
-            case 'anchor':            this.setAnchor(newValue); break;
-            case 'top':               this.root.style.top = newValue;  break;
-            case 'bottom':            this.root.style.bottom = newValue;  break;
-            case 'left':              this.root.style.left = newValue;  break;
-            case 'right':             this.root.style.right = newValue;  break;
-
-            // child
-            case 'flex':              this.root.style.flex = newValue;  break;
-            case 'gridcolumn':        this.setGridColumn(newValue); break;
-
-            // child anchor
-            case 'display':           this.root.style.display = newValue; break;
-            case 'childanchor':       this.setChildAnchor(newValue); break;
-            case 'textalign':         this.root.style.textAlign = newValue; break;
-
-            // border
-            case 'border':            this.root.style.border = newValue;  break;
-            case 'borderwidth':       this.root.style.borderWidth = newValue;  break;
-            case 'bordercolor':       this.root.style.borderColor = newValue;  break;
-            case 'borderstyle':       this.root.style.borderStyle = newValue;  break;
-            case 'radius':            this.root.style.borderRadius = newValue;  break;
-
-            // box & margin & padding
-            case 'box':               this.root.style.boxSizing = newValue; break;
-            case 'margin':            this.root.style.margin = newValue;  break;
-            case 'padding':           this.root.style.padding = newValue;  break;
-
-            // theme
-            case 'theme':             this.setThemeCls(newValue); break;
-
-            // background
-            case 'bgcolor':           this.root.style.backgroundColor = newValue;  break;
-            case 'hoverbgcolor':      this.setHoverBgColor(newValue); break;
-            case 'background':        this.root.style.background = newValue; break;
-
-            // text
-            case 'color':             this.root.style.color = newValue;  break;
-            case 'hovercolor':        this.setHoverTextColor(newValue);  break;
-            case 'font':              this.root.style.font = newValue;  break;
-            case 'fontsize':          this.root.style.fontSize = newValue;  break;
-            case 'fontfamily':        this.root.style.fontFamily = newValue;  break;
-            case 'fontstyle':         this.root.style.fontStyle = newValue;  break;
-            case 'fontweight':        this.root.style.fontWeight = newValue;  break;
-
-            // effect
-            case 'shadow':            this.setShadow(newValue); break;
-            case 'textshadow':        this.setTextShadow(newValue); break;
-            case 'transform':         this.root.style.transform = newValue; break;
-            case 'rotate':            this.root.style.transform = `rotate(${newValue}deg)`; break;
-            case 'skew':              this.root.style.transform = `skew(${newValue}deg)`; break;
-            case 'scale':             this.root.style.transform = `scale(${newValue})`; break;
-
-            // event
-            case 'click':             this.setClick(newValue); break;
-            case 'draggable':         this.root.setAttribute('draggable', newValue);  // draggable="true"
-        }
+        this.root.style.padding = "10px";
+        this.root.style.width = '100px';
+        this.root.style.height = '100px';
+        this.root.style.border = '1px solid lightgray';
+        this.root.style.overflow = 'hidden';
     }
 }
 customElements.define("x-rect", Rect);
@@ -545,22 +54,12 @@ customElements.define("x-circle", Circle);
 /***********************************************************
  * Row container
  * @example
- *     <x-row cellmargin="0 20px 0 0" bgcolor="lightgray" margin="0 0 10px 0">
+ *     <x-row gap="20px">
  ***********************************************************/
-export class Row extends Rect {
+export class Row extends Tag {
     //constructor(bgcolor='white') {  // 经测试不支持默认参数代入
     constructor() {
         super();
-        this.clear();
-
-        // style
-        this.styleTag = document.createElement('style');
-        this.shadow.appendChild(this.styleTag);
-
-        // root div
-        this.root = document.createElement('div');
-        this.root.innerHTML = this.innerHTML;   // contain child items
-        this.shadow.appendChild(this.root);
 
         // flex row
         this.root.classList.add('x-container');
@@ -568,11 +67,9 @@ export class Row extends Rect {
         this.root.style.height = '100px';
         this.root.style.display = "flex";
         this.root.style.flexDirection = "row";
-        //this.root.style.flexWrap = "wrap";
-        //this.root.style.alignItems = 'flex-start';
-        //this.root.style.justifyContent = 'flex-start';
 
         // child margin
+        this.createStyleTag();
         this.setGap('0 8px 0 0');
     }
 
@@ -598,6 +95,8 @@ export class Row extends Rect {
 customElements.define("x-row", Row);
 
 
+
+
 /************************************************************
  * Column container
  * @example
@@ -620,16 +119,15 @@ customElements.define("x-col", Column);
 /************************************************************
  * Grid container
  * @example
- *     <x-grid cellmargin="0 0 20px 0">
+ *     <x-grid gap="20px" columns='4'>
+ *     <x-grid gap="20px" columns='100px auto 100px'>
  ***********************************************************/
-export class Grid extends Rect {
+export class Grid extends Tag {
     constructor() {
         super();
         this.setChildAnchor(null);
         this.root.style.display = "grid";
         this.root.style.gap = '10px';
-        this.root.style.borderWidth = 0;
-        this.root.style.padding = "";
         this.setColumns(4);
     }
 
@@ -669,12 +167,14 @@ export class Grid extends Rect {
 customElements.define("x-grid", Grid);
 
 
+
+
 /************************************************************
  * Responsive form grid container to display 1-4 columns
  * @example
  *     <x-form>
  ***********************************************************/
-export class Form extends Rect {
+export class Form extends Tag {
     constructor() {
         super();
         this.clear();
@@ -695,12 +195,12 @@ export class Form extends Rect {
             .gridForm > label {margin-top: 5px;}
             .gridForm > input {border-radius: 4px; border: 1px solid gray;}
         `;
-        this.shadow.appendChild(style);
+        this.shadowRoot.appendChild(style);
 
         // root
         this.root = document.createElement('form');
         this.root.classList.add('gridForm');
-        this.shadow.appendChild(this.root);
+        this.shadowRoot.appendChild(this.root);
 
         // child
         this.root.innerHTML = this.innerHTML;
@@ -722,40 +222,5 @@ export class Form extends Rect {
 customElements.define("x-form", Form);
 
 
-/***********************************************************
- * Global style
- * @example
- *     <x-style cellmargin="0 20px 0 0" bgcolor="lightgray" margin="0 0 10px 0">
- ***********************************************************/
-export class Style extends Rect {
-    constructor() {
-        super();
-        this.clear();
-
-        // style tag
-        this.styleTag = document.createElement('style');
-        document.head.appendChild(this.styleTag);
-        this.styleTag.textContent = `
-            :root {
-                /* 定义全局变量。组件中可用 var('..')的方式设置值 */
-                --box: border-box;
-                --transition: 'all 0.5s';
-            }
-            html,body {
-                width: 100%;  height: 100%; /*全屏*/
-                padding: 0px; margin: 0px;
-            }
-
-            /* 以下没用，传递不到 shadow 里面去*/
-            *, *::before, *::after {box-sizing: --box;}
-            * {transition: 0.5s;}
-        `;
-
-        // apply variant
-        this.root = document.body;
-    }
-}
-
-customElements.define("x-style", Style);
 
 

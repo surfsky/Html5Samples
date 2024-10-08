@@ -2,7 +2,7 @@
  * xtags control tags.
  * @author surfsky.github.com 2024
  */
-import { XTags, Theme, Anchor } from "./xtags-base.js";
+import { XTags, Tag, Style, Theme, Anchor } from "./xtags-base.js";
 import { Rect, Circle, Row, Column, Grid } from "./xtags-baseui.js";
 
 
@@ -11,14 +11,14 @@ import { Rect, Circle, Row, Column, Grid } from "./xtags-baseui.js";
  * @example
  *     <x-frame></x-frame>
  ***********************************************************/
-export class Frame extends Rect {
+export class Frame extends Tag {
     constructor() {
         super();
         this.clear();
         this.root = document.createElement("iframe");
         this.root.innerHTML = this.innerHTML;
         this.root.style.border = '0';
-        this.shadow.appendChild(this.root);
+        this.shadowRoot.appendChild(this.root);
     }
 
     static get observedAttributes() {
@@ -32,15 +32,16 @@ export class Frame extends Rect {
         }
     }
 }
-
-
 customElements.define("x-frame", Frame);
+
+
+
 /************************************************************
  * Image
  * @example
  *     <x-img></x-img>
  ***********************************************************/
-export class Image extends Rect {
+export class Image extends Tag {
     constructor() {
         super();
         //this.shadow = this.attachShadow({mode: 'open'});  // fail
@@ -49,7 +50,7 @@ export class Image extends Rect {
         this.root.innerHTML = this.innerHTML;     // contain child items
         //this.root.style.transition = 'all 0.5s';  // animation
         this.root.style.overflow = 'hidden';
-        this.shadow.appendChild(this.root);
+        this.shadowRoot.appendChild(this.root);
     }
 
     static get observedAttributes() {
@@ -86,7 +87,7 @@ customElements.define("x-img", Image);
  * @example
  *     <x-link></x-link>
  ***********************************************************/
-export class Link extends Rect {
+export class Link extends Tag {
     constructor() {
         super();
         this.clear();
@@ -96,7 +97,7 @@ export class Link extends Rect {
         this.root.innerHTML = this.innerHTML;     // contain child items
         this.root.style.transition = 'all 0.5s';  // animation
         this.root.style.textDecoration = 'none';
-        this.shadow.appendChild(this.root);
+        this.shadowRoot.appendChild(this.root);
     }
 
     /** Set theme. 
@@ -115,7 +116,7 @@ export class Link extends Rect {
     writeLinkStyle(color, hoverColor, visitedColor) {
         if (this.styleTag == null) {
             this.styleTag = document.createElement('style');
-            this.shadow.appendChild(this.styleTag);
+            this.shadowRoot.appendChild(this.styleTag);
         }
         this.styleTag.textContent = `
             a         { text-decoration: none; color: ${color};}
@@ -186,12 +187,8 @@ export class Button extends Rect {
         this.root.style.borderRadius = "8px";
         this.root.style.borderWidth = "0px";
         this.root.style.overflow = 'hidden';
-        if (this.root.style.boxShadow == '' || this.root.style.boxShadow == 'content-box') {
-            this.root.style.height = '24px';
-        }
-        else {
-            this.root.style.height = '44px';
-        }
+        this.root.style.height = this.root.style.boxSizing=='border-box' ? '44px' : '24px';
+        this.root.style.width = this.root.style.boxSizing=='border-box' ? '120px' : '100px';
         this.setHoverOpacity('0.8');
     }
 
@@ -308,14 +305,15 @@ export class Toast {
      */
     static async show(text, icon = 'white-bulb') {
         var toast = new Rect()
-            .setSize('400px', '26px')
+            .setSize('400px', '36px')
             .setRadius('6px')
             .setColors(XTags.theme.success, XTags.theme.light)
-            //.setShadow(true)
             .setAnchor(Anchor.T)
-            .setChildAnchor(Anchor.CT)
-            .setInnerHTML(`<x-row height="100%"><img src='${XTags.getIconUrl(icon)}' width='24px'/><div>${text}<div></x-row>`)
+            .setChildAnchor(Anchor.C)
             ;
+        toast.content = `<x-row height="100%"><img src='${XTags.getIconUrl(icon)}' width='20px'/><div>${text}<div></x-row>`;
+        toast.style.height = toast.style.boxSizing=='border-box' ? '30px' : '26px';
+        toast.style.opacity = 0.8;
         toast.style.border = '0';
         toast.style.top = '-100px';
         document.body.appendChild(toast);
@@ -384,15 +382,16 @@ export class Tooltip {
  *     Dialog.show();
  *     Dialog.close();
  ***********************************************************/
-export class Dialog extends HTMLElement {
+export class Dialog extends Rect {
     constructor() {
         super();
-        const shadow = this.attachShadow({ mode: 'open' });
+        this.clear();
+        //const shadow = this.attachShadow({ mode: 'open' });
 
         // 内联样式
         const style = document.createElement('style');
         style.textContent = `
-            /* 弹出窗口样式 */
+          /* popup layer */
           .popup {
               position: absolute;
               background-color: white;
@@ -411,7 +410,7 @@ export class Dialog extends HTMLElement {
               text-align: center;
               user-select: none;
             }
-            /* 关闭按钮样式 */
+          /* close button */
           .btn-close {
               position: absolute;
               top: 10px;
@@ -419,7 +418,7 @@ export class Dialog extends HTMLElement {
               cursor: pointer;
               user-select: none;
             }
-            /* 调整大小的边框样式 */
+          /* resizers */
           .resizer {
               position: absolute;
               cursor: pointer;
@@ -481,30 +480,23 @@ export class Dialog extends HTMLElement {
               cursor: nwse-resize;
             }
           `;
-        shadow.appendChild(style);
+        this.shadowRoot.appendChild(style);
 
         // popup
         this.root = document.createElement('div');
         this.root.classList.add('popup');
-        shadow.appendChild(this.root);
+        this.shadowRoot.appendChild(this.root);
 
         // close button
         const closeButton = document.createElement('span');
         closeButton.classList.add('btn-close');
         closeButton.textContent = '×';
-        closeButton.addEventListener('click', () => {
-            this.close();
-        });
+        closeButton.addEventListener('click', () => this.close());
         this.root.appendChild(closeButton);
 
         // content
         this.contentDiv = document.createElement('div');
         this.contentDiv.classList.add('popup-content');
-        //this.innerHTML.split('\n').forEach(line => {
-        //  const element = document.createElement('div');
-        //  element.innerHTML = line.trim();
-        //  popupContent.appendChild(element);
-        //});
         this.contentDiv.innerHTML = this.innerHTML;
         this.root.appendChild(this.contentDiv);
 

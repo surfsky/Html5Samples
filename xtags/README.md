@@ -63,47 +63,46 @@ Examples
 ``` js
 <script src="./xtags.js" type='module' defer ></script>
 
-<x-rect fix="topLeft">topLeft</x-rect>
-<x-row cellmargin="0 20px 0 0" margin="0 0 10px 0" fix="center" width="430px">
-<x-col cellmargin="0 0 20px 0" width="130px" height="500px" fix="right">
+<x-rect anchor="topLeft" childanchor='center'>topLeft</x-rect>
+<x-row gap='20px' anchor="center" width="430px">...<x-row>
+<x-col gap="20px" anchor='right'  width="130px" height="500px">...<x-col>
+<x-grid columns='4'>...<x-grid>
+<x-form>...<x-form>
 ```
 
 -----------------------------------------------------
 Features
 -----------------------------------------------------
 
-- Support tags: rect, btn, row, col, grid, circle
+- Support tags: rect, btn, row, col, grid, form, circle, frame
 - Support fix position
 - Support child position
 - Support hover color change
-- Support animation for position, size, color
+- Support animation for position, size, color...
 - Support click event
 - Support theme: Just use XTags.showTheme(.)
-- Support popup: Mask, Toast, MessageBox, Dialog, Popup
+- Support popup: Mask, Toast, MessageBox, Dialog, Tooltip
 - Button
-    - Show ripple effect when click.
     - Disable when click before execute callback
+    - Can show ripple effect when click.
 
 
 -----------------------------------------------------
 Task
 -----------------------------------------------------
-/dragable
-/resizable
-/messagebox
-/dialog
-/unique id 对于动态创建的控件，自动生成一个唯一性ID，或者不用也行，用this.root 保存吧。
+drag
+swipe
 tooltip
-responsive: gridForm; gridBackend, gridDashboard
-弄个虚拟基类，实现所有css
-    Rect、Circle，butten
-    Style、
-    row、col，grid
-备选名称：classless.js, noclass.js, cssless.js, onlytags.js
-
-
+layout-backend
+layout-dashboard
+实现 react、vue那样的组件生成方式
 child sortable
-build min.js
+
+
+发布
+    build min.js
+    备选名称：classless.js, noclass.js, cssless.js, onlytags.js
+
 
 
 -----------------------------------------------------
@@ -112,9 +111,21 @@ Known BUG
 iframe 放在 xtags 里面，无法自动撑开，要手动指定 width=100%
 iframe 放在 xtags 里面，<a> 标签中的target无法正确指向
 
+
 -----------------------------------------------------
 history
 -----------------------------------------------------
+/dragable
+/resizable
+/messagebox
+/dialog
+/unique id 对于动态创建的控件，自动生成一个唯一性ID，或者不用也行，用this.root 保存吧。
+/layout-form
+/弄个虚拟基类Tag，实现所有css
+    Rect、Circle，butten
+    Style、
+    row、col，grid
+/删除this.shadow，直接用 this.shadowRoot
 /尝试用grid布局来写index.html
 /Link hover、visited color
 /Mask

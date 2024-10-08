@@ -421,3 +421,68 @@ export class MessageBox {
     <x-rect height="calc(100vh - 250px)">3</x-rect>  
     <x-rect height="calc(100vh - 250px)">4</x-rect>
   </x-grid>
+
+
+    /**
+     * Let element to screen center
+     * @param {string} elementSelector 
+     * @param {string} width  element width, suppoort px, em , rem
+     * @param {string} height element height, suppoort px, em , rem
+     * @returns 
+     */
+    static centerElement(elementSelector, width, height) {
+      const element = document.querySelector(elementSelector);
+      if (!element) return;
+
+      // 获取视口宽度和高度
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      let parsedWidth, parsedHeight;
+
+      // 解析宽度和高度值
+      if (width.endsWith('px')) {
+        parsedWidth = parseInt(width, 10);
+      } else if (width.endsWith('rem')) {
+        const rootFontSize = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
+        parsedWidth = parseInt(width, 10) * rootFontSize;
+      } else if (width.endsWith('em')) {
+        const parentFontSize = parseInt(getComputedStyle(element.parentNode).fontSize, 10);
+        parsedWidth = parseInt(width, 10) * parentFontSize;
+      } else {
+        console.error('Unsupported width unit');
+        return;
+      }
+
+      if (height.endsWith('px')) {
+        parsedHeight = parseInt(height, 10);
+      } else if (height.endsWith('rem')) {
+        const rootFontSize = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
+        parsedHeight = parseInt(height, 10) * rootFontSize;
+      } else if (height.endsWith('em')) {
+        const parentFontSize = parseInt(getComputedStyle(element.parentNode).fontSize, 10);
+        parsedHeight = parseInt(height, 10) * parentFontSize;
+      } else {
+        console.error('Unsupported height unit');
+        return;
+      }
+
+      // 计算并设置元素的位置
+      element.style.top = ((viewportHeight - parsedHeight) / 2) + 'px';
+      element.style.left = ((viewportWidth - parsedWidth) / 2) + 'px';
+    }
+
+      getInnerHTML(){
+      return this.root.innerHTML;
+  }
+
+  setInnerHTML(val){
+      this.root.innerHTML = val;
+      return this;
+  }
+
+
+        // root div
+        this.root = document.createElement('div');
+        this.root.innerHTML = this.innerHTML;   // contain child items
+        this.shadow.appendChild(this.root);
