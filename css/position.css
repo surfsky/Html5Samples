@@ -16,6 +16,8 @@ html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 当前元素的位置 Anchor 控制（position 属性）
 *************************************************/
 .fill          {position:fixed; top:0px; bottom:0px; left:0px;  right:0px;}
+.viewHeight    {height:100vh;}
+.viewWeight    {weight:100vw;}
 
 /* 固定位置（拖动页面时不会移动） */
 .fixTopLeft    {position:fixed; top:0px;    left:0px; }

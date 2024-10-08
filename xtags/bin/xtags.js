@@ -25,7 +25,7 @@
 
 
 import { XTags, Theme, Anchor} from "./xtags-base.js";
-import { Rect, Circle, Row, Column, Grid, Style } from "./xtags-baseui.js";
+import { Rect, Circle, Row, Column, Grid, Form, Style } from "./xtags-baseui.js";
 import { Frame, Image, Link, Button, Mask, Toast, Tooltip, MessageBox, Dialog } from "./xtags-control.js";
 import { XTagsUtil } from "./xtags-util.js";
 

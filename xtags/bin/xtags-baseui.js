@@ -19,11 +19,12 @@ export class Rect extends HTMLElement {
     // supported attribute. Notice these names must be all small chars.
     static _attrs = [
         'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'cursor',
+        'box', 'margin', 'padding',
         'width', 'height', 'minwidth', 'minheight', 'maxwidth', 'maxheight',
         'position', 'anchor', 'top', 'bottom', 'left', 'right',  
-        'display', 'childanchor', 'textalign', 'flex',
+        'display', 'childanchor', 'textalign', 
+        'flex', 'gridcolumn',
         'border', 'borderwidth', 'bordercolor', 'borderstyle', 'radius',  
-        'box', 'margin', 'padding',
         'background','bgcolor', 'hoverbgcolor', 'theme', 
         'color', 'hovercolor', 'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
         'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
@@ -404,6 +405,23 @@ export class Rect extends HTMLElement {
         this.root.addEventListener('click', ()=>eval(func));
         return this;
     }
+
+
+    /**Set grid column 
+     * @param {string} expr start-length or start/end
+    */
+    setGridColumn(expr){
+        if (expr.indexOf('-') != -1){
+            // start-length
+            const parts = expr.split("-");
+            this.root.style.gridColumnStart = parts[0];
+            this.root.style.gridColumnEnd = parseInt(parts[1]) + 1;
+        }
+        else{
+            // start/end
+            this.root.style.gridColumn = expr;
+        }
+    }
     
     //-----------------------------------------------------
     // Attribute change event
@@ -441,7 +459,10 @@ export class Rect extends HTMLElement {
             case 'bottom':            this.root.style.bottom = newValue;  break;
             case 'left':              this.root.style.left = newValue;  break;
             case 'right':             this.root.style.right = newValue;  break;
+
+            // child
             case 'flex':              this.root.style.flex = newValue;  break;
+            case 'gridcolumn':        this.setGridColumn(newValue); break;
 
             // child anchor
             case 'display':           this.root.style.display = newValue; break;
@@ -647,6 +668,58 @@ export class Grid extends Rect {
 
 customElements.define("x-grid", Grid);
 
+
+/************************************************************
+ * Responsive form grid container to display 1-4 columns
+ * @example
+ *     <x-form>
+ ***********************************************************/
+export class Form extends Rect {
+    constructor() {
+        super();
+        this.clear();
+
+        // style
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Responsive form grid container to display 1-4 columns*/
+            .gridForm {
+                display: grid;
+                gap: 10px;
+                padding: 10px;
+            }
+            @media (min-width: 400px)  {.gridForm { grid-template-columns: auto; }}
+            @media (min-width: 800px)  {.gridForm { grid-template-columns: 100px auto; }}
+            @media (min-width: 1000px) {.gridForm { grid-template-columns: 100px auto 100px auto; }}
+            .gridForm > * {text-align: left; height: 30px;}
+            .gridForm > label {margin-top: 5px;}
+            .gridForm > input {border-radius: 4px; border: 1px solid gray;}
+        `;
+        this.shadow.appendChild(style);
+
+        // root
+        this.root = document.createElement('form');
+        this.root.classList.add('gridForm');
+        this.shadow.appendChild(this.root);
+
+        // child
+        this.root.innerHTML = this.innerHTML;
+    }
+
+    static get observedAttributes() {
+        return ['gap', 'action'].concat(this._attrs);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        switch(name){
+            case 'gap':             this.root.style.gap = newValue; break;
+            case 'action':          this.root.setAttribute('action', newValue); break;
+        }
+    }
+}
+
+customElements.define("x-form", Form);
 
 
 /***********************************************************

@@ -132,10 +132,10 @@ export class XTags {
     }
 
     /** Get view width */
-    static get vw() { return  window.innerWidth || document.documentElement.clientWidth;}
+    static get viewWidth() { return  window.innerWidth || document.documentElement.clientWidth;}
 
     /** Get view height */
-    static get vh() { return window.innerHeight || document.documentElement.clientHeight;}
+    static get viewHeight() { return window.innerHeight || document.documentElement.clientHeight;}
 
     /** Center element in window */
     static centerlize(selector){

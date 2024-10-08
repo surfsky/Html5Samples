@@ -10,8 +10,8 @@
 
 <body>
     <x-style></x-style>
-    <x-grid width="100%" height="100%" columns="200px auto" gap="0">
-        <x-col height="100vh" bgcolor="#f0f0f0" padding="20px" >
+    <x-row width="100%" height="100%">
+        <x-col width="200px" height="100vh" bgcolor="#f0f0f0" padding="20px" >
             <h3>Menu</h3>
             <ui>
                 <li><a target="iframe" href="./about.html">About</a></li>
@@ -20,16 +20,15 @@
                 <li><a target="iframe" href="./container.html">Container</a></li>
                 <li><a target="iframe" href="./image.html">Image</a></li>
                 <li><a target="iframe" href="./image-icon.html">Icon</a></li>
-                <li><a target="iframe" href="./dialog.html">Dialog</a></li>
+                <li><a target="iframe" href="./popup.html">Popup</a></li>
                 <li><a target="iframe" href="./theme.html">Theme</a></li>
                 <li><a target="iframe" href="./mobile.html">Mobile</a></li>
                 <li><a target="iframe" href="./mobile.html">Backend</a></li>
                 <li><a target="iframe" href="./mobile.html">Dashboard</a></li>
             </ui>
         </x-col>
-        <!--div style="background-color: green; height:100%"></div-->
-        <!-- fail to occupied leaved width-->
-        <iframe name="iframe" src="./about.html" style="height:100vh; border:0;"></iframe>
-    </x-grid>
+        <!-- can't change iframe src-->
+        <iframe id="iframe" src="./about.html" style="height:100vh; flex:1; border:0;"></iframe>
+    </x-row>
 </body>
 </html>
