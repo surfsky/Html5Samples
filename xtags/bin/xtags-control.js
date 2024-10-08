@@ -189,6 +189,7 @@ export class Button extends Rect {
         this.root.style.overflow = 'hidden';
         this.root.style.height = this.root.style.boxSizing=='border-box' ? '44px' : '24px';
         this.root.style.width = this.root.style.boxSizing=='border-box' ? '120px' : '100px';
+        this.root.style.userSelect = 'none';
         this.setHoverOpacity('0.8');
     }
 
@@ -213,18 +214,24 @@ export class Button extends Rect {
     }
 
     /**
-     * Set click event overridde
+     * Set click event
+     * @param {function | string} func callback function or string. eg. "alert('hello world');"
      */
     setClick(func) {
         this.root.addEventListener('click', async (e) => {
+            // click to show ripple effect
             if (this._showRipple) {
                 var x = e.offsetX;
                 var y = e.offsetY;
                 this.showRipple(x, y);
             }
+
+            // disable - eval - enable
             this.setEnable(false);
-            await XTags.sleep(100);
-            eval(func);
+            if (typeof func === 'string')
+                await eval(`(async () => {${func}})()`);
+            else
+                await func();
             this.setEnable(true);
         });
     }
@@ -488,11 +495,11 @@ export class Dialog extends Rect {
         this.shadowRoot.appendChild(this.root);
 
         // close button
-        const closeButton = document.createElement('span');
-        closeButton.classList.add('btn-close');
-        closeButton.textContent = '×';
-        closeButton.addEventListener('click', () => this.close());
-        this.root.appendChild(closeButton);
+        this.closeButton = document.createElement('span');
+        this.closeButton.classList.add('btn-close');
+        this.closeButton.textContent = '×';
+        this.closeButton.addEventListener('click', () => this.close());
+        this.root.appendChild(this.closeButton);
 
         // content
         this.contentDiv = document.createElement('div');
@@ -630,26 +637,37 @@ export class Dialog extends Rect {
     }
 
     /**Show dialog with mask and center in screen*/
-    show(model=true, width='600px', height='400px') {
+    show(model=true, closable=true, width='600px', height='400px', x='', y='') {
         if (model)
             Mask.show();
+        this.closeButton.style.display = closable ? 'block' : 'none';
+        //const root = this.shadowRoot.querySelector('.popup');
+        //root.style.display = 'block';
+        this.root.style.display = 'block';
         this.root.style.width = width;
         this.root.style.height = height;
-        this.shadowRoot.querySelector('.popup').style.display = 'block';
-        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        const root = this.shadowRoot.querySelector('.popup');
-        const popupWidth = root.offsetWidth;
-        const popupHeight = root.offsetHeight;
-        root.style.left = (viewportWidth - popupWidth) / 2 + 'px';
-        root.style.top = (viewportHeight - popupHeight) / 2 + 'px';
+
+        // position
+        if (x=='' && y==''){
+            // auto center
+            const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+            const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+            const popupWidth  = this.root.offsetWidth;
+            const popupHeight = this.root.offsetHeight;
+            this.root.style.left = (viewWidth - popupWidth) / 2 + 'px';
+            this.root.style.top  = (viewHeight - popupHeight) / 2 + 'px';
+        }
+        else{
+            this.root.style.left = x;
+            this.root.style.top = y;
+        }
+
     }
 
     /**Close dialog*/
     close() {
         Mask.hide();
-        this.shadowRoot.querySelector('.popup').style.display = 'none';
-        //this.remove();
+        this.root.style.display = 'none';
     }
 
     /*Content*/
@@ -669,22 +687,40 @@ customElements.define('x-dialog', Dialog);
 /************************************************************
  * MessageBox
  * @example
- *     MessageBox.show('info', 'message info');
+ *     MessageBox.show('message content', 'info');
  ***********************************************************/
 export class MessageBox {
     /**
      * Show toast
-     * @param {string} icon iconname without extension
      * @param {string} text information 
+     * @param {string} icon iconname without extension
      */
     static async show(text, icon = 'black-bulb') {
-        const dlg = document.createElement('x-dialog');
+        const dlg = new Dialog(); // document.createElement('x-dialog');
         dlg.content = `
             <img src='${XTags.getIconUrl(icon)}' width='24px'/>
             <p>${text}</p>
             `;
         document.body.appendChild(dlg);
-        dlg.show(false, '500px', '150px');
+        dlg.show(false, true, '500px', '150px');
     }
 }
 
+/************************************************************
+ * Popup layer
+ * @example
+ *     Popup.show('info');
+ ***********************************************************/
+export class Popup {
+    /**
+     * Show popup
+     * @param {string} text content
+     */
+    static async show(text, width, height, x, y) {
+        const dlg = new Dialog();  // document.createElement('x-dialog');
+        dlg.content = `${text}`;
+        document.body.appendChild(dlg);
+        dlg.show(false, false, width, height, x, y);
+        return dlg;
+    }
+}

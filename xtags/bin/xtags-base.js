@@ -115,11 +115,15 @@ export class XTags {
      * @example await delay(20);
      */
     static sleep(ms) {
-      return new Promise((resolve) => {
-          setTimeout(resolve, ms);
-      });
-    }      
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
+    static toPromise(func){
+      return new Promise((resolve) => {
+        func(); 
+        resolve();
+      });
+    }
 
     /** Get element by class or id */
     static ele(selector){
@@ -167,6 +171,10 @@ export class XTags {
       return 0;
     }
 
+    /**Get element's real bound */
+    getBound(ele){
+      return ele.getBoundingClientRect();
+    }
 
 
     //-----------------------------------------
@@ -210,7 +218,15 @@ export class XTags {
     //-----------------------------------------
     // Color
     //-----------------------------------------
-    /** 生成浅色 */
+    /** Build random color */
+    static getRandomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgb(${r},${g},${b})`;
+  }
+
+    /** Build opacity color */
     static getOpacityColor(rawColor, opacity) {
         var clr = this.parseColor(rawColor);
         if (clr!= null)
@@ -218,6 +234,7 @@ export class XTags {
         return 'white';
     }
 
+    /** Build lighter color */
     static getLighterColor(color, factor = 0.5) {
         const rgb = this.parseColor(color);
         if (!rgb) return null;
@@ -233,7 +250,8 @@ export class XTags {
         }
       }
       
-      static getDarkerColor(color, factor = 0.5) {
+    /** Build darker color */
+    static getDarkerColor(color, factor = 0.5) {
         const rgb = this.parseColor(color);
         if (!rgb) return null;
       
@@ -563,16 +581,15 @@ export class Tag extends HTMLElement {
    * @param {Color} color 
    */
   setHoverBgColor(color){
-      var element = this.root;
-      var oldColor = element.style.backgroundColor;
-      var oldCursor = element.style.cursor;
-      element.addEventListener('mouseover', function() {
-          element.style.backgroundColor = color;
-          element.style.cursor = 'pointer';
+      var oldColor  = this.root.style.backgroundColor;
+      var oldCursor = this.root.style.cursor;
+      this.root.addEventListener('mouseover', () => {
+        this.root.style.backgroundColor = color;
+        this.root.style.cursor = 'pointer';
       });
-      element.addEventListener('mouseout', function() {
-          element.style.backgroundColor = oldColor;
-          element.style.cursor = oldCursor;
+      this.root.addEventListener('mouseout', () => {
+        this.root.style.backgroundColor = oldColor;
+        this.root.style.cursor = oldCursor;
       });
       return this;
   }
@@ -665,10 +682,12 @@ export class Tag extends HTMLElement {
    */
   setEnable(b){
       if (b){
+          this.root.disabled = false;
           this.root.style.pointerEvents = '';
           this.root.style.filter = '';
       }
       else{
+          this.root.disabled = true;
           this.root.style.pointerEvents = 'none';
           this.root.style.filter = 'grayscale(100%)';
       }
@@ -685,6 +704,21 @@ export class Tag extends HTMLElement {
           // TODO：根据当前位置拖动div位置
       }
       return this;
+  }
+
+  /**
+   * Make animation
+   * @param {function} animFunc  target animation function. eg. this.style.height='0px';
+   * @param {function} endFunc callback animation when finished. eg. this.style.visibility = 'hidden';
+   * @param {number} second animation duration seconds
+   * @param {string} [easing='ease'] easing animation name 
+   * @example tag.animate((ele)=> ele.style.height = '0px');
+   */
+  animate(animFunc, endFunc=null, second=0.1, easing='ease'){
+      this.root.style.transition = `all ${second}s ${easing}`;
+      if (endFunc != null)
+        this.root.addEventListener('transitionend', () => endFunc(this.root), { once: true });
+      requestAnimationFrame(() => animFunc(this.root));
   }
 
   //-----------------------------------------------------

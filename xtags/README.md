@@ -90,7 +90,8 @@ Features
 -----------------------------------------------------
 Task
 -----------------------------------------------------
-drag
+dialog buttons and dialogResult
+解决重入几次的问题：button.html
 swipe
 tooltip
 layout-backend
@@ -110,11 +111,16 @@ Known BUG
 -----------------------------------------------------
 iframe 放在 xtags 里面，无法自动撑开，要手动指定 width=100%
 iframe 放在 xtags 里面，<a> 标签中的target无法正确指向
+x-row 中的按钮点击后无法获取按钮的坐标和区域。popup.html
 
 
 -----------------------------------------------------
 history
 -----------------------------------------------------
+/按钮文字不可选择 user-select: none
+/Button long time execute
+/drag - dialog
+/animation: Tag.animate(...)
 /dragable
 /resizable
 /messagebox

@@ -10,32 +10,57 @@
 </head>
 <body>
     <x-row width="500px" anchor="center">
+        <x-btn click="showDialog()" >Dialog1</x-btn>
+        <x-btn click="showDialog2()">Dialog2</x-btn>
+        <x-btn click="await MessageBox.show('This is message')">MessageBox</x-btn>
+        <x-btn click="showPopup()" id="btnPopup">Popup</x-btn>
         <x-btn click="Toast.show('hello world!')" >Toast</x-btn>
-        <x-btn click="showDialog()">Diaog</x-btn>
-        <x-btn click="MessageBox.show('This is message')">MessageBox</x-btn>
-        <x-rect id="btnTooltip" height="44px">Tooltip</x-rect>
         <x-btn click="Mask.show(100)" >Mask</x-btn>
+        <x-rect id="btnTooltip" height="44px">Tooltip</x-rect>
     </x-row>
 
     <x-dialog id="dlg">
         <h1>Title</h1>
         <p>This is body</p>
-        <x-btn click="document.querySelector('#dlg').close()" anchor="bottom" bottom="16px">Close</x-btn>
+        <x-btn click="closeDialog()" anchor="bottom" bottom="16px">Close</x-btn>
     </x-dialog>
 </body>
 </html>
 
-<script type="module">
-    import { Tooltip } from "../bin/xtags-control.js";
-    Tooltip.bind('#btnTooltip');
-</script>
 <script>
     // show dialog
     function showDialog() {
-      //const dlg = document.createElement('x-dialog');
-      //dlg.content = '<h1>Title</h1><p>hello world!</p>';
-      //document.body.appendChild(dlg);
-      var dlg = document.querySelector('#dlg');
-      dlg.show();
+        document.querySelector('#dlg').show();
+    }
+
+    // dynamic show dialog with dynamic content
+    function showDialog2() {
+        const dlg = document.createElement('x-dialog');
+        dlg.content = `<h1>Title</h1><p>hello world! ${new Date().toLocaleString()}</p>`;
+        document.body.appendChild(dlg);
+        dlg.setShadow(false);
+        dlg.show();
+    }
+
+    // close dialog
+    function closeDialog(){
+        document.querySelector('#dlg').close();
+    }
+</script>
+
+<script type="module">
+    import { XTags } from "../bin/xtags-base.js";
+    import { Tooltip, Popup } from "../bin/xtags-control.js";
+    Tooltip.bind('#btnTooltip');
+
+    //
+    window.showPopup = async function(){
+        var btn = document.querySelector('#btnPopup');
+        var rect = btn.root.getBoundingClientRect();  // fail to get element's bound
+        var x = rect.left + 'px';
+        var y = rect.bottom + 'px';
+        var pop = await Popup.show('This is content', '200px', '100px',  x, y);
+        await XTags.sleep(1000);
+        pop.close();
     }
 </script>

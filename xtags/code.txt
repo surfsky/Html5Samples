@@ -486,3 +486,25 @@ export class MessageBox {
         this.root = document.createElement('div');
         this.root.innerHTML = this.innerHTML;   // contain child items
         this.shadow.appendChild(this.root);
+        //this.root.style.flexWrap = "wrap";
+        //this.root.style.alignItems = 'flex-start';
+        //this.root.style.justifyContent = 'flex-start';
+
+        <x-btn click="document.querySelector('#dlg').close()" anchor="bottom" bottom="16px">Close</x-btn>
+
+        //this.shadowRoot.querySelector('.popup').style.display = 'none';
+        //this.remove();
+
+
+            //await new Promise((resolve) => {
+            //    setTimeout(() => {
+            //        eval(func); 
+            //        resolve();
+            //    }, 0);
+            //});
+
+
+                //await new Promise((resolve) => {
+                //    eval(func); 
+                //    resolve();
+                //});

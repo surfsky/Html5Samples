@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #container {
+      position: fixed;
+      width: 800px;
+      top: 100px;
+      left: 100px;
+      display: flex;
+    }
+
+    #container>* {
+      margin-right: 10px;
+    }
+
+   .panel {
+      position: absolute;
+      visibility: hidden;
+      background-color: #f0f0f0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      width: 200px;
+      overflow: hidden;
+      transition: height 0.1s ease-out;  /*animat on height*/
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <button id="toggleButton1" onclick="togglePanel(this)">点击显示面板</button>
+    <button id="toggleButton2" onclick="togglePanel(this)">点击显示面板</button>
+    <button id="toggleButton3" onclick="togglePanel(this)">点击显示面板</button>
+    <button id="toggleButton4" onclick="togglePanel(this)">点击显示面板</button>
+  </div>
+  <div class="panel">这是弹出的面板内容，内容可多可少，自动适应高度。</div>
+
+  <script>
+    function togglePanel(trigger) {
+      const panel = document.querySelector('.panel');
+      if (panel.style.visibility === 'hidden' || panel.style.visibility == '') {
+        const rect = trigger.getBoundingClientRect();
+        panel.style.top = rect.bottom + 'px';
+        panel.style.left = rect.left + 'px';
+        const contentHeight = panel.scrollHeight;
+        panel.style.height = '0px';
+        panel.style.visibility = 'visible';
+        requestAnimationFrame(() => {
+          panel.style.height = `${contentHeight}px`;
+        });
+      } else {
+        panel.style.height = `${panel.scrollHeight}px`;
+        // 在动画结束后设置 display 为 none
+        panel.addEventListener('transitionend', () => {
+          panel.style.visibility = 'hidden';
+        }, { once: true });
+        requestAnimationFrame(() => {
+          panel.style.height = '0px';
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

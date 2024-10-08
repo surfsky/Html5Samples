@@ -10,7 +10,7 @@
 </head>
 <body>
     <x-grid anchor="center" width="430px" columns="3">
-        <x-btn theme="primary"   borderwidth="1px" click="alert('button1')" ripple='true'>button1</x-btn>
+        <x-btn theme="primary"   borderwidth="1px" click="console.log('click'); await sleep(2000); " ripple='true'>button1</x-btn>
         <x-btn theme="secondary" borderwidth="1px" click="alert('button2')">button2</x-btn>
         <x-btn theme="success"   borderwidth="1px" click="alert('button3')">button3</x-btn>
         <x-btn theme="info"      borderwidth="1px" click="alert('button4')">button4</x-btn>
@@ -19,3 +19,8 @@
     </x-grid>
 </body>
 </html>
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>

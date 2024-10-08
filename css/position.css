@@ -19,7 +19,7 @@ html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 .viewHeight    {height:100vh;}
 .viewWeight    {weight:100vw;}
 
-/* 固定位置（拖动页面时不会移动） */
+/* 固定位置（相对页面进行定位，拖动页面时不会移动） */
 .fixTopLeft    {position:fixed; top:0px;    left:0px; }
 .fixTop        {position:fixed; top:0px;    left:50%; transform: translateX(-50%);}
 .fixTopRight   {position:fixed; top:0px;    right:0px; }
@@ -31,7 +31,7 @@ html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 .fixRight      {position:fixed; top:50%;    transform: translateY(-50%); right:0px; }
 
 
-/* 位置（拖动页面时随着移动） */
+/* 位置（相对父元素进行定位，拖动页面时会随着移动） */
 .topLeft       {position:absolute; top:0px;    left:0px; }
 .top           {position:absolute; top:0px;    left:50%; transform: translateX(-50%);}
 .topRight      {position:absolute; top:0px;    right:0px; }
@@ -218,35 +218,30 @@ Grid 网格容器布局，控制子元素布局
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--grid-gap);
-    padding: var(--grid-padding);
     }
 /* 自动网格（统统放在一列） */
 .gridColumn{
     display: grid;
     grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--grid-gap);
-    padding: var(--grid-padding);
     }
 /* 2列网格 */
 .grid2 {
     display: grid;
     grid-template-columns: auto auto;  /*几个auto就几列*/
     gap: var(--grid-gap);
-    padding: var(--grid-padding);
     }
 /* 3列网格 */
 .grid3 {
     display: grid;
     grid-template-columns: auto auto auto;  /*几个auto就几列*/
     gap: var(--grid-gap);
-    padding: var(--grid-padding);
     }
 /* 4列网格 */
 .grid4 {
     display: grid;
     grid-template-columns: auto auto auto auto;  /*几个auto就几列*/
     gap: var(--grid-gap);
-    padding: var(--grid-padding);
     }
 
 /*表单容器（自适应1-4列）*/
