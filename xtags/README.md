@@ -36,22 +36,26 @@ Xtags framework
             /row
             /column
             /grid
-            iframe
+            /iframe
+            /form responsive
         event
             /click
             /hover
             drag
             swipe
-            any
         temple
-        responsive
     control:
         /button
-        groupbutton
+        /image
+        /link
         switch
+        groupbutton
         textbox
         popup
         toast
+    canvas
+        shape
+        control
     util:
         extensions
 
@@ -90,6 +94,10 @@ Features
 -----------------------------------------------------
 Task
 -----------------------------------------------------
+修复 Popup、dialog、messagebox、toast
+修复 Theme     遍历节点，setTheme方法丢失了，看是否把这个方法附在root下面
+
+canvas and shape
 dialog buttons and dialogResult
 解决重入几次的问题：button.html
 swipe
@@ -109,14 +117,34 @@ child sortable
 -----------------------------------------------------
 Known BUG
 -----------------------------------------------------
+三方库（如highlight.js）无法集成 ，估计是尝试获取 queryElement() 获取shadowDom中的子元素失败。
 iframe 放在 xtags 里面，无法自动撑开，要手动指定 width=100%
 iframe 放在 xtags 里面，<a> 标签中的target无法正确指向
-x-row 中的按钮点击后无法获取按钮的坐标和区域。popup.html
+x-row 中的按钮点击后无法获取按钮的坐标和区域。见 popup.html
 
 
 -----------------------------------------------------
 history
 -----------------------------------------------------
+/测试原地替换dom方式，而不是在shadow中创建，以避免shadow导致的隔离影响
+    思路
+        提供属性 render = Shadow | Body
+        对于自己的样式控制，直接写没关系
+        对于子类的渲染，需要给一个guid id，并输出对应的 style 标签
+    逐步修正。主要是查 shadowRoot
+        /Style       需提供全局 box-sizing 模式，全屏设置，1em设置，响应容器设置
+        /Link       按钮无法显示
+        /Rectangle   点击动画
+        /Circle      中间的圆显示不正常
+        /Image
+        /Icon
+        /Button
+        /Row       影响属性 gap
+        /Column    影响属性 gap
+        /Form
+        /Mask
+/实现 Container   响应式布局
+/button 继承至 tag，且生成 <button> 标签
 /按钮文字不可选择 user-select: none
 /Button long time execute
 /drag - dialog

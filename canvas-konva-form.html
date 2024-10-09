@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://unpkg.com/konva@8.3.5/konva.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <script>
+    const stage = new Konva.Stage({
+      container: 'container',
+      width: 500,
+      height: 300
+    });
+
+    const layer = new Konva.Layer();
+
+    // 创建一个垂直布局容器
+    const verticalGroup = new Konva.Group();
+
+    // 绘制对话框背景
+    const dialogBox = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 400,
+      height: 200,
+      fill: '#f0f0f0',
+      stroke: 'black',
+      strokeWidth: 2
+    });
+    verticalGroup.add(dialogBox);
+
+    // 创建一个水平布局容器用于标签和模拟输入框
+    const horizontalGroup1 = new Konva.Group();
+    const label1 = new Konva.Text({
+      x: 0,
+      y: 0,
+      text: 'Name:',
+      fontSize: 14
+    });
+    const inputRect1 = new Konva.Rect({
+      x: 80,
+      y: -5,
+      width: 200,
+      height: 20,
+      fill: 'white',
+      stroke: 'gray',
+      strokeWidth: 1
+    });
+    horizontalGroup1.add(label1);
+    horizontalGroup1.add(inputRect1);
+    verticalGroup.add(horizontalGroup1);
+
+    // 创建另一个水平布局容器用于另一个标签和模拟输入框
+    const horizontalGroup2 = new Konva.Group();
+    const label2 = new Konva.Text({
+      x: 0,
+      y: 0,
+      text: 'Email:',
+      fontSize: 14
+    });
+    const inputRect2 = new Konva.Rect({
+      x: 80,
+      y: -5,
+      width: 200,
+      height: 20,
+      fill: 'white',
+      stroke: 'gray',
+      strokeWidth: 1
+    });
+    horizontalGroup2.add(label2);
+    horizontalGroup2.add(inputRect2);
+    verticalGroup.add(horizontalGroup2);
+
+    // 绘制确认按钮
+    const confirmButton = new Konva.Rect({
+      x: 150,
+      y: 150,
+      width: 100,
+      height: 30,
+      fill: '#4CAF50',
+      stroke: 'black',
+      strokeWidth: 1
+    });
+    const confirmText = new Konva.Text({
+      x: 165,
+      y: 165,
+      text: 'Confirm',
+      fontSize: 14,
+      fill: 'white'
+    });
+    verticalGroup.add(confirmButton);
+    verticalGroup.add(confirmText);
+
+    layer.add(verticalGroup);
+    stage.add(layer);
+
+    // 添加按钮点击事件
+    confirmButton.on('click', function () {
+      // 这里只是模拟获取输入框的值，实际应用中可能需要更复杂的逻辑
+      console.log('Name: dummy name', 'Email: dummy email');
+    });
+  </script>
+</body>
+
+</html>

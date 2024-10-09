@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="module">
+    class XRow extends HTMLElement {
+      constructor() {
+        super();
+
+        //
+        this.root = document.createElement('div');
+        this.root.id = 'rowroot';
+        this.root.style.display = 'flex';
+        this.root.style.width = this.getAttribute('width');
+        this.root.style.height = this.getAttribute('height');
+        this.root.innerHTML = this.innerHTML;
+
+        // method1 - shadowdom, can't effect iframe
+        //const shadow = this.attachShadow({mode: 'open'});
+        //shadow.appendChild(this.root);
+
+        // method2 - clone in body, will dulplicate
+        //document.body.appendChild(this.root);
+
+        // method3 - inplace replace, ok
+        const parent = this.parentNode;
+        const index = Array.from(parent.children).indexOf(this);
+        parent.removeChild(this);
+        parent.insertBefore(this.root, parent.children[index]);
+      }
+    }
+    customElements.define("x-row", XRow);
+  </script>
+</head>
+
+<body>
+  <x-row id="row" width="100%" height="100%">
+    <ui>
+      <li><a target="iframe" href="./page1.html">Page1</a></li>
+      <li><a target="iframe" href="./page2.html">Page2</a></li>
+      <li><a target="iframe" href="./page3.html">Page3</a></li>
+    </ui>
+    <!-- can't change iframe src-->
+    <iframe name="iframe" src="./page1.html" style="height:100vh; flex:1; border:1;"></iframe>
+  </x-row>
+</body>
+
+</html>

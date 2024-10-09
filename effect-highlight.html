@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+</head>
+
+<body>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>
+    const originalHtmlCode = `
+    <x-rect anchor="fill" childAnchor="center" border="0">
+      <x-row anchor="topRight" right="10px" top="20px" width="100px">
+        <x-img icon="black-refresh" width="18px" click="location.reload()" cursor="pointer"></x-img>
+        <x-link href="http://github.com/surfsky" target="_blank" color="red" >Github</x-link>
+      </x-row>
+      <h1>XTags.js</h1>
+      <small>Write web and easy layout without any class and style.</small>
+      <br/>
+      <x-row width="500">
+        <x-btn click="XTags.setTheme(Theme.themeLight)" theme="primary">Light</x-btn>
+        <x-btn click="XTags.setTheme(Theme.themeDark)" theme="secondary">Dark</x-btn>
+        <x-btn click="Toast.show('hello XTags!', 'white-bulb')" theme="success" >Toast</x-btn>
+      </x-row>
+    </x-rect>`;
+    const encodedHtmlCode = originalHtmlCode.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    document.write(`<pre><code class="html">${encodedHtmlCode}</code></pre>`);
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>

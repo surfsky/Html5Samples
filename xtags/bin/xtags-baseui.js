@@ -19,6 +19,8 @@ export class Rect extends Tag {
         this.root.style.height = '100px';
         this.root.style.border = '1px solid lightgray';
         this.root.style.overflow = 'hidden';
+        if (this.innerHTML != '')
+            this.setChildAnchor(Anchor.C);
     }
 }
 customElements.define("x-rect", Rect);
@@ -57,24 +59,25 @@ customElements.define("x-circle", Circle);
  *     <x-row gap="20px">
  ***********************************************************/
 export class Row extends Tag {
-    //constructor(bgcolor='white') {  // 经测试不支持默认参数代入
     constructor() {
         super();
 
         // flex row
-        this.root.classList.add('x-container');
+        this.root.id = this.getId();
         this.root.style.width = '100%';
         this.root.style.height = '100px';
         this.root.style.display = "flex";
         this.root.style.flexDirection = "row";
 
         // child margin
-        this.createStyleTag();
         this.setGap('0 8px 0 0');
     }
 
+
     setGap(val){
-        this.styleTag.textContent = `.x-container > *  {margin: ${val} }`;
+        this.styleTag = document.createElement('style');
+        this.styleTag.textContent = `#${this.root.id} > *  {margin: ${val} }`;
+        this.saveStyle();
     }
 
     static get observedAttributes() {
@@ -177,9 +180,17 @@ customElements.define("x-grid", Grid);
 export class Form extends Tag {
     constructor() {
         super();
-        this.clear();
+    }
 
-        // style
+    createRoot(){
+        this.root = document.createElement('form');
+        this.root.classList.add('gridForm');
+        this.root.innerHTML = this.innerHTML;
+        return this.root;
+    }
+
+    createStyle(){
+        this.root.id = this.getId();
         const style = document.createElement('style');
         style.textContent = `
             /* Responsive form grid container to display 1-4 columns*/
@@ -195,15 +206,7 @@ export class Form extends Tag {
             .gridForm > label {margin-top: 5px;}
             .gridForm > input {border-radius: 4px; border: 1px solid gray;}
         `;
-        this.shadowRoot.appendChild(style);
-
-        // root
-        this.root = document.createElement('form');
-        this.root.classList.add('gridForm');
-        this.shadowRoot.appendChild(this.root);
-
-        // child
-        this.root.innerHTML = this.innerHTML;
+        return style;
     }
 
     static get observedAttributes() {
@@ -223,4 +226,75 @@ customElements.define("x-form", Form);
 
 
 
+/************************************************************
+ * Responsive container
+ * @example
+ *     <x-form>
+ ***********************************************************/
+export class Container extends Tag {
+    constructor() {
+        super();
+    }
+
+    createRoot(){
+        this.root = document.createElement('div');
+        this.root.innerHTML = this.innerHTML;
+        return this.root;
+    }
+
+    createStyle(){
+        this.root.id = this.getId();
+        const style = document.createElement('style');
+        style.textContent = `
+            #${this.root.id} {
+                width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 15px;
+                padding-right: 15px;
+                }
+                /* Responsive container 540-720-960-1140 */
+                @media (min-width: 576px)  { #${this.root.id}   {max-width: 540px;}}  /*xs*/
+                @media (min-width: 768px)  { #${this.root.id}   {max-width: 720px;}}  /*s*/
+                @media (min-width: 992px)  { #${this.root.id}   {max-width: 960px;}}  /*m*/
+                @media (min-width: 1200px) { #${this.root.id}   {max-width: 1140px;}} /*l*/
+                @media (min-width: 1500px) { #${this.root.id}   {max-width: 1400px;}} /*xl*/
+                @media (min-width: 1800px) { #${this.root.id}   {max-width: 1700px;}} /*xxl*/
+                @media (min-width: 2000px) { #${this.root.id}   {max-width: 1900px;}} /*xxxl*/
+        `;
+        return style;
+    }
+}
+
+customElements.define("x-container", Container);
+
+
+
+/************************************************************
+ * IFrame
+ * @example
+ *     <x-frame></x-frame>
+ ***********************************************************/
+export class Frame extends Tag {
+    constructor() {
+        super();
+        this.clear();
+        this.root = document.createElement("iframe");
+        this.root.innerHTML = this.innerHTML;
+        this.root.style.border = '0';
+        this.shadowRoot.appendChild(this.root);
+    }
+
+    static get observedAttributes() {
+        return ['src'].concat(this._attrs);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        switch (name) {
+            case 'src': this.root.src = newValue; break;
+        }
+    }
+}
+customElements.define("x-frame", Frame);
 

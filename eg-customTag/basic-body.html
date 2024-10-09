@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Tag Example</title>
+  <script type="module">
+    class MyTag extends HTMLElement {
+      constructor() {
+        super();
+        const root = document.createElement('div');        // 创建根元素
+        root.id = 'mytag';                                 // 设置ID
+        root.style.color = 'red';                          // 设置样式
+        //root.innerHTML = this.innerHTML;                   // 附加上子元素
+        document.body.appendChild(root);                   // 将内容添加到 DOM 中
+      }
+    }
+    customElements.define("my-tag", MyTag);  // 标签名称必须小写，且包含横杆#@¥@@##¥¥
+  </script>
+</head>
+<body onload="query()">
+    <!-- 使用自定义标签 -->
+    <my-tag ><p id="hello">hello world</p></my-tag>
+</body>
+</html>
+<script>
+    function query(){
+        var ele = document.querySelector('#mytag');
+        console.log(ele);  // 无法检索到。Shadow DOM内部创建的。
+
+        ele = document.querySelector('#hello');
+        console.log(ele);  // 可以检索到
+    }
+</script>

@@ -3,6 +3,7 @@
  * @author surfsky.github.com 2024
  */
 
+
 /************************************************************
  * Align enum for anchor and childAnchor
  ***********************************************************/
@@ -118,6 +119,7 @@ export class XTags {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
+    /** Change func to async promise. eg. await toPromise(func); */
     static toPromise(func){
       return new Promise((resolve) => {
         func(); 
@@ -189,13 +191,14 @@ export class XTags {
      */
     static setTheme(theme){
         this.theme = theme;
-        var tags = document.querySelectorAll('[tagName^="X-"]');  // not support
-        if (tags.length === 0) {
-            tags = Array.from(document.querySelectorAll('*'));
-            tags = tags.filter(element => element.nodeName.startsWith('X-'));  // notice: will upper
-        }
+        //var tags = document.querySelectorAll('[tagName^="X-"]');  // not support
+        //if (tags.length === 0) {
+        //    tags = Array.from(document.querySelectorAll('*'));
+        //    tags = tags.filter(element => element.nodeName.startsWith('X-'));  // notice: will upper
+        //}
+        var tags = Array.from(document.querySelectorAll('*'));
         tags.forEach(tag => {
-            if (tag.setTheme != 'undefined'){
+            if (tag.setTheme != undefined){
               tag.setTheme(theme);
           }
         });
@@ -313,6 +316,11 @@ export class XTags {
             }
             : null;
       }
+
+    /** TODO: Create unique id */
+    static uuid(){
+        return Date.now().toString(36) + Math.random().toString(36).substring(2);
+    }
 }
 
 
@@ -325,92 +333,107 @@ export class XTags {
  * @property {string} theme Set theme such as primary, secondary, success...
  ***********************************************************/
 export class Tag extends HTMLElement {
-  //-----------------------------------------------------
-  // Constructor
-  //-----------------------------------------------------
-  // supported attribute. Notice these names must be all small chars.
-  static _attrs = [
-      'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'cursor',
-      'box', 'margin', 'padding',
-      'width', 'height', 'minwidth', 'minheight', 'maxwidth', 'maxheight',
-      'position', 'anchor', 'top', 'bottom', 'left', 'right',  
-      'display', 'childanchor', 'textalign', 
-      'flex', 'gridcolumn',
-      'border', 'borderwidth', 'bordercolor', 'borderstyle', 'radius',  
-      'background','bgcolor', 'hoverbgcolor', 'theme', 
-      'color', 'hovercolor', 'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
-      'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
-      'click', 'draggable'
-  ];
+    //-----------------------------------------------------
+    // Constructor
+    //-----------------------------------------------------
+    // supported attribute. Notice these names must be all small chars.
+    static _attrs = [
+        'id', 'name', 'class', 'newclass', 'z', 'opacity', 'visible', 'overflow', 'cursor',
+        'box', 'margin', 'padding',
+        'width', 'height', 'minwidth', 'minheight', 'maxwidth', 'maxheight',
+        'position', 'anchor', 'top', 'bottom', 'left', 'right',  
+        'display', 'childanchor', 'textalign', 
+        'flex', 'gridcolumn',
+        'border', 'borderwidth', 'bordercolor', 'borderstyle', 'radius',  
+        'background','bgcolor', 'hoverbgcolor', 'theme', 
+        'color', 'hovercolor', 'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
+        'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
+        'click', 'draggable'
+    ];
 
 
-  /**Constructor. Build a frame rectangle with content in center.*/
-  constructor() {
-      super();
-      this.root = this.createRoot();
-      this.attachShadow({mode: 'open'});
-      this.shadowRoot.appendChild(this.root);
-      if (this.innerHTML != '')
-          this.setChildAnchor(Anchor.C);
-  }
+    /**Constructor. Build a frame rectangle with content in center.*/
+    constructor() {
+        super();
+        this.useShadow = false;  // use shadow or body to create element
+        this.attachShadow({mode: 'open'});
+        this.root = this.createRoot();
+        this.styleTag = this.createStyle();
+        this.saveRoot();
+        this.saveStyle();
+    }
 
-  /**Create root element */
-  createRoot(){
-      var ele = document.createElement("div");
-      ele.innerHTML = this.innerHTML;      // contain child items
-      ele.style.boxSizing = 'border-box';  // size = content + padding + border, margin is outside.
-      ele.style.transition = 'all 0.5s';   // animation
-      return ele;
-  }
+    /**Create root element(virtual function) */
+    createRoot(){
+        var ele = document.createElement("div");
+        ele.innerHTML = this.innerHTML;      // contain child items
+        ele.style.boxSizing = 'border-box';  // size = content + padding + border, margin is outside.
+        ele.style.transition = 'all 0.5s';   // animation
+        return ele;
+    }
 
-  /**Support attributes.*/
-  static get observedAttributes() {
-      return this._attrs;
-  }
+    /**Create style element(virtual function) */
+    createStyle(){
+        return null;
+    }
 
-  //-----------------------------------------------------
-  // Css Property Getter & Setter
-  //-----------------------------------------------------
-  /** Insert style tag into shadow root. And use this.styleTag.contentText = ...; */
-  createStyleTag(){
-      this.styleTag = document.createElement('style');
-      this.shadowRoot.appendChild(this.styleTag);
-      return this.styleTag;
-  }
+    /**Get or build uuid id. */
+    getId(){
+        var id = this.getAttribute('id');
+        if (id == null) id = XTags.uuid();
+        return id;
+    }
 
-  /** This root div's style */
-  get style(){
-      return this.root.style;
-  }
+    /**Save root element. */
+    saveRoot(){
+        if (this.root == null) return;
+        if (this.useShadow){
+            this.shadowRoot.appendChild(this.root);
+        }
+        else{
+            // replace inplace
+            const parent = this.parentNode;
+            if (parent != null){
+                const index = Array.from(parent.children).indexOf(this);
+                parent.removeChild(this);
+                parent.insertBefore(this.root, parent.children[index]);
+            }
+        }
+    }
+
+    /** Save styleTage element */
+    saveStyle(){
+        if (this.styleTag == null) return;
+        if (this.useShadow){
+            this.shadowRoot.appendChild(this.styleTag);
+        }
+        else{
+            document.head.appendChild(this.styleTag);
+        }
+    }
 
 
-  /** Css property getter */
-  //get(property){
-  //    return this.root.style.getPropertyValue(property);
-  //}
-  /** Css property setter */
-  //set(property, val){
-  //    this.root.style.setProperty(property, val);
-  //    return this;
-  //}
 
-  //-----------------------------------------------------
-  // Content
-  //-----------------------------------------------------
-  /**Clear all children */
-  clear() {
-      while (this.shadowRoot.firstChild) {
-          this.shadowRoot.removeChild(this.shadowRoot.firstChild);
-      }
-  }
+    /**Support attributes.*/
+    static get observedAttributes() {
+        return this._attrs;
+    }
 
-  /** Child content object (equal innerHTML) */
-  get content(){
-      return this.root.innerHTML;
-  }
-  set content(val){
-      this.root.innerHTML = val;
-  }
+    //-----------------------------------------------------
+    // Property Getter & Setter
+    //-----------------------------------------------------
+    /** This root div's style */
+    get style(){
+        return this.root.style;
+    }
+
+    /** Child content object (equal innerHTML) */
+    get content(){
+        return this.root.innerHTML;
+    }
+    set content(val){
+        this.root.innerHTML = val;
+    }
 
 
   //-----------------------------------------------------
@@ -845,32 +868,34 @@ export class Tag extends HTMLElement {
  *     <x-style cellmargin="0 20px 0 0" bgcolor="lightgray" margin="0 0 10px 0">
  ***********************************************************/
 export class Style extends Tag {
-  constructor() {
-      super();
-      this.clear();
+    constructor() {
+        super();
+        this.root = document.body; // set attribute on body
+    }
 
-      // style tag
-      this.styleTag = document.createElement('style');
-      document.head.appendChild(this.styleTag);
-      this.styleTag.textContent = `
-          :root {
-              /* 定义全局变量。组件中可用 var('..')的方式设置值 */
-              --box: border-box;
-              --transition: 'all 0.5s';
-          }
-          html,body {
-              width: 100%;  height: 100%; /*全屏*/
-              padding: 0px; margin: 0px;
-          }
+    createRoot(){
+        return null;
+    }
 
-          /* 以下没用，传递不到 shadow 里面去*/
-          *, *::before, *::after {box-sizing: --box;}
-          * {transition: 0.5s;}
-      `;
+    createStyle(){
+        this.styleTag = document.createElement('style');
+        document.head.appendChild(this.styleTag);
+        this.styleTag.textContent = `
+            :root {
+                /* global variants. Use var('..') to get value */
+                --box: border-box;
+                --transition: 'all 0.5s';
+            }
+            html,body {
+                width: 100%;  height: 100%; /*fullscreen*/
+                padding: 0px; margin: 0px;
+            }
 
-      // apply variant
-      this.root = document.body;
-  }
+            /* boxmodule and animation*/
+            *, *::before, *::after {box-sizing: --box;}
+            * {transition: 0.5s;}
+        `;
+    }
 }
 
 customElements.define("x-style", Style);

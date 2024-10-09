@@ -20,27 +20,27 @@ html,body      {height: 100%; width: 100%; margin: 0; padding:0;}
 .viewWeight    {weight:100vw;}
 
 /* 固定位置（相对页面进行定位，拖动页面时不会移动） */
-.fixTopLeft    {position:fixed; top:0px;    left:0px; }
-.fixTop        {position:fixed; top:0px;    left:50%; transform: translateX(-50%);}
-.fixTopRight   {position:fixed; top:0px;    right:0px; }
-.fixBottomLeft {position:fixed; bottom:0px; left:0px; }
-.fixBottom     {position:fixed; bottom:0px; left:50%; transform: translateX(-50%); }
-.fixBottomRight{position:fixed; bottom:0px; right:0px; }
-.fixLeft       {position:fixed; top:50%;    transform: translateY(-50%); left:0px; }
-.fixCenter     {position:fixed; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
-.fixRight      {position:fixed; top:50%;    transform: translateY(-50%); right:0px; }
+.fixTopLeft    {position:fixed;    top:0px;    left:0px;  }
+.fixTop        {position:fixed;    top:0px;    left:50%;  transform: translateX(-50%);}
+.fixTopRight   {position:fixed;    top:0px;    right:0px; }
+.fixBottomLeft {position:fixed;    bottom:0px; left:0px;  }
+.fixBottom     {position:fixed;    bottom:0px; left:50%;  transform: translateX(-50%); }
+.fixBottomRight{position:fixed;    bottom:0px; right:0px; }
+.fixLeft       {position:fixed;    top:50%;    left:0px;  transform: translateY(-50%); }
+.fixCenter     {position:fixed;    top:50%;    left:50%;  transform: translate3D(-50%, -50%, 0); }
+.fixRight      {position:fixed;    top:50%;    right:0px; transform: translateY(-50%); }
 
 
 /* 位置（相对父元素进行定位，拖动页面时会随着移动） */
-.topLeft       {position:absolute; top:0px;    left:0px; }
-.top           {position:absolute; top:0px;    left:50%; transform: translateX(-50%);}
+.topLeft       {position:absolute; top:0px;    left:0px;  }
+.top           {position:absolute; top:0px;    left:50%;  transform: translateX(-50%);}
 .topRight      {position:absolute; top:0px;    right:0px; }
-.bottomLeft    {position:absolute; bottom:0px; left:0px; }
-.bottom        {position:absolute; bottom:0px; left:50%; transform: translateX(-50%); }
+.bottomLeft    {position:absolute; bottom:0px; left:0px;  }
+.bottom        {position:absolute; bottom:0px; left:50%;  transform: translateX(-50%); }
 .bottomRight   {position:absolute; bottom:0px; right:0px; }
-.left          {position:absolute; top:50%;    transform: translateY(-50%); left:0px; }
-.center        {position:absolute; top:50%;    transform: translate3D(-50%, -50%, 0); left:50%;}
-.right         {position:absolute; top:50%;    transform: translateY(-50%); right:0px; }
+.left          {position:absolute; top:50%;    left:0px;  transform: translateY(-50%); }
+.center        {position:absolute; top:50%;    left:50%;  transform: translate3D(-50%, -50%, 0);}
+.right         {position:absolute; top:50%;    right:0px; transform: translateY(-50%); }
 
 
 /* 浮动位置（拖动页面时会移动） */

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Tag Example</title>
+  <script type="module">
+    class XRow extends HTMLElement {
+      constructor() {
+        super();
+        const root = document.createElement('div');
+        root.id = 'rowroot';
+        root.style.display = 'flex';
+        root.innerHTML = this.innerHTML;
+
+        const shadow = this.attachShadow({mode: 'open'});  // 创建 Shadow DOM
+        shadow.appendChild(root);
+      }
+    }
+    customElements.define("x-row", XRow);
+  </script>
+</head>
+
+<body>
+  <x-row id="row">
+    <div id="div1">Div 1</div>
+    <div>Div 2</div>
+    <div>Div 3</div>
+  </x-row>
+</body>
+
+</html>
+<script>
+  $ = (selector) => document.querySelector(selector);
+  _ = (selector) => document.querySelector(selector);
+  q = (selector) => document.querySelector(selector);
+  console.log($('#row'));      // ok
+  console.log($('#rowroot'));  // fail. shadowroot 下的dom元素无法被检索
+  console.log($('#div1'));     // ok
+
+  console.log(_('#row'));      // ok
+  console.log(_('#rowroot'));  // fail. shadowroot 下的dom元素无法被检索
+  console.log(_('#div1'));     // ok
+</script>

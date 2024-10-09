@@ -508,3 +508,23 @@ export class MessageBox {
                 //    eval(func); 
                 //    resolve();
                 //});
+
+
+
+  /** Css property getter */
+  //get(property){
+  //    return this.root.style.getPropertyValue(property);
+  //}
+  /** Css property setter */
+  //set(property, val){
+  //    this.root.style.setProperty(property, val);
+  //    return this;
+  //}
+
+  /**Clear all children */
+  clear() {
+      while (this.shadowRoot.firstChild) {
+          this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+      }
+  }
+

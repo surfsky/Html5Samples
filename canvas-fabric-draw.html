@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      display: block;
+      border: 1px solid red;
+      /*background-color: #f0f0f0;*/
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="1200" height="800"></canvas>
+</body>
+
+
+</html>
+<script>
+// ref: https://zhuanlan.zhihu.com/p/404933623
+// canvas
+const canvas = new fabric.Canvas('c');
+//const canvas = new fabric.StaticCanvas("c");//没有鼠标交互的fabric对象
+
+canvas.isDrawingMode = true;
+canvas.freeDrawingBrush.color = "blue";
+canvas.freeDrawingBrush.width = 5;
+
+  </script>

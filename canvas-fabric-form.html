@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    /*经测试会和fabric库冲突
+    html,body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 1px solid blue;
+      box-sizing: border-box;
+    }
+    #c{
+      display: block;
+      background-color: lightblue;
+      width: 800px;
+      height: 600px;
+      border: 1px solid red;
+      position:fixed;    
+      top:50%;
+      left:50%;
+      transform: translate3D(-50%, -50%, 0); 
+    }
+    */
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    canvas {
+      display: block;
+      /*background-color: #f0f0f0;*/
+    }
+  </style>
+  <title>Fabric canvas绘图库测试</title>
+</head>
+
+<body>
+  <canvas id="c" width="800px" height="600px" ></canvas>
+  <script>
+    const canvas = new fabric.Canvas('c');
+
+    // 覆盖默认的交互对象的方法（禁止调整大小、拖动）
+    canvas.interactive = false;
+    canvas.forEachObject(obj => {
+      obj.hasControls = false;
+      obj.hasBorders = false;
+      obj.selectable = false;
+      obj.evented = false;
+      // 禁止拖动（未成功）
+      obj.lockMovementX = true;
+      obj.lockMovementY = true;
+    });
+
+    // 绘制对话框背景
+    const dialogBox = new fabric.Rect({
+      left: 50,
+      top: 50,
+      width: 400,
+      height: 200,
+      fill: '#f0f0f0',
+      stroke: 'black',
+      strokeWidth: 2
+    });
+    canvas.add(dialogBox);
+
+    // 绘制标签
+    const label1 = new fabric.Text('Name:', {
+      left: 80,
+      top: 80,
+      fontSize: 14
+    });
+    canvas.add(label1);
+
+    // 绘制输入框
+    const inputName = new fabric.Textbox('', {
+      left: 150,
+      top: 75,
+      width: 200,
+      fontSize: 14,
+      // 设置边框颜色和宽度.fail
+      borderColor: 'gray',
+      borderWidth: 1
+    });
+    canvas.add(inputName);
+
+    const label2 = new fabric.Text('Email:', {
+      left: 80,
+      top: 120,
+      fontSize: 14,
+      color: 'red',  // fail
+    });
+    canvas.add(label2);
+
+    const inputEmail = new fabric.Textbox('', {
+      left: 150,
+      top: 115,
+      width: 200,
+      fontSize: 14,
+      borderColor: 'gray',
+      borderWidth: 1
+    });
+    canvas.add(inputEmail);
+
+    // 绘制确认按钮
+    const confirmButton = new fabric.Rect({
+      left: 180,
+      top: 160,
+      width: 100,
+      height: 30,
+      fill: '#4CAF50',
+      stroke: 'black',
+      strokeWidth: 1,
+      // 设置圆角（无效）
+      cornerRadius: 5,
+      borderRadius: 5,
+      radius: 5,
+    });
+    const confirmText = new fabric.Text('Confirm', {
+      left: 205,
+      top: 170,
+      fontSize: 14,
+      fill: 'white'
+    });
+    canvas.add(confirmButton);
+    canvas.add(confirmText);
+
+    // 添加按钮点击事件
+    confirmButton.on('mousedown', function () {
+      const name = inputName.value;
+      const email = inputEmail.value;
+      console.log('Name:', name, 'Email:', email);
+    });
+  </script>
+</body>
+
+</html>
