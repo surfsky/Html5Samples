@@ -70,12 +70,18 @@ export class Row extends Tag {
         this.root.style.flexDirection = "row";
 
         // child margin
-        this.setGap('0 8px 0 0');
+        var gap = this.getAttribute('gap');
+        if (gap != null)
+            this.setChildMargin(`0 ${gap} 0 0`);
     }
 
 
-    setGap(val){
+    /** Set children margin 
+     * @param {string} val css number. eg. 10px, 1em, 1rem
+    */
+    setChildMargin(val){
         this.styleTag = document.createElement('style');
+        this.styleTag.id = XTags.uuid();
         this.styleTag.textContent = `#${this.root.id} > *  {margin: ${val} }`;
         this.saveStyle();
     }
@@ -89,7 +95,7 @@ export class Row extends Tag {
         super.attributeChangedCallback(name, oldValue, newValue);
         switch(name){
             case 'gap':            
-                this.setGap(newValue);
+                this.setChildMargin(newValue);
                 break;
         }
     }
@@ -111,7 +117,9 @@ export class Column extends Row {
         this.root.style.flexDirection = "column";
         this.root.style.width = '';
         this.root.style.height = '100%';
-        this.setGap('0 0 8px 0');
+        var gap = this.getAttribute('gap');
+        if (gap != null)
+            this.setChildMargin(`0 0 ${gap} 0`);
     }
 }
 
@@ -203,7 +211,7 @@ export class Form extends Tag {
             @media (min-width: 800px)  {.gridForm { grid-template-columns: 100px auto; }}
             @media (min-width: 1000px) {.gridForm { grid-template-columns: 100px auto 100px auto; }}
             .gridForm > * {text-align: left; height: 30px;}
-            .gridForm > label {margin-top: 5px;}
+            .gridForm > label {padding-top: 0px;}
             .gridForm > input {border-radius: 4px; border: 1px solid gray;}
         `;
         return style;

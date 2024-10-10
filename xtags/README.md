@@ -94,8 +94,14 @@ Features
 -----------------------------------------------------
 Task
 -----------------------------------------------------
-修复 Popup、dialog、messagebox、toast
-修复 Theme     遍历节点，setTheme方法丢失了，看是否把这个方法附在root下面
+button按钮有点问题，有的可以正常，有的不行（如setTheme）。 要不增加一个 asyncclick ？ 
+修复 Popup、dialog、messagebox
+如何回收自动创建的style标签，增加一个styleid属性？
+useShadow 的注入
+    有些控件无需全局dom，用shadow模式就行了，也便于保存状态，如button、radio、复杂的控件等。
+    把方法都写在root下面，避免inplace模式导致方法丢失
+完善link，动态修改色彩
+全局静态的方式，自动注入 boxsizing、transition css，弄个开关。
 
 canvas and shape
 dialog buttons and dialogResult
@@ -115,7 +121,7 @@ child sortable
 
 
 -----------------------------------------------------
-Known BUG
+Showdow 模式下的 BUG
 -----------------------------------------------------
 三方库（如highlight.js）无法集成 ，估计是尝试获取 queryElement() 获取shadowDom中的子元素失败。
 iframe 放在 xtags 里面，无法自动撑开，要手动指定 width=100%
@@ -126,11 +132,15 @@ x-row 中的按钮点击后无法获取按钮的坐标和区域。见 popup.html
 -----------------------------------------------------
 history
 -----------------------------------------------------
+/toast 的 style 需要回收，算了，不设置row 的 gap属性了。
+/修复 Theme     遍历节点，setTheme方法丢失了，看是否把这个方法附在root下面
+/fixanchor 固定在页面，不跟随父节点
+/修复 Toast
 /测试原地替换dom方式，而不是在shadow中创建，以避免shadow导致的隔离影响
     思路
         提供属性 render = Shadow | Body
         对于自己的样式控制，直接写没关系
-        对于子类的渲染，需要给一个guid id，并输出对应的 style 标签
+        对于子类的渲染，需要给一个guid，并输出对应的 style 标签
     逐步修正。主要是查 shadowRoot
         /Style       需提供全局 box-sizing 模式，全屏设置，1em设置，响应容器设置
         /Link       按钮无法显示

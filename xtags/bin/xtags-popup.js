@@ -52,12 +52,14 @@ export class Mask {
  *     Toast.show('info', 'message info');
  ***********************************************************/
 export class Toast {
+    static counter = 0;
     /**
      * Show toast
      * @param {string} icon iconname without extension
      * @param {string} text information 
      */
-    static async show(text, icon = 'white-bulb') {
+    static async show(text, icon='white-bulb', width='400px', height='38px') {
+        /*
         var toast = new Rect()
             .setSize('400px', '36px')
             .setRadius('6px')
@@ -77,7 +79,46 @@ export class Toast {
         toast.style.top = '-100px';
         await XTags.sleep(1000);
         document.body.removeChild(toast);
+        */
+
+        var id = XTags.uuid();
+        var tag = `
+            <x-rect id='${id}' box='border-box' fixanchor='top' top='-100px' childanchor='center'
+              width='${width}' height='${height}' radius='6px'  border='0'
+              bgcolor='${XTags.theme.success}' color='${XTags.theme.light}' opacity='0.8'>
+              <x-row height="100%">
+                <img src='${XTags.getIconUrl(icon)}' width='20px' height='20px'/>&nbsp;
+                <div>${text}<div>
+              </x-row>
+            </x-rect>
+        `;
+
+        // add to body
+        //var ele2 = document.createElement('div');
+        //ele.innerHTML = tag;
+        //document.body.appendChild(ele);
+        var ele = XTags.parseDomNode(tag);
+        document.body.appendChild(ele);
+
+        // parse height's value and unit, calc top position.
+        this.counter++;
+        const regex = /(\d+(?:\.\d+)?)(px|rem|em|%)/;
+        const match = height.match(regex);
+        const value = match ? parseFloat(match[1]) : 38;
+        const unit  = match ? match[2] : 'px';
+        var top = 25 + (this.counter-1)*(value+10) + unit;
+
+        // show and hide with animation
+        var toast = XTags.$('#' + id);  // = ele.root
+        await XTags.sleep(50);
+        toast.style.top = top;
+        await XTags.sleep(2000);
+        toast.style.top = '-100px';
+        await XTags.sleep(1000);
+        document.body.removeChild(toast);
+        this.counter--;
     }
+
 }
 
 /************************************************************
@@ -136,7 +177,9 @@ export class Tooltip {
  *     Dialog.show();
  *     Dialog.close();
  ***********************************************************/
-export class Dialog extends Rect {
+export class Dialog extends Tag {
+    useShadow = true;  // use shadow dom to simply page.
+
     constructor() {
         super();
     }
@@ -420,14 +463,14 @@ export class Dialog extends Rect {
     }
 
     /*Content*/
-    get content() { return this.contentDiv.innerHTML; }
+    get content()    { return this.contentDiv.innerHTML; }
     set content(val) { this.contentDiv.innerHTML = val; }
 
     /*Width*/
-    get width() { return this.root.style.width;}
-    set width(val) { this.root.style.width = val;}
-    get height() { return this.root.style.height;}
-    set height(val) { this.root.style.height = val;}
+    get width()      { return this.root.style.width;}
+    set width(val)   { this.root.style.width = val;}
+    get height()     { return this.root.style.height;}
+    set height(val)  { this.root.style.height = val;}
 }
 
 customElements.define('x-dialog', Dialog);

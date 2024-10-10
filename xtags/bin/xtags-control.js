@@ -62,6 +62,7 @@ customElements.define("x-img", Image);
  ***********************************************************/
 export class Link extends Tag {
     constructor() {
+        this.useShadow = true;  // 如何插入到super 前面去
         super();
     }
 
@@ -174,62 +175,17 @@ export class Button extends Tag {
         this.root.style.height = this.root.style.boxSizing=='border-box' ? '44px' : '24px';
         this.root.style.width = this.root.style.boxSizing=='border-box' ? '120px' : '100px';
         this.root.style.userSelect = 'none';
+        this.root.style.textAlign = 'center';
         this.setHoverOpacity('0.8');
         return this.root;
     }
 
-    setBorderColor() {
-        var clr = 'red';  // ok
-        var clr1 = XTags.getOpacityColor(this.root.style.backgroundColor, 0.5);  // fail
-        var clr2 = XTags.getDarkerColor(this.root.style.backgroundColor, 0.2);   // ok
-        var clr3 = XTags.getLighterColor(this.root.style.backgroundColor, 0.5);  // ok
-        this.root.style.borderColor = clr2;
-    }
-
-    /**
-     * Set theme. 
-     * @param {Theme} o 
-     */
-    setTheme(o) {
-        super.setTheme(o);
-        //this.root.style.borderColor = o.Border;
-        this.root.style.borderRadius = o.radius;
-        this.root.style.color = o.light;
-        this.setBorderColor();
-    }
-
-    /**
-     * Set click event
-     * @param {function | string} func callback function or string. eg. "alert('hello world');"
-     */
-    setClick(func) {
-        this.root.addEventListener('click', async (e) => {
-            // click to show ripple effect
-            //if (this._showRipple) {
-            //    var x = e.offsetX;
-            //    var y = e.offsetY;
-            //    this.showRipple(x, y);
-            //}
-
-            // disable - eval - enable
-            this.setEnable(false);
-            if (typeof func === 'string')
-                await eval(`(async () => {${func}})()`);
-            else
-                await func();
-            this.setEnable(true);
-        });
-    }
-
-    setRipple(b) {
-        this._showRipple = Boolean(b);
-    }
-
-
+    //----------------------------------------------------
+    // Attributes
+    //----------------------------------------------------
     static get observedAttributes() {
         return ['ripple'].concat(this._attrs);
     }
-
 
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
@@ -240,6 +196,96 @@ export class Button extends Tag {
         }
     }
 
+    //----------------------------------------------------
+    // Set functions
+    //----------------------------------------------------
+    /**
+     * Set theme. 
+     * @param {Theme} o 
+     */
+    setTheme(o) {
+        super.setTheme(o);
+        //this.root.style.border = o.Border;
+        this.root.style.borderRadius = o.radius;
+        this.root.style.color = o.light;
+        this.setAutoBorderColor();
+    }
+
+
+    /**
+     * Set click event
+     * @param {function | string} func callback function or string. eg. "alert('hello world');"
+     */
+    setClick(func) {
+        this.root.addEventListener('click', async (e) => {
+            // click to show ripple effect
+            if (this._showRipple) {
+                var x = e.offsetX;
+                var y = e.offsetY;
+                this.showRipple(x, y);
+            }
+
+            // disable - eval - enable
+            this.setEnable(false);
+            if (typeof func === 'string'){
+                if (func.indexOf('await') != -1)
+                    await eval(`(async () => {${func}})()`);
+                else
+                    eval(func);
+            }
+            else
+                await func();
+            this.setEnable(true);
+        });
+    }
+
+
+
+    //----------------------------------------------------
+    // Ripple effect
+    //----------------------------------------------------
+    /**Ripple style element */
+    static _rippleStyle = null;
+
+    setRipple(b) {
+        this._showRipple = Boolean(b);
+    }
+
+    /**
+     * Show ripple
+     * @param {number} x 
+     * @param {number} y 
+     */
+    showRipple(x, y){
+        // style
+        if (this._rippleStyle == null){
+            this._rippleStyle = document.createElement('style');
+            this._rippleStyle.textContent = `
+                @keyframes ripple-effect {
+                    to { transform: scale(10); opacity: 0;}
+                }`;
+            if (this.useShadow)
+                this.shadowRoot.appendChild(this._rippleStyle);
+            else
+                this.document.head.appendChild(this._rippleStyle);
+        }
+
+        // ripple div
+        const ripple = document.createElement('div');
+        ripple.style.width = "40px";
+        ripple.style.height = "40px";
+        ripple.style.borderRadius = "20px";
+        ripple.style.position = 'absolute';
+        ripple.style.left = `${x-20}px`;
+        ripple.style.top  = `${y-20}px`;
+        ripple.style.backgroundColor = 'white';
+        ripple.style.opacity = '0.9';
+        ripple.style.animation = 'ripple-effect 0.3s linear';
+        this.root.appendChild(ripple);
+        ripple.addEventListener('animationend', function () {
+            this.release();
+        });
+    }
 }
 
 customElements.define("x-btn", Button);
