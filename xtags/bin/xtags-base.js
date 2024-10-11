@@ -29,6 +29,7 @@ export class Theme{
         this.name        = opt.name;
         this.background  = opt.background;
         this.text        = opt.text;
+        this.textLight   = opt.textLight;
         this.link        = opt.link;
         this.linkHover   = opt.linkHover;
         this.linkVisited = opt.linkVisited;
@@ -41,7 +42,7 @@ export class Theme{
         this.dark        = opt.dark;
         this.light       = opt.light;
         this.border      = opt.border;  // border style. eg. '1px solid red'
-        this.radius      = opt.radius;  // radius: 
+        this.radius      = opt.radius;
     }
 
     /** Theme light*/
@@ -49,6 +50,7 @@ export class Theme{
         name        : 'iOSLight',
         background  : 'white',
         text        : 'black',
+        textLight   : 'white',
         link        : 'blue',
         linkHover   : 'darkblue',
         linkVisited : 'gray',
@@ -60,7 +62,7 @@ export class Theme{
         danger      : '#dc3545',
         dark        : '#343a40',
         light       : '#f8f9fa',
-        border      : '#cdcdcd',
+        //border      : '1px solid #cdcdcd',
         radius      : '8px',
     });
 
@@ -69,18 +71,19 @@ export class Theme{
         name        : 'MaterialDark',
         background  : '#171717',
         text        : '#cccccc',
+        textLight   : '#f0f0f0', //'#f8f9fa',
         link        : 'red',
         linkHover   : 'darkred',
         linkVisited : 'gray',
         primary     : '#007bff',
-        secondary   : '#6c757d',
+        secondary   : '#7633d4',
         success     : '#28a745',
         info        : '#17a2b8',
         warning     : '#ffc107',
         danger      : '#dc3545',
         dark        : '#343a40',
         light       : '#f8f9fa',
-        border      : '#707070',
+        //border      : '1px solid #707070',
         radius      : '8px',
     });
 }
@@ -100,7 +103,7 @@ class ITheme{
 
 
 /************************************************************
- * XTags utils
+ * XTags utils: sleep, theme, icon, color, px, position....
  ***********************************************************/
 export class XTags {
     /** Icon root path*/
@@ -209,6 +212,19 @@ export class XTags {
         return getComputedStyle(ele);
     }
 
+    /**
+     * Search and remove &lt;style&gt; tag that contains certain stylename (eg. '.mytag')
+     * @param {string} styleName 
+     */
+    removeStyleTag(styleName) {
+        const styleTags = document.getElementsByTagName('style');
+        for (let i = 0; i < styleTags.length; i++) {
+            const tag = styleTags[i];
+            if (tag.textContent.includes(styleName)) {
+                tag.remove();
+            }
+        }
+    }
 
     //-----------------------------------------
     // Theme
@@ -379,38 +395,99 @@ export class Tag extends HTMLElement {
         'background','bgcolor', 'hoverbgcolor', 'theme', 
         'color', 'hovercolor', 'font', 'fontsize', 'fontfamily', 'fontstyle', 'fontweight',
 
+        // data
+        'title', 'tip',
+
         // effect
         'shadow', 'transform', 'rotate', 'scale', 'skew', 'textshadow',
 
         // event
-        'click', 'draggable'
+        'click', 'draggable',
     ];
 
     /** Create element in shadow or body*/
-    useShadow = false;
+    get useShadow() {return  false;}
 
     /**Constructor. Build a frame rectangle with content in center.*/
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
+        if (this.useShadow)
+            this.attachShadow({mode: 'open'});
+
+        // root element with styletag
         this.root = this.createRoot();
-        this.styleTag = this.createStyle();
+        this.root.styleTag = this.createStyle();
+
+        // backup functions to tag for inplace mode.
+        var tag = this.root;
+        tag.root = this.root;
+        tag.setTheme = this.setTheme;
+        tag.beforeRemove = this.beforeRemove;
+        tag.afterRemove = this.afterRemove;
+        tag.disconnectedCallback = this.disconnectedCallback;
+
+        // save root and style tags.
         this.saveRoot();
         this.saveStyle();
     }
+
+    /**Destructor. Call when release. */
+    disconnectedCallback(){
+        this.afterRemove();
+    }
+
+    /**Call this function manually when need release something before remove.*/
+    beforeRemove() { }
+
+    /**Call this function anto after node is removed. */
+    afterRemove(){
+        if (this.root != null && this.root.styleTag != null)
+            this.root.styleTag.remove();
+    }
+
+
 
     /**Create root element(virtual function) */
     createRoot(){
         var ele = document.createElement("div");
         ele.innerHTML = this.innerHTML;      // contain child items
-        ele.style.boxSizing = 'border-box';  // size = content + padding + border, margin is outside.
         ele.style.transition = 'all 0.5s';   // animation
+        //ele.style.boxSizing = 'border-box';  // size = content + padding + border, margin is outside.
         return ele;
     }
 
     /**Create style element(virtual function) */
     createStyle(){
         return null;
+    }
+
+    /**Save root element. */
+    saveRoot(){
+        if (this.root == null || this.root == document.body) 
+            return;
+
+        if (this.useShadow)
+            this.shadowRoot.appendChild(this.root);
+        else {
+            const parent = this.parentNode;
+            if (parent != null){
+                // replace inplace
+                const index = Array.from(parent.children).indexOf(this);
+                parent.removeChild(this);
+                parent.insertBefore(this.root, parent.children[index]);
+            }
+        }
+    }
+
+    /** Save styleTage element */
+    saveStyle(){
+        if (this.root.styleTag == null) return;
+        if (this.useShadow){
+            this.shadowRoot.appendChild(this.root.styleTag);
+        }
+        else{
+            document.head.appendChild(this.root.styleTag);
+        }
     }
 
     /**Get or build uuid id. */
@@ -420,51 +497,7 @@ export class Tag extends HTMLElement {
         return id;
     }
 
-    /**Save root element. */
-    saveRoot(){
-        if (this.root == null) return;
-        if (this.useShadow){
-            this.shadowRoot.appendChild(this.root);
-        }
-        else{
-            // replace inplace
-            var tag = this.root;
-            const parent = this.parentNode;
-            if (parent != null){
-                const index = Array.from(parent.children).indexOf(this);
-                parent.removeChild(this);
-                parent.insertBefore(this.root, parent.children[index]);
 
-                //
-                tag.root = this.root;
-                tag.setTheme = this.setTheme;
-                tag.styleTag = this.styleTag;
-                tag.release = this.release;
-            }
-        }
-    }
-
-    /** Save styleTage element */
-    saveStyle(){
-        if (this.styleTag == null) return;
-        if (this.useShadow){
-            this.shadowRoot.appendChild(this.styleTag);
-        }
-        else{
-            document.head.appendChild(this.styleTag);
-        }
-    }
-
-    /**Remove dom and style tags */
-    release(){
-        if (this.useShadow){
-            document.body.removeChild(this);
-        }
-        else{
-            document.body.removeChild(this.root);
-            document.head.removeChild(this.styleTag);
-        }
-    }
 
     //-----------------------------------------------------
     // Attribute change event
@@ -547,6 +580,10 @@ export class Tag extends HTMLElement {
             case 'fontstyle':         this.root.style.fontStyle = newValue;  break;
             case 'fontweight':        this.root.style.fontWeight = newValue;  break;
 
+            // data
+            case 'title':             this.root.title = newValue;  break;
+            case 'tip':               this.root.setAttribute('tip', newValue);  break;
+
             // effect
             case 'shadow':            this.setShadow(newValue); break;
             case 'textshadow':        this.setTextShadow(newValue); break;
@@ -586,12 +623,9 @@ export class Tag extends HTMLElement {
     //-----------------------------------------------------
     // Theme
     //-----------------------------------------------------
-    /** Theme class, eg. primary, secondary, info, warning...*/
-    _themeCls = "";
-
     /** Set theme class, eg. primary, secondary, info, warning...*/
     setThemeCls(cls){
-        this._themeCls = cls;
+        this.root.themeCls = cls;
         this.setTheme(XTags.theme);
         return this;
     }
@@ -602,7 +636,7 @@ export class Tag extends HTMLElement {
      */
     setTheme(t){
         this.root.style.color = t.text;
-        switch (this._themeCls){
+        switch (this.root.themeCls){
             case "primary":   this.root.style.backgroundColor = t.primary;     break;
             case "secondary": this.root.style.backgroundColor = t.secondary;   break;
             case "success":   this.root.style.backgroundColor = t.success;     break;
@@ -913,29 +947,26 @@ customElements.define("x-div", Tag);
 export class Style extends Tag {
     constructor() {
         super();
-        this.root = document.body; // set attribute on body
     }
 
     createRoot(){
-        return null;
+        return document.body;
     }
 
     createStyle(){
-        this.styleTag = document.createElement('style');
-        document.head.appendChild(this.styleTag);
-        this.styleTag.textContent = `
-            :root {
-                /* global variants. Use var('..') to get value */
-                --box: border-box;
-                --transition: 'all 0.5s';
-            }
+        this.root.styleTag = document.createElement('style');
+        document.head.appendChild(this.root.styleTag);
+        this.root.styleTag.textContent = `
+            /* fullscreen */
             html,body {
-                width: 100%;  height: 100%; /*fullscreen*/
+                width: 100%;  height: 100%; 
                 padding: 0px; margin: 0px;
             }
 
-            /* boxmodule and animation*/
-            *, *::before, *::after {box-sizing: --box;}
+            /* boxmodule */
+            *, *::before, *::after {box-sizing: border-box;}
+
+            /* animation */
             * {transition: 0.5s;}
         `;
     }

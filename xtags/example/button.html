@@ -10,10 +10,10 @@
 </head>
 <body>
     <x-grid anchor="center" width="430px" columns="3">
-        <x-btn theme="primary"   click="console.log('click'); await sleep(2000); " ripple='true'>button1</x-btn>
-        <x-btn theme="secondary" click="alert('button2')">button2</x-btn>
-        <x-btn theme="success"   click="alert('button3')">button3</x-btn>
-        <x-btn theme="info"      click="alert('button4')">button4</x-btn>
+        <x-btn theme="primary"   click="console.log('button1 ripple');" ripple='true'>button1</x-btn>
+        <x-btn theme="secondary" click="" ripple="true">button2</x-btn>
+        <x-btn theme="success"   asyncclick="await sleep(2000); alert('button3 asyncclick');">button3</x-btn>
+        <x-btn theme="info"      asyncclick="alert('button4')">button4</x-btn>
         <x-btn theme="warning"   click="alert('button5')">button5</x-btn>
         <x-btn theme="danger"    click="alert('button6')">button6</x-btn>
     </x-grid>

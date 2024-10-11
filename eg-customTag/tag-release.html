@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        /* 一些与自定义标签相关的样式 */
+        .custom-style {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <my-custom-tag></my-custom-tag>
+    <button id="removeButton" onclick="removeTag()">删除自定义标签</button>
+
+    <script>
+        class MyCustomTag extends HTMLElement {
+            constructor() {
+                super();
+                // 创建一个影子 DOM
+                const shadow = this.attachShadow({ mode: 'open' });
+                // 在影子 DOM 中添加内容
+                shadow.innerHTML = '<p>This is a custom tag.</p>';
+            }
+
+            // 当元素从 DOM 中移除时执行清理操作
+            disconnectedCallback() {
+                const styleTags = document.getElementsByTagName('style');
+                for (let i = 0; i < styleTags.length; i++) {
+                    const styleTag = styleTags[i];
+                    if (styleTag.textContent.includes('.custom-style')) {
+                        styleTag.remove();
+                    }
+                }
+                console.log('自定义标签被移除，执行清理操作。');
+            }
+        }
+        customElements.define('my-custom-tag', MyCustomTag);
+
+        function removeTag(){
+            const customTag = document.getElementsByTagName('my-custom-tag')[0];
+            if (customTag) {
+                customTag.remove();
+            }
+        }
+
+        //document.getElementById('removeButton').addEventListener('click', function () {
+        //    const customTag = document.getElementsByTagName('my-custom-tag')[0];
+        //    if (customTag) {
+        //        customTag.remove();
+        //    }
+        //});
+    </script>
+
+</body>
+
+</html>

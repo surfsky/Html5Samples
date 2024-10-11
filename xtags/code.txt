@@ -530,3 +530,15 @@ export class MessageBox {
 
         //tags = tags.filter(element => element.nodeName.startsWith('X-'));  // use in shadow mode. The nodeName will be upper.
 
+
+    /**Remove dom and style tags */
+    release(){
+        if (this.useShadow){
+            document.body.removeChild(this);
+        }
+        else{
+            document.body.removeChild(this.root);
+            document.head.removeChild(this.styleTag);
+        }
+    }
+    

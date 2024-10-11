@@ -3,7 +3,7 @@
  * @author surfsky.github.com 2024
  */
 import { XTags, Tag, Style, Theme, Anchor } from "./xtags-base.js";
-import { Rect, Circle, Row, Column, Grid } from "./xtags-baseui.js";
+import { Rect, Circle, Row, Column, Grid } from "./xtags-container.js";
 
 
 
@@ -128,37 +128,46 @@ export class Toast {
  *     Tooltip.hide();
  ***********************************************************/
 export class Tooltip {
-    /** Bind all matched elements to show tooltip with element's textcontent 
+    /** Bind all matched elements to show tooltip
      * @param {string} selector Element selector 
+     * @param {string} [attrName='tip'] Attribute name or callback， If null, show element's text content.
     */
-    static bind(selector) {
+    static bind(selector, attrName=null) {
         const elements = document.querySelectorAll(selector);
         elements.forEach(ele => {
             var o = (ele.root == null) ? ele : ele.root;
-            o.addEventListener('mouseover', () => Tooltip.show(ele));
-            o.addEventListener('mouseout', () => Tooltip.hide());
+            o.addEventListener('mouseover', () => Tooltip.show(ele, attrName));
+            o.addEventListener('mouseout',  () => Tooltip.hide());
         });
     }
 
     /**
-     * Show tooltip under element. If text is null, show element's text content.
+     * Show tooltip under element. 
      * @param {Tag} element 
-     * @param {string} text 
+     * @param {string} attrName
      */
-    static show(element, text = "") {
-        if (text == "") text = element.textContent;
+    static show(element, attrName) {
+        var text = '';
+        if (attrName == null)                    text = element.textContent;
+        else if (typeof attrName == 'function')  text = attrName(element);
+        else                                     text = this.getVal(element, attrName);
+        if (text == null || text == '')
+            return;
+
         const tooltip = document.createElement('div');
         tooltip.id = 'tooltip';
-        tooltip.textContent = text;
+        tooltip.innerHTML = text;
         tooltip.style.display = 'block';
-        tooltip.style.position = "absolute";
-        tooltip.style.backgroundColor = "#f9f9f9";
+        tooltip.style.position = "fixed";
+        tooltip.style.backgroundColor = 'white'; //"#f9f9f9";
         tooltip.style.border = "1px solid #ccc";
         tooltip.style.borderRadius = '4px';
         tooltip.style.padding = "5px";
         tooltip.style.zIndex = "999";
-        tooltip.style.left = element.offsetLeft + 'px';
-        tooltip.style.top = element.offsetTop + element.offsetHeight + 'px';
+
+        var rect = element.getBoundingClientRect(); // get rect in viewport
+        tooltip.style.left = rect.left + 'px';
+        tooltip.style.top  = rect.bottom + 4 + 'px';
         document.body.appendChild(tooltip);
     }
 
@@ -167,6 +176,22 @@ export class Tooltip {
         const tooltip = document.getElementById('tooltip');
         if (tooltip != null)
             document.body.removeChild(tooltip);
+    }
+
+    /** Get element's attribute's value 
+     * @param {Element} element 
+     * @param {string} attr Attribute name, can be comma-seperated string: 'style.width'
+    */
+    static getVal(element, attr) {
+        let attrs = attr.split('.');
+        let value = element;
+        for (let a of attrs) {
+            value = value[a];
+            if (value === undefined) {
+                return undefined;
+            }
+        }
+        return value;
     }
 }
 
@@ -178,7 +203,8 @@ export class Tooltip {
  *     Dialog.close();
  ***********************************************************/
 export class Dialog extends Tag {
-    useShadow = true;  // use shadow dom to simply page.
+    /** Create element in shadow mode*/
+    get useShadow() {return  true;}
 
     constructor() {
         super();
@@ -204,7 +230,7 @@ export class Dialog extends Tag {
             }
           .popup-content {
               text-align: center;
-              user-select: none;
+              /*user-select: none;*/
             }
           /* close button */
           .btn-close {
@@ -214,6 +240,9 @@ export class Dialog extends Tag {
               cursor: pointer;
               user-select: none;
             }
+          .btn-close:hover{
+            color: red;
+          }
           /* resizers */
           .resizer {
               position: absolute;

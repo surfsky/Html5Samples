@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <div id="targetElement">Some content</div>
+    <button onclick="changeStyleTag()">Change style tag</button>
+
+    <script>
+        /** Build random color */
+        function getRandomColor() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            return `rgb(${r},${g},${b})`;
+        }
+
+        //
+        _style = null;
+        function changeStyleTag() {
+            if (_style == null) {
+                _style = document.createElement('style');
+                document.head.appendChild(_style);
+            }
+            _style.textContent = `#targetElement { color: ${getRandomColor()}; }`;
+        }
+    </script>
+
+</body>
+
+</html>

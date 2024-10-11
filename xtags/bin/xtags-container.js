@@ -14,6 +14,8 @@ import { XTags, Tag, Style, Theme, Anchor } from "./xtags-base.js";
 export class Rect extends Tag {
     constructor() {
         super();
+        this.root.style.boxSizing = 'border-box';  // size = content + padding + border, margin is outside.
+        this.root.style.transition = 'all 0.5s';   // animation
         this.root.style.padding = "10px";
         this.root.style.width = '100px';
         this.root.style.height = '100px';
@@ -75,14 +77,12 @@ export class Row extends Tag {
             this.setChildMargin(`0 ${gap} 0 0`);
     }
 
-
     /** Set children margin 
      * @param {string} val css number. eg. 10px, 1em, 1rem
     */
     setChildMargin(val){
-        this.styleTag = document.createElement('style');
-        this.styleTag.id = XTags.uuid();
-        this.styleTag.textContent = `#${this.root.id} > *  {margin: ${val} }`;
+        this.root.styleTag = document.createElement('style');
+        this.root.styleTag.textContent = `#${this.root.id} > *  {margin: ${val} }`;
         this.saveStyle();
     }
 
@@ -247,6 +247,7 @@ export class Container extends Tag {
     createRoot(){
         this.root = document.createElement('div');
         this.root.innerHTML = this.innerHTML;
+        this.root.style.transition = 'all 0.5s';   // animation
         return this.root;
     }
 

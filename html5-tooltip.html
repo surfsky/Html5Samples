@@ -44,8 +44,13 @@
             tooltip.style.borderRadius = '4px';
             tooltip.style.padding= "5px";
             tooltip.style.zIndex= "999";
-            tooltip.style.left = element.offsetLeft + 'px';
-            tooltip.style.top  = element.offsetTop + element.offsetHeight + 'px';
+
+
+            var rect = element.getBoundingClientRect(); // get rect in viewport
+            tooltip.style.left = rect.left + 'px';
+            tooltip.style.top  = rect.top + rect.height + 'px';
+            //tooltip.style.left = element.offsetLeft + 'px';
+            //tooltip.style.top  = element.offsetTop + element.offsetHeight + 'px';
             document.body.appendChild(tooltip);
         }
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+</head>
+
+<body>
+    <button onclick="showHtmlCode('codeDisplay')">显示页面代码</button>
+    <pre id="codeDisplay"></pre>
+</body>
+
+<script>
+    function showHtmlCode(id){
+      const bodyHtml = document.body.outerHTML;
+        // 去除 script 标签，注释，空行
+        const bodyWithoutScript = bodyHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        const bodyWithoutComments = bodyWithoutScript.replace(/<!--[\s\S]*?-->/g, '');
+        const bodyWithoutEmptyLines = bodyWithoutComments.replace(/^\s*[\r\n]/gm, '');
+        const codeDisplay = document.getElementById(id);
+        codeDisplay.textContent = bodyWithoutEmptyLines;
+        hljs.highlightElement(codeDisplay);
+    }
+</script>
+
+</html>

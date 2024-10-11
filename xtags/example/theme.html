@@ -8,11 +8,11 @@
     <script src="../bin/xtags.js" type="module" defer></script>
 </head>
 <body>
-    <x-rect anchor="fill" childanchor="center">
+    <x-rect anchor="fill" childanchor="center" border="0">
         <h2>Click button to change theme.</h2>
-        <x-row width="300px" height="100px">
+        <x-row width="300px" height="100px" gap="5px">
             <x-btn click="XTags.setTheme(Theme.themeLight)" theme="primary">Light</x-btn>
-            <x-btn click="XTags.setTheme(Theme.themeDark)"  theme="secondary">Dark</x-btn>
+            <x-btn click="XTags.setTheme(Theme.themeDark)"  theme="success">Dark</x-btn>
         </x-row>
     </x-rect>
 </body>

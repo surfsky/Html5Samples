@@ -77,35 +77,60 @@ Examples
 -----------------------------------------------------
 Features
 -----------------------------------------------------
+- Tags: 
+    - basic: tag, rect, circle, style
+    - container: container, row, col, grid, form, frame
+    - form
+        - Button
+            - Disable when click before execute callback
+            - Can show ripple effect when click.
+    - popup: toast, mask, dialog, messagebox, popup, tooltip
 
-- Support tags: rect, btn, row, col, grid, form, circle, frame
-- Support fix position
-- Support child position
-- Support hover color change
-- Support animation for position, size, color...
-- Support click event
-- Support theme: Just use XTags.showTheme(.)
-- Support popup: Mask, Toast, MessageBox, Dialog, Tooltip
-- Button
-    - Disable when click before execute callback
-    - Can show ripple effect when click.
+- Position
+    - anchor, fixanchor
+    - childanchor
+
+- Effect
+    - Hover color change
+    - Animation for position, size, color...
+    - Button click ripple effect
+
+- Event
+    - click
+
+- Theme
+    - Just use XTags.showTheme(.)
+
+
+备注：shadow 和 inplace 模式
+    
+- shadow 模式是将动态生成的标签创建在 shadowDOM 内部，所有的style和js都自封装起来，好处是独立，不会污染页面。坏处是由于其隔离模式，无法被外部访问，会导致以下问题：
+    三方库（如highlight.js）无法集成 ，估计是尝试获取 queryElement() 获取shadowDom中的子元素失败。
+    iframe 放在 xtags 里面，无法自动撑开，要手动指定 width=100%
+    iframe 放在 xtags 里面，<a> 标签中的target无法正确指向
+    x-row 中的按钮点击后无法获取按钮的坐标和区域。见 popup.html
+- inplace 模式是将动态生成的标签替代原有的 x- 开头的标签。好处是兼容三方类库且不会污染页面。
+- 现阶段大部分控件都是用 inplace 方式创建的，少数复杂控件采用 shadow 模式封装：dialog、messagebox、popup
 
 
 -----------------------------------------------------
 Task
 -----------------------------------------------------
-button按钮有点问题，有的可以正常，有的不行（如setTheme）。 要不增加一个 asyncclick ？ 
-修复 Popup、dialog、messagebox
-如何回收自动创建的style标签，增加一个styleid属性？
-useShadow 的注入
-    有些控件无需全局dom，用shadow模式就行了，也便于保存状态，如button、radio、复杂的控件等。
-    把方法都写在root下面，避免inplace模式导致方法丢失
-完善link，动态修改色彩
-全局静态的方式，自动注入 boxsizing、transition css，弄个开关。
+优化dialog
+    提供标题栏供拖动
+    实现dialog buttons and dialogResult
+    提供resize属性以及其它属性供用户自己设置
+实现SideDialog，靠边刷出，高度填满，顶部或底部固定放置
+button showRipple 改用方法来写，不用css，并改为异步的。
 
+如何回收自动创建的style标签？
+    删除前没有事件或方法可以调用
+    删除后，标签都不存在了，属性和方法都不能调用了
+    唯有静态成员还存在，那只能用class方式了
+    注：ripple.animateend 方法会自动释放
+
+完善link，动态修改色彩
 canvas and shape
-dialog buttons and dialogResult
-解决重入几次的问题：button.html
 swipe
 tooltip
 layout-backend
@@ -120,18 +145,21 @@ child sortable
 
 
 
------------------------------------------------------
-Showdow 模式下的 BUG
------------------------------------------------------
-三方库（如highlight.js）无法集成 ，估计是尝试获取 queryElement() 获取shadowDom中的子元素失败。
-iframe 放在 xtags 里面，无法自动撑开，要手动指定 width=100%
-iframe 放在 xtags 里面，<a> 标签中的target无法正确指向
-x-row 中的按钮点击后无法获取按钮的坐标和区域。见 popup.html
-
 
 -----------------------------------------------------
 history
 -----------------------------------------------------
+/优化tootip，支持：textContext、attribute、callback
+/修复 dialog、messagebox、Popup
+/让dialog 使用shadow模式，自封装让页面更干净。
+/显示页面源码
+/解决重入几次的问题：button.html
+/button按钮有点问题，有的可以正常，有的不行（如setTheme）。 要不增加一个 asyncclick ？
+/完善 theme，可设置 border 组合属性，增加textLight 属性
+/inplace 模式注意事项
+    /把方法都写在root下面，避免 inplace 模式导致方法丢失
+    /增加一个styleid属性？把 styleTag 挂在root下面
+/全局自动注入 boxsizing、transition css，弄个开关。算了，用<style>标签吧，让用户自己设置。
 /toast 的 style 需要回收，算了，不设置row 的 gap属性了。
 /修复 Theme     遍历节点，setTheme方法丢失了，看是否把这个方法附在root下面
 /fixanchor 固定在页面，不跟随父节点

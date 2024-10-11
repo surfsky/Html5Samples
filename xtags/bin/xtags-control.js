@@ -3,7 +3,7 @@
  * @author surfsky.github.com 2024
  */
 import { XTags, Tag, Style, Theme, Anchor } from "./xtags-base.js";
-import { Rect, Circle, Row, Column, Grid } from "./xtags-baseui.js";
+import { Rect, Circle, Row, Column, Grid } from "./xtags-container.js";
 import { Mask, Toast, Tooltip, Dialog, MessageBox, Popup } from "./xtags-popup.js";
 
 
@@ -88,11 +88,11 @@ export class Link extends Tag {
      * @param {Color} visitedColor 
      */
     writeLinkStyle(color, hoverColor, visitedColor) {
-        if (this.styleTag == null) {
-            this.styleTag = document.createElement('style');
-            this.shadowRoot.appendChild(this.styleTag);
+        if (this.root.styleTag == null){
+            this.root.styleTag = document.createElement('style');
+            this.saveStyle();
         }
-        this.styleTag.textContent = `
+        this.root.styleTag.textContent = `
             a         { text-decoration: none; color: ${color};}
             a:hover   { text-decoration: none; color: ${hoverColor};}
             a:visited { text-decoration: none; color: ${visitedColor};}
@@ -135,9 +135,9 @@ export class Link extends Tag {
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
         switch (name) {
-            case 'href': this.root.setAttribute('href', newValue); break;
+            case 'href':   this.root.setAttribute('href', newValue); break;
             case 'target': this.root.setAttribute('target', newValue); break;
-            case 'color': this.setLinkColors(newValue, newValue, newValue); break;
+            case 'color':  this.setLinkColors(newValue, newValue, newValue); break;
         }
     }
 }
@@ -171,11 +171,10 @@ export class Button extends Tag {
         this.root.style.color = XTags.theme.light;
         this.root.style.borderRadius = "8px";
         this.root.style.borderWidth = "0px";
-        this.root.style.overflow = 'hidden';
         this.root.style.height = this.root.style.boxSizing=='border-box' ? '44px' : '24px';
         this.root.style.width = this.root.style.boxSizing=='border-box' ? '120px' : '100px';
-        this.root.style.userSelect = 'none';
-        this.root.style.textAlign = 'center';
+        this.root.style.userSelect = 'none';   // can't select button text
+        this.root.style.textAlign = 'center';  // horizontal center text
         this.setHoverOpacity('0.8');
         return this.root;
     }
@@ -184,15 +183,14 @@ export class Button extends Tag {
     // Attributes
     //----------------------------------------------------
     static get observedAttributes() {
-        return ['ripple'].concat(this._attrs);
+        return ['ripple', 'asyncclick'].concat(this._attrs);
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
         switch (name) {
-            case 'ripple':
-                this.setRipple(newValue);
-                break;
+            case 'ripple':      this.setRipple(newValue);        break;
+            case 'asyncclick':   this.setClick(newValue, true);   break;
         }
     }
 
@@ -205,38 +203,53 @@ export class Button extends Tag {
      */
     setTheme(o) {
         super.setTheme(o);
-        //this.root.style.border = o.Border;
         this.root.style.borderRadius = o.radius;
-        this.root.style.color = o.light;
-        this.setAutoBorderColor();
+        this.root.style.color = o.textLight;
+        if (o.border == null || o.border == ''){
+            var clr = XTags.getDarkerColor(this.root.style.backgroundColor, 0.2);
+            this.root.style.border = `1px solid ${clr}`;
+        }
+        else{
+            this.root.style.border = o.border;
+        }
     }
 
 
     /**
      * Set click event
      * @param {function | string} func callback function or string. eg. "alert('hello world');"
+     * @param {boolean} [isAsync=false] Whether the func is async?
      */
-    setClick(func) {
-        this.root.addEventListener('click', async (e) => {
-            // click to show ripple effect
-            if (this._showRipple) {
-                var x = e.offsetX;
-                var y = e.offsetY;
-                this.showRipple(x, y);
-            }
+    setClick(func, isAsync=false) {
+        if (isAsync)
+            this.root.addEventListener('click', async (e) => {
+                // show ripple effect
+                if (this._showRipple)
+                    this.showRipple(e.offsetX, e.offsetY);
 
-            // disable - eval - enable
-            this.setEnable(false);
-            if (typeof func === 'string'){
-                if (func.indexOf('await') != -1)
+                // disable - eval - enable
+                this.setEnable(false);
+                if (typeof func === 'string')
                     await eval(`(async () => {${func}})()`);
                 else
+                    await func();
+                this.setEnable(true);
+            });
+        else{
+            this.root.addEventListener('click',  (e) => {
+                // show ripple effect
+                if (this._showRipple)
+                    this.showRipple(e.offsetX, e.offsetY);
+
+                // disable - eval - enable
+                //this.setEnable(false);
+                if (typeof func === 'string')
                     eval(func);
-            }
-            else
-                await func();
-            this.setEnable(true);
-        });
+                else
+                    func();
+                //this.setEnable(true);
+            });
+        }
     }
 
 
@@ -258,16 +271,13 @@ export class Button extends Tag {
      */
     showRipple(x, y){
         // style
-        if (this._rippleStyle == null){
-            this._rippleStyle = document.createElement('style');
-            this._rippleStyle.textContent = `
+        if (this.root.styleTag == null){
+            this.root.styleTag = document.createElement('style');
+            this.root.styleTag.textContent = `
                 @keyframes ripple-effect {
                     to { transform: scale(10); opacity: 0;}
                 }`;
-            if (this.useShadow)
-                this.shadowRoot.appendChild(this._rippleStyle);
-            else
-                this.document.head.appendChild(this._rippleStyle);
+            this.saveStyle();
         }
 
         // ripple div
@@ -283,7 +293,8 @@ export class Button extends Tag {
         ripple.style.animation = 'ripple-effect 0.3s linear';
         this.root.appendChild(ripple);
         ripple.addEventListener('animationend', function () {
-            this.release();
+            this.remove();
+            //this.root.styleTag.remove();
         });
     }
 }
