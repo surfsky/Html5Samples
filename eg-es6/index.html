@@ -10,7 +10,7 @@
 
 
 <script type="module">
-    // 注意script的type=module，表示支持ES6，该方式只能用site方式访问
+    // 注意import是ES6语法，需要script的type=module，该方式只能用部署网站方式访问
     import {add, pi} from "./math.js";
     import {test} from "./utils.js";
     document.getElementById('myButton').addEventListener('click', function() {

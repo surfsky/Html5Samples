@@ -1,0 +1,63 @@
+<html>
+<body>
+  <my-parent-element>
+    <my-child-element>这是子元素的内容</my-child-element>
+  </my-parent-element>
+
+  <script>
+    class MyParentElement extends HTMLElement {
+      constructor() {
+        super();
+        this.root = document.createElement('div');
+        this.root.style.backgroundColor = 'red';
+        this.root.style.width = '400px';
+        this.root.style.height = '400px';
+        this.root.style.borderRadius = '50%';
+
+        // 把子节点移到root下面去
+        //for (let child of this.childNodes)
+        //    this.root.appendChild(child);
+        //while (this.lastChild != null)
+        //    this.removeChild(this.lastChild);
+        Array.from(this.childNodes).forEach(child => this.root.appendChild(child));
+        //this.appendChild(this.root);
+        const parent = this.parentNode;
+        if (parent != null){
+            const index = Array.from(parent.children).indexOf(this);
+            parent.removeChild(this);
+            parent.insertBefore(this.root, parent.children[index]);
+        }
+      }
+    }
+
+    class MyChildElement extends HTMLElement {
+      constructor() {
+        super();
+        this.root = document.createElement('div');
+        this.root.style.backgroundColor = 'blue';
+        this.root.style.width = '100px';
+        this.root.style.height = '100px';
+        this.root.style.borderRadius = '50%';
+
+        // 把子节点移到root下面去
+        //for (let child of this.childNodes)
+        //    this.root.appendChild(child);
+        //while (this.lastChild != null)
+        //    this.removeChild(this.lastChild);
+        Array.from(this.childNodes).forEach(child => this.root.appendChild(child));
+        //this.appendChild(this.root);
+        const parent = this.parentNode;
+        if (parent != null){
+            const index = Array.from(parent.children).indexOf(this);
+            parent.removeChild(this);
+            parent.insertBefore(this.root, parent.children[index]);
+        }
+      }
+    }
+
+    customElements.define('my-parent-element', MyParentElement);
+    customElements.define('my-child-element', MyChildElement);
+  </script>
+</body>
+
+</html>

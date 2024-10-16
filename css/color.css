@@ -73,6 +73,8 @@ https://www.github.com/surfsky/
     --dark           :#343a40;
     --light          :#f8f9fa;
 }
+
+/*text colors*/
 .primary             {color:var(--primary  );}
 .secondary           {color:var(--secondary);}
 .success             {color:var(--success  );}
@@ -81,6 +83,8 @@ https://www.github.com/surfsky/
 .danger              {color:var(--danger   );}
 .dark                {color:var(--dark     );}
 .light               {color:var(--light    );}
+
+/*background colors*/
 .bg-primary          {background-color:var(--primary  );}
 .bg-secondary        {background-color:var(--secondary);}
 .bg-success          {background-color:var(--success  );}
@@ -89,6 +93,8 @@ https://www.github.com/surfsky/
 .bg-danger           {background-color:var(--danger   );}
 .bg-dark             {background-color:var(--dark     );}
 .bg-light            {background-color:var(--light    );}
+
+/*border colors*/
 .bd-primary          {border-color:var(--primary  );}
 .bd-secondary        {border-color:var(--secondary);}
 .bd-success          {border-color:var(--success  );}
