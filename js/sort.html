@@ -1,0 +1,24 @@
+<body></body>
+<script src="./io.js"></script>
+
+<script>
+// sort string array
+const stringArray = ['banana', 'apple', 'cherry'];
+stringArray.sort();
+log(JSON.stringify(stringArray));
+
+// sort object array
+const arr = [
+  { name: 'apple' },
+  { name: 'banana' },
+  { name: 'cherry' }
+];
+arr.sort((a, b) => {
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+  return 0;
+});
+
+log(JSON.stringify(arr));
+
+</script>

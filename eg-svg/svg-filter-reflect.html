@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    button {
+      position: relative;
+      padding: 10px 20px;
+      background-color: blue;
+      color: white;
+      border: none;
+      font-size: 16px;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <svg width="0" height="0">
+    <defs>
+      <filter id="reflectionFilter">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+        <feOffset dy="10" result="offsetBlur" />
+        <feComposite in="offsetBlur" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="compositeBlur" />
+        <feFlood flood-color="rgba(255,255,255,0.5)" result="flood" />
+        <feComposite in="flood" in2="compositeBlur" operator="in" result="floodedBlur" />
+        <feMerge>
+          <feMergeNode in="SourceGraphic" />
+          <feMergeNode in="floodedBlur" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <button>这是一个按钮</button>
+
+  <script>
+    const button = document.querySelector('button');
+    button.style.filter = 'url(#reflectionFilter)';
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<style>
+  .btn-container:hover {
+    filter: url(#filter);
+  }
+  .btn{
+    background-color: purple;
+    cursor: pointer;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    color: white;
+  }
+</style>
+
+https://yoksel.github.io/svg-filters/#/
+<div class="btn-container">
+  <button class="btn">Hover Me</button>
+</div>
+
+<svg style="display:none">
+  <defs>
+    <filter id="filter" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">
+      <feTurbulence type="turbulence" baseFrequency="0.01 0.05" numOctaves="2" seed="2" stitchTiles="noStitch" result="turbulence"/>
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="20" xChannelSelector="G" yChannelSelector="A" result="displacementMap"/>
+    </filter>
+  </defs>
+</svg>
+

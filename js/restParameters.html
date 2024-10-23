@@ -1,0 +1,21 @@
+<script src=".io.js"></script>
+<div id="logger"></div>
+
+
+<script>
+
+// JS 不定长参数（rest parameters） 用...pname 来表示，pname是一个容纳string数组
+function sum(...numbers) {
+  let total = 0;
+  for (let num of numbers) {
+    total += num;
+  }
+  return total;
+}
+
+log(sum(1, 4, 5, 6, 7), 'INFO' ,  'logger');
+log(sum(1, 2, 3),       'WARN' ,  'logger');
+log(sum(4, 5, 6, 7),    'ERROR',  'logger');
+
+
+</script>

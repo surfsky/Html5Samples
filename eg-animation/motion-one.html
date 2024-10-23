@@ -1,0 +1,15 @@
+<html>
+<head>
+  <script src="https://unpkg.com/motion-one"></script>
+</head>
+
+<body>
+  <div id="animatedElement">Hello, World!</div>
+
+  <script>
+    const animatedElement = document.getElementById('animatedElement');
+    motionOne.animate(animatedElement, { x: 0 }, { x: 200 }, { duration: 1000 });
+  </script>
+</body>
+
+</html>
