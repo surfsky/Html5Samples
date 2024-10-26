@@ -1,0 +1,69 @@
+<head>
+<script>
+    /**Monitor DOM changes, and set custom attribute.*/
+    function addMonitor(){
+        const observer = new MutationObserver((mutationsList, observer) => {
+            for (const mutation of mutationsList) {
+                const ele = mutation.target;
+                if (mutation.type == 'childList'){
+                    // new element
+                    if (mutation.addedNodes.length > 0){
+                        mutation.addedNodes.forEach((node)=>{
+                            if (node instanceof HTMLElement)
+                                setCustomAttribute(node);
+                        });
+                    }
+                }
+                else if (mutation.type === 'attributes') {
+                    // edit attribute
+                    setCustomAttribute(ele, mutation.attributeName);
+                }
+            }
+        });
+        const targetNode = document; //.body;
+        observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
+
+    }
+    addMonitor();
+
+    /**Parse custom attributes
+    * @param(Element) ele
+    */
+    function setCustomAttribute(ele, attributeName){
+        const newRadius = ele.getAttribute('radius');
+        const newWidth = ele.getAttribute('width');
+        const newHeight = ele.getAttribute('height');
+        const newBackgroundColor = ele.getAttribute('bgcolor');
+        if (newRadius != null)           ele.style.borderRadius = newRadius;
+        if (newWidth != null)            ele.style.width = newWidth;
+        if (newHeight != null)           ele.style.height = newHeight;
+        if (newBackgroundColor != null)  ele.style.backgroundColor = newBackgroundColor;
+    }
+</script>
+
+</head>
+<body>
+    <h1>Custom attribute for tag: radius, width, height, bgcolor...</h1>
+    <div radius='5px' width='100px' height='30px' bgcolor='red'></div>
+</body>
+
+<script>
+    const newDiv = document.createElement('div');
+    newDiv.setAttribute('radius', '3px');
+    newDiv.setAttribute('width', '80px');
+    newDiv.setAttribute('height', '25px');
+    newDiv.setAttribute('bgcolor', 'blue');
+    document.body.appendChild(newDiv);
+
+    //
+    setInterval(()=>newDiv.setAttribute('bgcolor', getRandomColor()), 1000);
+
+    /** Build random color */
+    function getRandomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgb(${r},${g},${b})`;
+  }
+
+</script>

@@ -1,0 +1,30 @@
+<body></body>
+<script src="../js/io.js"></script>
+<script>
+   // 创建观察器
+   const observer = new MutationObserver((mutationsList, observer) => {
+       for (const mutation of mutationsList) {
+           if (mutation.type === 'childList') {
+               if (mutation.addedNodes.length > 0){
+                    console.log('添加子节点: ');
+                    console.log(mutation.addedNodes);
+               }
+               if (mutation.removedNodes.length > 0){
+                    console.log('删除子节点: ');
+                    console.log(mutation.removedNodes);
+               }
+           } else if (mutation.type === 'attributes') {
+               console.log('节点属性被修改');
+               console.log(mutation.attributeName, mutation.oldValue);
+           }
+       }
+   });
+
+   // 选择要观察的目标节点, 配置观察选项, 开始观察目标节点
+   const targetNode = document.querySelector('body'); //.getElementById('myElement');
+   const config = { attributes: true, childList: true, subtree: true };
+   observer.observe(targetNode, config);
+
+
+   setInterval(()=>log('HelloWorld', 'INFO'), 10000);
+</script>
