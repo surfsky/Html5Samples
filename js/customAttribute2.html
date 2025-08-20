@@ -24,9 +24,9 @@
                     });
                 }
             }
-            //else if (mutation.type === 'attributes') {
-            //    setCustomAttribute(ele, mutation.attributeName);
-            //}
+            else if (mutation.type === 'attributes') {
+                setCustomAttribute(ele, mutation.attributeName, ele.getAttribute(mutation.attributeName));
+            }
         }
     });
     observer.observe(document, { attributes: true, childList: true, subtree: true });
@@ -47,25 +47,13 @@
     * @param(Element) ele
     */
     function setCustomAttribute(ele, name, value){
+        if (ele.style.hasOwnProperty(name)){
+            ele.style.setProperty(name, value);
+            return;
+        }
         switch(name){
-            case "width":           ele.style.width = value; break;
-            case "height":          ele.style.height = value; break;
-
-            //
             case "radius":          ele.style.borderRadius = value; break;
-            case "border":          ele.style.border = value; break;
-
-            //
-            case "margin":          ele.style.margin = value; break;
-            case "padding":         ele.style.padding = value; break;
-            case 'box':             ele.style.boxSizing = value; break;
-
-            //
-            case "color":           ele.style.color = value; break;
             case "bgcolor":         ele.style.backgroundColor = value; break;
-
-            //
-            case "display":         ele.style.display = value; break;
         }
     }
 </script>
@@ -85,9 +73,9 @@
     // dynamic create tag and set property value.
     const newDiv = document.createElement('div');
     newDiv.radius = '5px';
+    newDiv.bgcolor = 'blue';
     newDiv.width  = '80px';
     newDiv.height = '40px';
-    newDiv.bgcolor = 'blue';
     newDiv.padding = '4px';
     newDiv.innerHTML = "DIV2"
     document.body.appendChild(newDiv);

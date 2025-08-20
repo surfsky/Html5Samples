@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 HTML5 示例集合</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        .welcome-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 120px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        .cta {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cta-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                min-width: 100px;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1 class="welcome-title">🚀 HTML5 示例集合</h1>
+        <p class="welcome-subtitle">
+            这里收集了各种现代Web开发技术的示例，包括CSS3、HTML5、动画效果、布局技巧等。<br>
+            点击左侧目录树中的文件来查看具体示例，探索前端技术的无限可能。
+        </p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="folderCount">15+</div>
+                <div class="stat-label">示例分类</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="fileCount">100+</div>
+                <div class="stat-label">示例文件</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">原生技术</div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">CSS3 特效</div>
+                <div class="feature-desc">动画、变换、阴影、渐变等现代CSS特效示例</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title">响应式布局</div>
+                <div class="feature-desc">Flexbox、Grid、媒体查询等响应式设计技术</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">交互组件</div>
+                <div class="feature-desc">自定义标签、拖拽、对话框等交互式组件</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎪</div>
+                <div class="feature-title">Canvas 绘图</div>
+                <div class="feature-desc">2D绘图、图表、动画等Canvas应用示例</div>
+            </div>
+        </div>
+        
+        <div class="cta">
+            <div class="cta-text">准备好探索现代Web技术了吗？</div>
+            <a href="#" class="cta-button" onclick="parent.postMessage('start-exploring', '*')">开始探索</a>
+        </div>
+    </div>
+    
+    <script>
+        // 动态更新统计数据
+        function updateStats() {
+            // 这些数据可以从父页面获取
+            if (window.parent && window.parent.getProjectStats) {
+                const stats = window.parent.getProjectStats();
+                if (stats) {
+                    document.getElementById('folderCount').textContent = stats.folders || '15+';
+                    document.getElementById('fileCount').textContent = stats.files || '100+';
+                }
+            }
+        }
+        
+        // 页面加载完成后更新统计
+        document.addEventListener('DOMContentLoaded', updateStats);
+        
+        // 监听来自父页面的消息
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'updateStats') {
+                document.getElementById('folderCount').textContent = event.data.folders || '15+';
+                document.getElementById('fileCount').textContent = event.data.files || '100+';
+            }
+        });
+    </script>
+</body>
+</html>

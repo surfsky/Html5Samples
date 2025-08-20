@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SplitPanel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .test-title {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 0;
+            font-size: 1.3em;
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .test-content {
+            padding: 20px;
+        }
+        
+        .test-panel {
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .panel-item {
+            padding: 20px 20px 20px 10px;
+            background: #f0f8ff;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            color: #333;
+            text-align: center;
+            min-height: 100px;
+            box-sizing: border-box;
+        }
+        
+        .panel-item:nth-child(even) {
+            background: #fff0f5;
+        }
+        
+        .panel-item:nth-child(3n) {
+            background: #f0fff0;
+        }
+        
+        .controls {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+        
+        .log-area {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .log-content {
+            color: #495057;
+            line-height: 1.4;
+        }
+        
+        h4 {
+            color: #495057;
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feature-list li:before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* Sizes测试专用样式 */
+        .panel-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .panel-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .panel-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .panel-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        
+        .panel-content {
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .test-panel {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">            
+            <!-- 基础水平分隔 -->
+            <div class="test-section">
+                <h2 class="test-title">水平分隔</h2>
+                <div class="test-content">
+                    <split-panel direction="horizontal" class="test-panel" id="panel1" sizes="20%, 60%, 20%">
+                        <div class="panel-item">左侧面板<br>可拖拽右侧分隔条调整大小</div>
+                        <div class="panel-item">中间面板<br>两侧都有分隔条</div>
+                        <div class="panel-item">右侧面板<br>可拖拽左侧分隔条调整大小</div>
+                    </split-panel>
+                </div>
+            </div>
+
+            <!-- 垂直分隔 -->
+            <h2 class="test-title">垂直分隔</h2>
+            <div class="test-content">
+                <split-panel direction="vertical" class="test-panel" id="panel2">
+                    <div class="panel-item">顶部面板<br>可拖拽下方分隔条调整高度</div>
+                    <div class="panel-item">底部面板<br>可拖拽上方分隔条调整高度</div>
+                </split-panel>
+                <div class="controls">
+                    <button class="btn" onclick="resetPanel('panel2')">重置大小</button>
+                    <button class="btn btn-secondary" onclick="setVerticalSize('panel2')">设置7:3比例</button>
+                </div>
+            </div>
+
+            <!-- 嵌套分隔 -->
+            <h2 class="test-title">嵌套分隔</h2>
+            <div class="test-content">
+                <split-panel direction="horizontal" class="test-panel" sizes="20%, 80%">
+                    <div class="panel-item">左侧固定面板</div>
+                    <split-panel direction="vertical">
+                        <div class="panel-item">右上面板<br>嵌套垂直分隔</div>
+                        <div class="panel-item">右下面板<br>可独立调整大小</div>
+                    </split-panel>
+                </split-panel>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入SplitPanel组件 -->
+    <script src="splitPanel.js"></script>
+
+</body>
+</html>

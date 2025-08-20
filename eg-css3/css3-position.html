@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSS3 定位示例</title>
+  <meta charset="utf-8">
+  <style>
+    .container {
+      width: 500px;
+      height: 500px;
+      background: #f0f0f0;
+      position: relative;
+      margin: 20px auto;
+    }
+    
+    .box {
+      width: 100px;
+      height: 100px;
+      background: orange;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* 顶部 */
+    .top { top: 0; left: 50%; transform: translateX(-50%); }
+    /* 底部 */
+    .bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+    /* 左侧 */
+    .left { left: 0; top: 50%; transform: translateY(-50%); }
+    /* 右侧 */
+    .right { right: 0; top: 50%; transform: translateY(-50%); }
+    /* 左上角 */
+    .top-left { top: 0; left: 0; }
+    /* 右上角 */
+    .top-right { top: 0; right: 0; }
+    /* 左下角 */
+    .bottom-left { bottom: 0; left: 0; }
+    /* 右下角 */
+    .bottom-right { bottom: 0; right: 0; }
+    /* 中间 */
+    .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box top">顶部</div>
+    <div class="box bottom">底部</div>
+    <div class="box left">左侧</div>
+    <div class="box right">右侧</div>
+    <div class="box top-left">左上</div>
+    <div class="box top-right">右上</div>
+    <div class="box bottom-left">左下</div>
+    <div class="box bottom-right">右下</div>
+    <div class="box center">中间</div>
+  </div>
+</body>
+</html>

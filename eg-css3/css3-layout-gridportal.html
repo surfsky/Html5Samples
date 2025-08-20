@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title>网格布局示例</title>
+    <style>
+        /* 整体容器设置为网格布局 */
+       .container {
+            display: grid;
+            grid-template-columns: 200px auto 200px;
+            grid-gap: 10px;
+        }
+
+        /* 左侧部分样式 */
+       .left-section {
+            background-color: lightblue;
+        }
+
+        /* 中间部分样式 */
+       .middle-section {
+            background-color: lightgreen;
+            min-width: 200px; /* 设置中间部分最小宽度，保证在页面较窄时能换行展示 */
+        }
+
+        /* 右侧部分样式 */
+       .right-section {
+            background-color: lightcoral;
+        }
+
+        /* 媒体查询，当页面宽度小于一定值时，让中间部分换行展示 */
+        @media screen and (max-width: 610px) {
+           .container { grid-template-columns: 200px;}
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-section">左侧200px区域</div>
+        <div class="middle-section">中间自动拉伸区域，页面太窄时小于200px会自动换行展示</div>
+        <div class="right-section">右侧200px区域</div>
+    </div>
+</body>
+
+</html>

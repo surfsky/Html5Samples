@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSSOM示例</title>
+    <style id="styles">
+        #myDiv {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myDiv"></div>
+
+    <script>
+        // 假设已经有一个id为myDiv的div元素，且设置了背景颜色
+        const div = document.getElementById('myDiv');
+
+        // 创建一个空的CSSOM解析器对象
+        const parser = new CSSStyleSheet();
+
+        // 获取页面中的<style>标签内的CSS样式内容
+        const styleElement = document.getElementById('styles');
+        const cssText = styleElement.textContent;
+
+        // 将获取到的CSS样式内容加载到解析器中
+        parser.replaceSync(cssText);
+
+        // 遍历解析器中的所有样式规则，找到与myDiv对应的规则
+        for (let i = 0; i < parser.cssRules.length; i++) {
+            const rule = parser.cssRules[i];
+            if (rule.selectorText === '#myDiv') {
+                // 获取背景颜色值
+                const backgroundColor = rule.style.backgroundColor;
+                console.log(backgroundColor);
+                break;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

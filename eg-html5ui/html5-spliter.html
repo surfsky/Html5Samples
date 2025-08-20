@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>可拖动分割的左右结构网页</title>
+    <style>
+       body{padding: 0; margin:0;}
+        /* 整体容器样式 */
+       .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 左侧菜单样式 */
+       .left-menu {
+            width: 200px;
+            background-color: #f4f4f4;
+            overflow-y: auto;
+        }
+
+        /* 右侧iframe容器样式 */
+       .right-iframe {
+            flex: 1;
+            position: relative;
+        }
+
+        /* 分割线样式 */
+       .splitter {
+            border-top: 0;
+            border-bottom: 0;
+            border-left: 10px solid #f4f4f4;
+            border-right: 10px solid #f4f4f4;
+            width: 5px;
+            background-color: #ccc;
+            cursor: col-resize;
+        }
+
+        /* iframe样式 */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-menu">
+            <!-- 这里可以添加菜单的具体内容，比如列表项等 -->
+            <ul>
+                <li>菜单选项1</li>
+                <li>菜单选项2</li>
+                <li>菜单选项3</li>
+            </ul>
+        </div>
+        <div class="splitter" id="splitter"></div>
+        <div class="right-iframe">
+            <iframe src="https://www.baidu.com" id="iframe"></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const splitter = document.getElementById('splitter');
+            const leftMenu = document.querySelector('.left-menu');
+            const rightIframe = document.querySelector('.right-iframe');
+
+            // 监听分割线的mousedown事件
+            var startMove = false;
+            splitter.addEventListener('mousedown', function (e) {
+                startMove = true;
+                document.body.style.cursor = 'col-resize';
+            });
+            document.addEventListener('mousemove', function(e){
+                if (startMove){
+                    leftMenu.style.width = e.pageX + 'px';
+                    rightIframe.style.flex = 'auto';
+                    rightIframe.style.width = (document.body.offsetWidth - e.pageX) + 'px';
+                }
+            });
+            document.addEventListener('mouseup', function(){
+                startMove = false;
+                document.body.style.cursor = 'default';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

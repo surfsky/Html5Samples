@@ -15,8 +15,8 @@ class Sign extends HTMLElement{
         const shadow = this.attachShadow({mode: 'open'});
 
         // parent
-        const divparent = document.createElement('div');
-        divparent.setAttribute('class','div_parent');
+        const divRoot = document.createElement('div');
+        divRoot.setAttribute('class','div_parent');
 
         // doctor
         const divDoc = document.createElement('div');
@@ -64,14 +64,14 @@ class Sign extends HTMLElement{
             `;
 
         // build dom
+        divRoot.appendChild(divDoc);
+        divRoot.appendChild(this.divDocSign);
+        divRoot.appendChild(span1);
+        divRoot.appendChild(divPatient);
+        divRoot.appendChild(this.divPatientSign);
+        divRoot.appendChild(span2);
         shadow.appendChild(style);
-        shadow.appendChild(divparent);
-        divparent.appendChild(divDoc);
-        divparent.appendChild(this.divDocSign);
-        divparent.appendChild(span1);
-        divparent.appendChild(divPatient);
-        divparent.appendChild(this.divPatientSign);
-        divparent.appendChild(span2);
+        shadow.appendChild(divRoot);
     }
 
     // 当元素插入到 DOM 中时，connectedCallback()函数将会执行

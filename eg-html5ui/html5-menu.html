@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Menu with ul and li</title>
+    <style>
+        /* 基本的列表样式设置 */
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* 菜单项链接样式 */
+        a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 10px;
+        }
+
+        /* 当鼠标悬停在菜单项上时的样式 */
+        li:hover > a {
+            background-color: #f0f0f0;
+        }
+
+        /* 对于较宽屏幕（桌面等），显示为横向下拉菜单 */
+        @media screen and (min-width: 768px) {
+            #mainMenu {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            #mainMenu li {
+                position: relative;
+            }
+
+            #mainMenu li.has-submenu:hover >.submenu {
+                display: block;
+            }
+
+            #mainMenu.submenu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #fff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                min-width: 150px;
+            }
+
+            #mainMenu.submenu li {
+                white-space: nowrap;
+            }
+        }
+
+        /* 对于较窄屏幕（手机等），显示为左侧树状菜单 */
+        @media screen and (max-width: 767px) {
+            #mainMenu {
+                width: 100%;
+            }
+
+            #mainMenu li {
+                border-bottom: 1px solid #ccc;
+            }
+
+            #mainMenu li.has-submenu >.submenu {
+                display: none;
+            }
+
+            #mainMenu li.has-submenu.open >.submenu {
+                display: block;
+            }
+        }
+
+        /* 新增样式，用于设置父菜单右侧箭头的样式及旋转动画效果 */
+       .has-submenu > a::after {
+            content: "\25BC"; /* 下箭头字符编码 */
+            display: inline-block;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+       .has-submenu.open > a::after {
+            transform: rotate(180deg); /* 点击后旋转180度变为上箭头 */
+        }
+    </style>
+    <style>
+        /* 新增样式，用于修复点击子菜单时菜单膨胀且下移的问题 */
+        #mainMenu {
+            position: relative;
+        }
+
+        #mainMenu.submenu {
+            position: absolute;
+            z-index: 10;
+            /* 根据实际情况调整子菜单的高度，以避免布局混乱 */
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        #mainMenu li.has-submenu.open >.submenu {
+            max-height: 500px; /* 根据实际情况调整合适的高度值 */
+            overflow: visible;
+            transition: max-height 0.3s ease-in;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="mainMenu" class="responsive-menu">
+        <li><a href="#home">首页</a></li>
+        <li class="has-submenu">
+            <a href="#products">产品</a>
+            <ul class="submenu">
+                <li><a href="#productA">产品A</a></li>
+                <li><a href="#productB">产品B</a></li>
+            </ul>
+        </li>
+        <li><a href="#about">关于我们</a></li>
+        <li><a href="#contact">联系我们</a></li>
+    </ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainMenu = document.getElementById('mainMenu');
+            const menuItems = mainMenu.querySelectorAll('li');
+
+            // 在较窄屏幕上，为每个有子菜单的菜单项添加点击事件处理函数
+            if (window.innerWidth <= 767) {
+                menuItems.forEach(function (item) {
+                    if (item.classList.contains('has-submenu')) {
+                        item.addEventListener('click', function () {
+                            this.classList.toggle('open');
+                        });
+                    }
+                });
+            }
+
+            // 为所有有子菜单的菜单项添加点击事件处理函数，用于展开/收起子菜单
+            menuItems.forEach(function (item) {
+                if (item.classList.contains('has-submenu')) {
+                    item.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        var submenu = this.querySelector('.submenu');
+                        if (submenu.style.display === 'block') {
+                            submenu.style.display = 'none';
+                        } else {
+                            submenu.style.display = 'block';
+                        }
+                    });
+                }
+            });
+
+            // 修复默认显示问题，确保子菜单默认不显示
+            menuItems.forEach(function (item) {
+                if (item.classList.contains('has-submenu')) {
+                    item.querySelector('.submenu').style.display = 'none';
+                }
+            });
+        });
+
+        // 当窗口大小改变时，重新应用相应的菜单样式
+        window.addEventListener('resize', function () {
+            const mainMenu = document.getElementById('mainMenu');
+            const menuItems = mainMenu.querySelectorAll('li');
+
+            if (window.innerWidth <= 767) {
+                menuItems.forEach(function (item) {
+                    if (item.classList.contains('has-submenu')) {
+                        item.classList.remove('open');
+                        item.querySelector('.submenu').style.display = 'none';
+                    }
+                });
+            } else {
+                menuItems.forEach(function (item) {
+                    if (item.classList.contains('has-submenu')) {
+                        item.classList.remove('open');
+                        if (item.querySelector('.submenu')) {
+                            item.querySelector('.submenu').style.display = 'block';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

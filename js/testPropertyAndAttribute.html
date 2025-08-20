@@ -1,0 +1,62 @@
+<body>
+    <canvas id="canvas" width="1000" height="500"></canvas>
+    <div id="div" width="200px"></div>
+</body>
+
+<script src="../js/io.js"></script>
+<script>
+
+var ele = document.getElementById('canvas');
+log(ele.width);                    // 1000
+log('width' in ele);               // true
+log(ele.hasOwnProperty('width'));  // false
+log(ele.getAttribute('width'));    // 1000
+
+ele = document.getElementById('div');
+log(ele.width);                    // -
+log('width' in ele);               // false
+log(ele.hasOwnProperty('width'));  // false
+log(ele.getAttribute('width'));    // 200px
+
+
+/*
+attribute 是在 HTML 标签里直接定义的一些描述元素的额外信息，它们是 HTML 文档结构层面的内容，用于初始设置元素的状态、外观等各种特性。例如 <img src="image.jpg" alt="An image"> 中的 src 和 alt 就是 img 元素的特性，用于指定图片的来源和替代文本描述。
+这些特性在 HTML 解析时被解析器识别并关联到对应的 DOM 元素上，它们的值在 HTML 代码里写定后，就是以字符串的形式存在（除非经过后续脚本等处理改变），比如 width="1000" 里的 "1000" 就是作为字符串值存在的。
+attribute 的数据类型是字符串。
+获取 attribute：用 getAttribute() 方法，如 var w = ele.getAttribute('width');
+设置 attribute：用 setAttribute() 方法，如 ele.setAttribute('width', '800'); 
+如果通过 setAttribute 改变了特性值，属性值也不一定会马上更新，不同浏览器在这种同步处理细节上可能稍有差异。
+
+
+property 是从 JavaScript 角度来看，DOM 元素对象所具有的属性，它们与对象在 JavaScript 运行环境中的行为、状态表示相关。
+property 的数据类型可以是任何对象。
+获取：var w = canvas.style.width;
+设置：canvas.style.width = 100;
+*/
+
+
+/*
+HTMLElement.defineProperty(mydiv, name, {
+    get: function () {
+        return self.getCustomAttribute(this, name);
+    },
+    set: function (value) {
+        this.setAttribute(name, value);
+        self.setCustomAttribute(this, name, value);
+    },
+    enumerable: true,
+    configurable: true
+});
+*/
+var self = this;
+var name = 'anchor';
+HTMLElement.prototype.__defineGetter__(name, function(){
+    //return this.getAttribute(name);
+    return self.getCustomAttribute(this, name);
+});
+HTMLElement.prototype.__defineSetter__(name, function (value) { 
+    this.setAttribute(name, value);
+    self.setCustomAttribute(this, name, value); 
+});
+
+</script>

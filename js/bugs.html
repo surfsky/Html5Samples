@@ -1,0 +1,28 @@
+<body>
+    <canvas width="1000" height="500"></canvas>
+</body>
+
+<script src="../js/io.js"></script>
+<script>
+
+testForEach('name');
+
+/**
+ * Test foreach function's bug
+*/
+function testForEach(name){
+    const arr = ['id', 'name', 'class', 'style'];
+    arr.forEach(k =>{
+        if (k == name) {
+            log('found!', 'WARN')
+            return;  // 有坑，只会跳出forEach方法，还会继续执行后面的代码。
+        }
+    });
+
+    log('Do others', 'ERROR');
+}
+
+var ele = document.getElementByTag('canvas');
+var b = ele.hasOwnProperty('width');
+
+</script>
