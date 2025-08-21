@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabPanel 测试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .demo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #017BFF;
+            padding-bottom: 8px;
+        }
+        
+        .demo-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .demo-panel {
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .demo-panel.tall {
+            height: 400px;
+        }
+        
+        .tab-content-demo {
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #017BFF;
+            background: white;
+            color: #017BFF;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: #017BFF;
+            color: white;
+        }
+        
+        .btn.primary {
+            background: #017BFF;
+            color: white;
+        }
+        
+        .btn.primary:hover {
+            background: #0056b3;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TabPanel 组件测试</h1>
+        
+        <!-- 基础用法 -->
+        <div class="demo-section">
+            <div class="demo-title">基础用法</div>
+            <div class="demo-description">
+                最基本的标签页面板，包含三个标签页，默认激活第一个。
+            </div>
+            
+            <tab-panel class="demo-panel" id="basicPanel" height="500px">
+                <tab-item title="首页">
+                    <div class="tab-content-demo">
+                        <h3>欢迎来到首页</h3>
+                        <p>这是第一个标签页的内容。您可以在这里放置任何HTML内容，包括文本、图片、表单等。</p>
+                        <p>TabPanel 组件支持响应式设计，在移动设备上也能良好显示。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="产品">
+                    <div class="tab-content-demo">
+                        <h3>产品展示</h3>
+                        <p>这里展示我们的产品信息。</p>
+                        <ul>
+                            <li>产品特性一：高性能</li>
+                            <li>产品特性二：易使用</li>
+                            <li>产品特性三：可定制</li>
+                        </ul>
+                    </div>
+                </tab-item>
+                <tab-item title="关于">
+                    <div class="tab-content-demo">
+                        <h3>关于我们</h3>
+                        <p>我们致力于创建优秀的Web组件，提升开发效率。</p>
+                        <p>TabPanel 是我们开发的自定义HTML元素，遵循Web Components标准。</p>
+                    </div>
+                </tab-item>
+            </tab-panel>
+            
+            <div class="controls">
+                <button class="btn" onclick="setActiveTab('basicPanel', 0)">激活首页</button>
+                <button class="btn" onclick="setActiveTab('basicPanel', 1)">激活产品</button>
+                <button class="btn" onclick="setActiveTab('basicPanel', 2)">激活关于</button>
+            </div>
+        </div>
+        
+        <!-- 可关闭标签页 -->
+        <div class="demo-section">
+            <div class="demo-title">可关闭标签页</div>
+            <div class="demo-description">
+                启用 closable 属性后，每个标签页都会显示关闭按钮，用户可以动态关闭标签页。
+            </div>
+            
+            <tab-panel class="demo-panel" id="closablePanel" closable="true">
+                <tab-item title="文档1">
+                    <div class="tab-content-demo">
+                        <h3>文档1</h3>
+                        <p>这是一个可以关闭的标签页。点击标签上的 × 按钮可以关闭此标签页。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="文档2">
+                    <div class="tab-content-demo">
+                        <h3>文档2</h3>
+                        <p>这是第二个文档标签页。您可以尝试关闭其他标签页，看看效果如何。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="文档3">
+                    <div class="tab-content-demo">
+                        <h3>文档3</h3>
+                        <p>最后一个文档标签页。当只剩一个标签页时，关闭功能仍然可用。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="文档4">
+                    <div class="tab-content-demo">
+                        <h3>文档4</h3>
+                        <p>额外的标签页，用于测试多标签页的关闭功能。</p>
+                    </div>
+                </tab-item>
+            </tab-panel>
+            
+            <div class="controls">
+                <button class="btn primary" onclick="addNewTab('closablePanel')">添加新标签</button>
+                <button class="btn" onclick="removeTab('closablePanel', 0)">移除第一个标签</button>
+            </div>
+        </div>
+        
+        <!-- 自定义样式 -->
+        <div class="demo-section">
+            <div class="demo-title">自定义样式</div>
+            <div class="demo-description">
+                通过属性可以自定义标签页的颜色、文字颜色等样式。
+            </div>
+            
+            <tab-panel class="demo-panel" 
+                       id="styledPanel"
+                       tab-color="#2c3e50" 
+                       active-tab-color="#e74c3c" 
+                       tab-text-color="#ecf0f1" 
+                       active-tab-text-color="#ffffff"
+                       active-index="1">
+                <tab-item title="深色主题">
+                    <div class="tab-content-demo">
+                        <h3>深色主题标签页</h3>
+                        <p>这个标签页使用了深色主题，标签背景为深蓝色，激活标签为红色。</p>
+                        <p>您可以通过 CSS 属性来自定义标签页的外观。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="设计">
+                    <div class="tab-content-demo">
+                        <h3>设计说明</h3>
+                        <p>自定义样式包括：</p>
+                        <ul>
+                            <li>tab-color: 标签背景色</li>
+                            <li>active-tab-color: 激活标签背景色</li>
+                            <li>tab-text-color: 标签文字颜色</li>
+                            <li>active-tab-text-color: 激活标签文字颜色</li>
+                        </ul>
+                    </div>
+                </tab-item>
+                <tab-item title="配置">
+                    <div class="tab-content-demo">
+                        <h3>配置选项</h3>
+                        <p>TabPanel 支持多种配置选项，让您可以根据需要定制组件的行为和外观。</p>
+                    </div>
+                </tab-item>
+            </tab-panel>
+        </div>
+        
+        <!-- 标签位置 -->
+        <div class="demo-section">
+            <div class="demo-title">标签位置</div>
+            <div class="demo-description">
+                支持将标签页放置在顶部、底部、左侧或右侧。
+            </div>
+            
+            <tab-panel class="demo-panel tall" 
+                       id="positionPanel"
+                       tab-position="left"
+                       active-tab-color="#28a745">
+                <tab-item title="左侧标签">
+                    <div class="tab-content-demo">
+                        <h3>左侧标签页</h3>
+                        <p>标签页位于左侧，适合需要更多垂直空间的场景。</p>
+                        <p>这种布局在某些应用中很常见，比如设置面板或导航菜单。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="配置">
+                    <div class="tab-content-demo">
+                        <h3>位置配置</h3>
+                        <p>通过 tab-position 属性可以设置标签页的位置：</p>
+                        <ul>
+                            <li>top: 顶部（默认）</li>
+                            <li>bottom: 底部</li>
+                            <li>left: 左侧</li>
+                            <li>right: 右侧</li>
+                        </ul>
+                    </div>
+                </tab-item>
+                <tab-item title="响应式">
+                    <div class="tab-content-demo">
+                        <h3>响应式设计</h3>
+                        <p>组件支持响应式设计，在不同屏幕尺寸下都能良好显示。</p>
+                        <p>在移动设备上，标签页会自动调整布局以适应小屏幕。</p>
+                    </div>
+                </tab-item>
+            </tab-panel>
+            
+            <div class="controls">
+                <button class="btn" onclick="changeTabPosition('positionPanel', 'top')">顶部</button>
+                <button class="btn" onclick="changeTabPosition('positionPanel', 'bottom')">底部</button>
+                <button class="btn" onclick="changeTabPosition('positionPanel', 'left')">左侧</button>
+                <button class="btn" onclick="changeTabPosition('positionPanel', 'right')">右侧</button>
+            </div>
+        </div>
+        
+        <!-- 事件监听 -->
+        <div class="demo-section">
+            <div class="demo-title">事件监听</div>
+            <div class="demo-description">
+                TabPanel 支持多种事件，您可以监听这些事件来实现自定义逻辑。
+            </div>
+            
+            <tab-panel class="demo-panel" id="eventPanel" closable="true">
+                <tab-item title="事件1">
+                    <div class="tab-content-demo">
+                        <h3>标签页切换事件</h3>
+                        <p>当切换标签页时，会触发 tabChange 事件。</p>
+                        <p>您可以在控制台中查看事件详情。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="事件2">
+                    <div class="tab-content-demo">
+                        <h3>标签页关闭事件</h3>
+                        <p>当关闭标签页时，会触发 tabClose 事件。</p>
+                        <p>您可以在事件处理函数中阻止关闭操作。</p>
+                    </div>
+                </tab-item>
+                <tab-item title="事件3">
+                    <div class="tab-content-demo">
+                        <h3>自定义事件处理</h3>
+                        <p>通过监听事件，您可以实现复杂的交互逻辑。</p>
+                        <p>比如在关闭前确认、切换时保存状态等。</p>
+                    </div>
+                </tab-item>
+            </tab-panel>
+            
+            <div class="info-box">
+                <strong>事件日志：</strong>
+                <div id="eventLog">等待事件触发...</div>
+            </div>
+        </div>
+        
+        <!-- API 示例 -->
+        <div class="demo-section">
+            <div class="demo-title">API 使用示例</div>
+            <div class="demo-description">
+                展示如何通过 JavaScript API 来控制 TabPanel 组件。
+            </div>
+            
+            <div class="code-block">
+// 获取组件实例
+const tabPanel = document.getElementById('myTabPanel');
+
+// 设置激活标签
+tabPanel.setActiveIndex(1);
+
+// 添加新标签
+tabPanel.addTab('新标签', '<p>新内容</p>');
+
+// 移除标签
+tabPanel.removeTab(0);
+
+// 监听事件
+tabPanel.addEventListener('tabChange', (e) => {
+    console.log('切换到标签:', e.detail.activeIndex);
+});
+            </div>
+        </div>
+    </div>
+    
+    <script src="tabPanel.js"></script>
+    <script>
+        // 设置激活标签
+        function setActiveTab(panelId, index) {
+            const panel = document.getElementById(panelId);
+            panel.setActiveIndex(index);
+        }
+        
+        // 添加新标签
+        function addNewTab(panelId) {
+            const panel = document.getElementById(panelId);
+            const count = panel.getTabs().length + 1;
+            panel.addTab(`新文档${count}`, `
+                <div class="tab-content-demo">
+                    <h3>新文档${count}</h3>
+                    <p>这是动态添加的标签页内容。</p>
+                    <p>添加时间: ${new Date().toLocaleTimeString()}</p>
+                </div>
+            `);
+        }
+        
+        // 移除标签
+        function removeTab(panelId, index) {
+            const panel = document.getElementById(panelId);
+            panel.removeTab(index);
+        }
+        
+        // 改变标签位置
+        function changeTabPosition(panelId, position) {
+            const panel = document.getElementById(panelId);
+            panel.setAttribute('tab-position', position);
+        }
+        
+        // 事件监听
+        const eventPanel = document.getElementById('eventPanel');
+        const eventLog = document.getElementById('eventLog');
+        
+        eventPanel.addEventListener('tabChange', (e) => {
+            const log = `[${new Date().toLocaleTimeString()}] 标签切换: ${e.detail.previousIndex} → ${e.detail.activeIndex}`;
+            eventLog.innerHTML = log + '<br>' + eventLog.innerHTML;
+            console.log('TabChange Event:', e.detail);
+        });
+        
+        eventPanel.addEventListener('tabClose', (e) => {
+            const log = `[${new Date().toLocaleTimeString()}] 标签关闭: 索引 ${e.detail.index}`;
+            eventLog.innerHTML = log + '<br>' + eventLog.innerHTML;
+            console.log('TabClose Event:', e.detail);
+        });
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('TabPanel 测试页面加载完成');
+            
+            // 可以在这里添加更多初始化代码
+            const panels = document.querySelectorAll('tab-panel');
+            console.log(`找到 ${panels.length} 个 TabPanel 组件`);
+        });
+    </script>
+</body>
+</html>

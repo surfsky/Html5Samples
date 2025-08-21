@@ -36,7 +36,7 @@ export const menuData = [
         url: null,
         children: [
             { name: 'splitPanel', text: '分割面板', icon: '📄', url: 'tagCustom/splitPanel/test.html', children: null },
-            { name: 'tabPanel', text: '标签面板', icon: '📄', url: 'tagCustom/tabPanel/tabPanel.html', children: null }
+            { name: 'tabPanel', text: '标签面板', icon: '📄', url: 'tagCustom/tabPanel/test.html', children: null }
         ]
     },
     {

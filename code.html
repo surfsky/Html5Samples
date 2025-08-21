@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码查看器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .code-viewer {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100%;
+            overflow: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .code-header {
+            background: #2d2d30;
+            color: #cccccc;
+            padding: 8px 16px;
+            border-bottom: 1px solid #3e3e42;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .code-content {
+            padding: 16px;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            flex: 1;
+            overflow: auto;
+            background: #1e1e1e;
+        }
+        
+        .loading {
+            color: #888;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        .error {
+            color: #f44336;
+            padding: 16px;
+            background: #2d1b1b;
+            border-left: 4px solid #f44336;
+            margin: 16px;
+            border-radius: 4px;
+        }
+        
+        .code-icon {
+            font-size: 16px;
+        }
+        
+        /* 滚动条样式 */
+        .code-content::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .code-content::-webkit-scrollbar-track {
+            background: #2d2d30;
+        }
+        
+        .code-content::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        
+        .code-content::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+        
+        /* 代码高亮样式 */
+        .code-content {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+        }
+        
+        /* 行号样式 */
+        .line-numbers {
+            display: flex;
+        }
+        
+        .line-numbers-column {
+            background: #252526;
+            color: #858585;
+            padding: 16px 8px;
+            text-align: right;
+            user-select: none;
+            border-right: 1px solid #3e3e42;
+            min-width: 50px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .code-lines {
+            flex: 1;
+            padding: 16px;
+        }
+        
+        .show-line-numbers .code-content {
+            padding: 0;
+            display: flex;
+        }
+        
+        /* 工具栏样式 */
+        .toolbar {
+            background: #2d2d30;
+            border-bottom: 1px solid #3e3e42;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        
+        .toolbar button {
+            background: #3c3c3c;
+            border: 1px solid #555;
+            color: #cccccc;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .toolbar button:hover {
+            background: #4c4c4c;
+        }
+        
+        .toolbar button.active {
+            background: #007acc;
+            border-color: #007acc;
+        }
+    </style>
+</head>
+<body>
+    <div class="code-viewer">
+        <div class="code-header">
+            <span class="code-icon">💻</span>
+            <span id="codeFileName">代码查看器</span>
+        </div>
+        
+        <div class="toolbar">
+            <button id="toggleLineNumbers" title="切换行号显示">行号</button>
+            <button id="copyCode" title="复制代码">复制</button>
+            <button id="downloadCode" title="下载代码">下载</button>
+            <span style="margin-left: auto; color: #888;" id="fileInfo"></span>
+        </div>
+        
+        <div class="code-content" id="codeContent">
+            <div class="loading">正在加载代码...</div>
+        </div>
+    </div>
+    
+    <script>
+        class CodeViewer {
+            constructor() {
+                this.codeContent = document.getElementById('codeContent');
+                this.codeFileName = document.getElementById('codeFileName');
+                this.fileInfo = document.getElementById('fileInfo');
+                this.showLineNumbers = false;
+                this.currentCode = '';
+                this.currentFilePath = '';
+                
+                this.init();
+            }
+            
+            init() {
+                this.bindEvents();
+                this.loadCodeFromUrl();
+            }
+            
+            bindEvents() {
+                // 切换行号显示
+                document.getElementById('toggleLineNumbers').addEventListener('click', () => {
+                    this.toggleLineNumbers();
+                });
+                
+                // 复制代码
+                document.getElementById('copyCode').addEventListener('click', () => {
+                    this.copyCode();
+                });
+                
+                // 下载代码
+                document.getElementById('downloadCode').addEventListener('click', () => {
+                    this.downloadCode();
+                });
+            }
+            
+            /**
+             * 从URL参数加载代码
+             */
+            loadCodeFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const filePath = urlParams.get('file');
+                
+                if (filePath) {
+                    this.loadSourceCode(filePath);
+                } else {
+                    this.showMessage('请通过URL参数指定要查看的文件，例如: code.html?file=about.html');
+                }
+            }
+            
+            /**
+             * 加载源代码
+             */
+            async loadSourceCode(filePath) {
+                try {
+                    this.currentFilePath = filePath;
+                    this.codeContent.innerHTML = '<div class="loading">加载源代码中...</div>';
+                    this.updateFileName(filePath);
+                    
+                    const response = await fetch(filePath);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const sourceCode = await response.text();
+                    this.currentCode = sourceCode;
+                    this.displaySourceCode(sourceCode);
+                    this.updateFileInfo(sourceCode, filePath);
+                    
+                } catch (error) {
+                    console.error('加载源代码失败:', error);
+                    this.showError(`加载源代码失败: ${error.message}`);
+                }
+            }
+            
+            /**
+             * 显示源代码
+             */
+            displaySourceCode(code) {
+                // 简单的HTML转义
+                const escapedCode = code
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+                
+                if (this.showLineNumbers) {
+                    this.displayWithLineNumbers(escapedCode);
+                } else {
+                    this.codeContent.innerHTML = escapedCode;
+                }
+            }
+            
+            /**
+             * 显示带行号的代码
+             */
+            displayWithLineNumbers(code) {
+                const lines = code.split('\n');
+                const lineNumbers = lines.map((_, index) => index + 1).join('\n');
+                
+                this.codeContent.innerHTML = `
+                    <div class="line-numbers-column">${lineNumbers}</div>
+                    <div class="code-lines">${code}</div>
+                `;
+                
+                this.codeContent.classList.add('show-line-numbers');
+            }
+            
+            /**
+             * 切换行号显示
+             */
+            toggleLineNumbers() {
+                this.showLineNumbers = !this.showLineNumbers;
+                const button = document.getElementById('toggleLineNumbers');
+                
+                if (this.showLineNumbers) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                    this.codeContent.classList.remove('show-line-numbers');
+                }
+                
+                if (this.currentCode) {
+                    this.displaySourceCode(this.currentCode);
+                }
+            }
+            
+            /**
+             * 复制代码
+             */
+            async copyCode() {
+                if (!this.currentCode) {
+                    this.showMessage('没有可复制的代码');
+                    return;
+                }
+                
+                try {
+                    await navigator.clipboard.writeText(this.currentCode);
+                    this.showMessage('代码已复制到剪贴板', 'success');
+                } catch (error) {
+                    console.error('复制失败:', error);
+                    this.showMessage('复制失败，请手动选择复制', 'error');
+                }
+            }
+            
+            /**
+             * 下载代码
+             */
+            downloadCode() {
+                if (!this.currentCode) {
+                    this.showMessage('没有可下载的代码');
+                    return;
+                }
+                
+                const fileName = this.getFileName(this.currentFilePath) || 'code.txt';
+                const blob = new Blob([this.currentCode], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.showMessage('代码已下载', 'success');
+            }
+            
+            /**
+             * 更新文件名显示
+             */
+            updateFileName(filePath) {
+                const fileName = this.getFileName(filePath);
+                this.codeFileName.textContent = fileName || '未知文件';
+            }
+            
+            /**
+             * 更新文件信息
+             */
+            updateFileInfo(code, filePath) {
+                const lines = code.split('\n').length;
+                const chars = code.length;
+                const size = new Blob([code]).size;
+                
+                let sizeText = size + ' bytes';
+                if (size > 1024) {
+                    sizeText = (size / 1024).toFixed(1) + ' KB';
+                }
+                
+                this.fileInfo.textContent = `${lines} 行, ${chars} 字符, ${sizeText}`;
+            }
+            
+            /**
+             * 获取文件名
+             */
+            getFileName(filePath) {
+                if (!filePath) return '';
+                return filePath.split('/').pop() || filePath;
+            }
+            
+            /**
+             * 显示消息
+             */
+            showMessage(message, type = 'info') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = type === 'error' ? 'error' : 'loading';
+                messageDiv.textContent = message;
+                
+                this.codeContent.innerHTML = '';
+                this.codeContent.appendChild(messageDiv);
+                
+                // 如果是成功或信息消息，3秒后自动消失
+                if (type === 'success' || type === 'info') {
+                    setTimeout(() => {
+                        if (this.currentCode) {
+                            this.displaySourceCode(this.currentCode);
+                        }
+                    }, 2000);
+                }
+            }
+            
+            /**
+             * 显示错误
+             */
+            showError(message) {
+                this.showMessage(message, 'error');
+            }
+        }
+        
+        // 初始化代码查看器
+        document.addEventListener('DOMContentLoaded', () => {
+            new CodeViewer();
+        });
+        
+        // 监听来自父窗口的消息
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'loadCode' && event.data.filePath) {
+                const viewer = new CodeViewer();
+                viewer.loadSourceCode(event.data.filePath);
+            }
+        });
+    </script>
+</body>
+</html>

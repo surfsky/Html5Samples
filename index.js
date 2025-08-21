@@ -4,21 +4,19 @@
  */
 
 // 导入菜单数据
-import { menuData } from './menu.js';
+import { menuData } from './menudata.js';
 
-/**
+/*****************************************************************
  * 应用主类
- */
+ *****************************************************************/
 class App {
     constructor() {
         this.currentFile = 'about.html';
         this.pageFrame = null;
-        this.codeContent = null;
-        this.codeFileName = null;
         this.menuTree = null;
         this.mainSplitPanel = null;
-        this.contentSplitPanel = null;
-        
+        this.contentTabPanel = null;
+        this.codeFrame = null;        
         this.init();
     }
     
@@ -32,73 +30,20 @@ class App {
             this.renderMenuTree();
             this.loadDefaultContent();
             this.bindEvents();
-            
             console.log('🚀 HTML5示例集合已加载');
         }, 100);
     }
     
-    /**
-     * 初始化DOM元素引用
-     */
+    /**初始化DOM元素引用*/
     initElements() {
-        // 获取 SplitPanel 组件
         this.mainSplitPanel = document.getElementById('mainSplitPanel');
-        this.contentSplitPanel = document.getElementById('contentSplitPanel');
-        
-        // 在整个文档中查找元素（包括 Shadow DOM）
-        this.pageFrame = this.findElementById('pageFrame');
-        this.codeContent = this.findElementById('codeContent');
-        this.codeFileName = this.findElementById('codeFileName');
-        this.menuTree = this.findElementById('menuTree');
+        this.contentTabPanel = document.getElementById('contentTabPanel');
+        this.menuTree  = document.getElementById('menuTree');
+        this.pageFrame = document.getElementById('pageFrame');
+        this.codeFrame = document.getElementById('codeFrame');
     }
     
-    /**
-     * 在文档中查找元素（包括 Shadow DOM）
-     */
-    findElementById(id) {
-        // 先在普通 DOM 中查找
-        let element = document.getElementById(id);
-        if (element) return element;
-        
-        // 在 SplitPanel 的 Shadow DOM 中查找
-        const splitPanels = document.querySelectorAll('split-panel');
-        for (const panel of splitPanels) {
-            if (panel.shadowRoot) {
-                // 在 Shadow DOM 中查找
-                element = panel.shadowRoot.querySelector(`#${id}`);
-                if (element) return element;
-                
-                // 在 split-panel-item 容器中递归查找
-                const items = panel.shadowRoot.querySelectorAll('.split-panel-item');
-                for (const item of items) {
-                    element = item.querySelector(`#${id}`);
-                    if (element) return element;
-                    
-                    // 递归查找嵌套的 SplitPanel
-                    const nestedPanels = item.querySelectorAll('split-panel');
-                    for (const nestedPanel of nestedPanels) {
-                        if (nestedPanel.shadowRoot) {
-                            element = nestedPanel.shadowRoot.querySelector(`#${id}`);
-                            if (element) return element;
-                            
-                            const nestedItems = nestedPanel.shadowRoot.querySelectorAll('.split-panel-item');
-                            for (const nestedItem of nestedItems) {
-                                element = nestedItem.querySelector(`#${id}`);
-                                if (element) return element;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    
-    /**
-     * 渲染菜单目录树
-     */
+    /**渲染菜单目录树*/
     renderMenuTree() {
         if (!this.menuTree || !menuData) {
             console.error('菜单树容器或菜单数据未找到');
@@ -117,9 +62,7 @@ class App {
         }, 100);
     }
     
-    /**
-     * 构建目录树HTML
-     */
+    /**构建目录树HTML*/
     buildTreeHtml(items, level = 0) {
         return items.map(item => {
             const isFolder = item.children && item.children.length > 0;
@@ -147,30 +90,25 @@ class App {
         }).join('');
     }
     
-    /**
-     * 加载默认内容
-     */
+    /**加载默认内容*/
     async loadDefaultContent() {
         await this.loadFile('about.html');
     }
     
-    /**
-     * 绑定事件
-     */
+    /**绑定事件*/
     bindEvents() {
         // 目录树点击事件
         this.menuTree.addEventListener('click', (e) => {
             const treeNode = e.target.closest('.tree-node');
-            if (!treeNode) return;
-            
+            if (!treeNode) return;            
             const isFolder = treeNode.classList.contains('folder');
             const filePath = treeNode.dataset.path;
             
             if (isFolder) {
                 this.toggleFolder(treeNode.parentElement);
             } else if (filePath) {
-                this.loadFile(filePath);
                 this.setActiveNode(treeNode);
+                this.loadFile(filePath);  //
             }
         });
         
@@ -185,14 +123,10 @@ class App {
         });
     }
     
-    /**
-     * 切换文件夹展开/收起状态
-     */
+    /**切换文件夹展开/收起状态*/
     toggleFolder(folderItem) {
         if (!folderItem.classList.contains('has-children')) return;
-        
         const isExpanded = folderItem.classList.contains('expanded');
-        
         if (isExpanded) {
             folderItem.classList.remove('expanded');
         } else {
@@ -200,9 +134,7 @@ class App {
         }
     }
     
-    /**
-     * 设置活动节点
-     */
+    /**设置活动节点*/
     setActiveNode(node) {
         // 移除所有活动状态
         this.menuTree.querySelectorAll('.tree-node.active').forEach(n => {
@@ -213,89 +145,39 @@ class App {
         node.classList.add('active');
     }
     
-    /**
-     * 加载文件
-     */
+    /** 加载文件*/
     async loadFile(filePath) {
         try {
             this.currentFile = filePath;
-            
-            // 更新页面显示
-            this.pageFrame.src = filePath;
-            
-            // 更新代码显示
-            await this.loadSourceCode(filePath);
-            
-            // 更新文件名显示
-            this.codeFileName.textContent = this.getFileName(filePath);
-            
+
+            // 如果codeFrame、pageFrame放在tabPanel中，死活无法刷新页面。
+            this.pageFrame.src = `${filePath}?r=${Utils.getRandomInt(1, 1000000)}`;
+            this.codeFrame.src = `code.html?file=${encodeURIComponent(filePath)}&r=${Utils.getRandomInt(1, 1000000)}`;
+            console.log(`加载文件: ${this.pageFrame.src}`);
+            console.log(`加载文件: ${this.codeFrame.src}`);
         } catch (error) {
             console.error('加载文件失败:', error);
             this.showError('加载文件失败: ' + error.message);
         }
     }
     
-    /**
-     * 加载源代码
-     */
-    async loadSourceCode(filePath) {
-        try {
-            this.codeContent.innerHTML = '<div class="loading">加载源代码中...</div>';
-            
-            const response = await fetch(filePath);
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const sourceCode = await response.text();
-            this.displaySourceCode(sourceCode);
-            
-        } catch (error) {
-            console.error('加载源代码失败:', error);
-            this.codeContent.innerHTML = `<div style="color: #f44336; padding: 16px;">加载源代码失败: ${error.message}</div>`;
-        }
-    }
-    
-    /**
-     * 显示源代码
-     */
-    displaySourceCode(code) {
-        // 简单的HTML转义
-        const escapedCode = code
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-        
-        this.codeContent.innerHTML = escapedCode;
-    }
-    
-    /**
-     * 获取文件名
-     */
+    /**获取文件名*/
     getFileName(filePath) {
         return filePath.split('/').pop() || filePath;
     }
     
-    /**
-     * 显示错误信息
-     */
+    /*** 显示错误信息*/
     showError(message) {
         this.codeContent.innerHTML = `<div style="color: #f44336; padding: 16px;">${message}</div>`;
     }
     
-    /**
-     * 处理窗口大小改变
-     */
+    /**处理窗口大小改变*/
     handleResize() {
         // 可以在这里添加响应式处理逻辑
         console.log('窗口大小已改变');
     }
     
-    /**
-     * 获取项目统计信息
-     */
+    /**获取项目统计信息*/
     getProjectStats() {
         const countItems = (items) => {
             let folders = 0;
@@ -319,10 +201,17 @@ class App {
     }
 }
 
-/**
+/*****************************************************************
  * 工具函数
- */
+ *****************************************************************/
 class Utils {
+    /**随机数 */
+    static getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     /**
      * 防抖函数
      */

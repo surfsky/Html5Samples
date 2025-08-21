@@ -72,8 +72,5 @@ Just run index.html in browser.
 - [ ] test back/forward cache
 
 
-删除index.html，完全重建index.html：
-- js 部分保存在index.js 中，用es6 module 来写；
-- 左侧根据 menu.js 显示菜单目录树；
-- 右侧上方显示页面（默认为about.html），下方显示源代码
-- 使用 SplitPanel 来布局;
+检查一下index.html, index.js 动态变更iframe ur时未刷新，是什么原因？是tabPanel的问题，把iframe挪到外面就正常更新了。
+从index.html中剥离tree-view 自定义标签组件，放到 tagCustom/treeView 目录下。

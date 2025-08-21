@@ -60,36 +60,7 @@
             border-radius: 0;
         }
         
-        .code-viewer {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            height: 100%;
-            overflow: auto;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .code-header {
-            background: #2d2d30;
-            color: #cccccc;
-            padding: 8px 16px;
-            border-bottom: 1px solid #3e3e42;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .code-content {
-            padding: 16px;
-            white-space: pre-wrap;
-            overflow-wrap: break-word;
-            flex: 1;
-            overflow: auto;
-        }
+
         
         /* 目录树样式 */
         .tree {
@@ -205,36 +176,35 @@
         
         <main class="main-content">
             <!-- 主分割面板：左右布局 -->
-            <split-panel id="mainSplitPanel" direction="horizontal" sizes="20%,80%" height="100%" width="100%">
+            <split-panel id="mainSplitPanel" direction="horizontal" sizes="20%,60%,20%" height="100%" width="100%">
                 <!-- 左侧目录树 -->
                 <div class="sidebar">
                     <div id="menuTree" class="tree"></div>
                 </div>
                 
-                <!-- 右侧内容区域：上下分割 -->
-                <split-panel id="contentSplitPanel" direction="vertical" sizes="1fr,300px">
-                    <!-- 上方页面显示区域 -->
-                    <div class="page-viewer">
+                <!-- 右侧内容区域：tabPanel -->
+                <iframe id="pageFrame" src="about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
+                <iframe id="codeFrame" src="code.html?file=about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
+
+
+                <!-- 右侧内容区域：tabPanel。用该方式容纳iframe，死活无法刷新iframe内容 -->
+                <!--
+                <tab-panel id="contentTabPanel" tab-position="top" height="100%" width="100%" active-tab-color="#677ee9">
+                    <tab-item title="内容" padding="0">
                         <iframe id="pageFrame" src="about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
-                    </div>
-                    
-                    <!-- 下方代码显示区域 -->
-                    <div class="code-viewer">
-                        <div class="code-header">
-                            <span class="code-icon">💻</span>
-                            <span id="codeFileName">about.html</span>
-                        </div>
-                        <div class="code-content" id="codeContent">
-                            <div class="loading">选择文件查看源代码...</div>
-                        </div>
-                    </div>
-                </split-panel>
+                    </tab-item>
+                    <tab-item title="代码" padding="0">
+                        <iframe id="codeFrame" src="code.html?file=about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
+                    </tab-item>
+                </tab-panel>
+                -->
             </split-panel>
         </main>
     </div>
     
     <!-- 引入依赖 -->
     <script src="tagCustom/splitPanel/splitPanel.js"></script>
+    <script src="tagCustom/tabPanel/tabPanel.js"></script>
     <script type="module" src="index.js"></script>
 </body>
 </html>

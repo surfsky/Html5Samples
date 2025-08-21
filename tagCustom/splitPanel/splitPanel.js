@@ -8,7 +8,7 @@
 class SplitPanel extends HTMLElement {
     option = {
         direction: 'horizontal',
-        splitterColor: '#ddd',
+        splitterColor: '#dddddda0',
         splitterHoverColor: '#017BFF',
         width: '100%',
         height: '100%',

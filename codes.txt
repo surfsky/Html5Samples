@@ -345,3 +345,116 @@
                     <button class="btn btn-secondary" onclick="setVerticalSize('panel2')">设置7:3比例</button>
                 </div>
             </div>
+
+
+        this.menuTree  = this.findElementById('menuTree');
+        this.pageFrame = this.findElementById('pageFrame');
+        this.codeFrame = this.findElementById('codeFrame');
+
+    /**
+     * 在文档中查找元素（包括 Shadow DOM）
+     */
+    findElementById(id) {
+        // 先在普通 DOM 中查找
+        let element = document.getElementById(id);
+        if (element) return element;
+        
+        // 在 SplitPanel 的 Shadow DOM 中查找
+        const splitPanels = document.querySelectorAll('split-panel');
+        for (const panel of splitPanels) {
+            if (panel.shadowRoot) {
+                // 在 Shadow DOM 中查找
+                element = panel.shadowRoot.querySelector(`#${id}`);
+                if (element) return element;
+                
+                // 在 split-panel-item 容器中递归查找
+                const items = panel.shadowRoot.querySelectorAll('.split-panel-item');
+                for (const item of items) {
+                    element = item.querySelector(`#${id}`);
+                    if (element) return element;
+                    
+                    // 递归查找嵌套的 SplitPanel
+                    const nestedPanels = item.querySelectorAll('split-panel');
+                    for (const nestedPanel of nestedPanels) {
+                        if (nestedPanel.shadowRoot) {
+                            element = nestedPanel.shadowRoot.querySelector(`#${id}`);
+                            if (element) return element;
+                            
+                            const nestedItems = nestedPanel.shadowRoot.querySelectorAll('.split-panel-item');
+                            for (const nestedItem of nestedItems) {
+                                element = nestedItem.querySelector(`#${id}`);
+                                if (element) return element;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 在 TabPanel 的 Shadow DOM 中查找
+        //const tabPanels = document.querySelectorAll('tab-panel');
+        //for (const panel of tabPanels) {
+        //    if (panel.shadowRoot) {
+        //        // 在 Shadow DOM 中查找
+        //        element = panel.shadowRoot.querySelector(`#${id}`);
+        //        if (element) return element;
+        //        
+        //        // 在 tab-content 容器中查找
+        //        const contents = panel.shadowRoot.querySelectorAll('.tab-content');
+        //        for (const content of contents) {
+        //            element = content.querySelector(`#${id}`);
+        //            if (element) return element;
+        //        }
+        //    }
+        //}
+        
+        return null;
+    }
+    
+
+        /**刷新TabPanel中的iframe内容*/
+    refreshTabPanelContent() {
+        // 获取当前激活的标签页
+
+
+        const tabPanel = this.contentTabPanel;
+        if (tabPanel) {
+            // 获取所有tab-content中的iframe
+            const tabContents = tabPanel.querySelectorAll('.tab-content');
+            tabContents.forEach((content, index) => {
+                const iframe = content.querySelector('iframe');
+                if (iframe) {
+                    const currentSrc = iframe.src;
+                    // 强制重新加载iframe内容
+                    iframe.src = '';
+                    setTimeout(() => {
+                        iframe.src = currentSrc;
+                    }, 50);
+                }
+            });
+        }
+    }
+
+            
+            // 强制刷新tabPanel中的iframe内容
+            //this.refreshTabPanelContent();
+            
+
+
+                <!-- 右侧内容区域：tabPanel -->
+                <tab-panel id="contentTabPanel" tab-position="top" height="100%" width="100%" active-tab-color="#677ee9">
+                    <tab-item title="内容" padding="0">
+                        <iframe id="pageFrame" src="about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
+                    </tab-item>
+                    <tab-item title="代码" padding="0">
+                        <iframe id="codeFrame" src="code.html?file=about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
+                    </tab-item>
+                </tab-panel>
+
+
+                <tab-panel id="contentTabPanel" tab-position="top" height="100%" width="100%" active-tab-color="#677ee9">
+                    <tab-item title="内容" padding="0">
+                    </tab-item>
+                    <tab-item title="代码" padding="0">
+                    </tab-item>
+                </tab-panel>
