@@ -219,10 +219,8 @@ class SplitPanel extends HTMLElement {
             if (child.nodeType !== Node.ELEMENT_NODE) return false;
             return !child.classList.contains('split-panel-item') && !child.classList.contains('splitter');
         });
-        //this.children.forEach(child => {
-        //    child.remove();
-        //});
         
+        // 渲染子元素
         realChildren.forEach((child, index) => {
             // 创建子包装容器（是否有必要？）
             const wrapper = document.createElement('div');
@@ -255,6 +253,8 @@ class SplitPanel extends HTMLElement {
                 this.appendChild(splitter);
             }
         });
+
+        this.setChildrenSizes();
     }
     
     
@@ -376,8 +376,10 @@ class SplitPanel extends HTMLElement {
     }
     
     /**初始化子元素大小 */
-    initChildrenSizes() {
-        const items = this.querySelectorAll('.split-panel-item');
+    setChildrenSizes() {
+        // 选取当前节点下直接挂着的 .split-panel-item 元素
+        var items = Array.from(this.children).filter(child => child.classList.contains('split-panel-item'));
+        //const items = this.querySelectorAll('.split-panel-item');
         if (items.length === 0) return;
         
         const isHorizontal = this.option.direction === 'horizontal';
@@ -496,7 +498,10 @@ class SplitPanel extends HTMLElement {
         setTimeout(() => {items.forEach(item => item.classList.remove('with-animation'));}, 300);
     }
     
-    /**设置指定子元素的大小 */
+    /**设置指定子元素的大小 
+     * @param {number} index 子元素索引
+     * @param {string} size 大小值，支持px、%、fr单位
+    */
     setItemSize(index, size) {
         const items = this.querySelectorAll('.split-panel-item');
 
