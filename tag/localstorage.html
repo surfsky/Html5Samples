@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 本地存储示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .storage-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .storage-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        .storage-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .storage-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .storage-key {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .storage-value {
+            color: #666;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .storage-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .storage-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+            margin: 0;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .warning-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ff9800;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 本地存储示例</h1>
+        
+        <!-- localStorage 示例 -->
+        <div class="storage-section">
+            <h3>1. localStorage - 持久化存储</h3>
+            <div class="info-box">
+                <strong>特点:</strong> 数据持久保存，除非手动删除或清除浏览器数据，否则数据会一直存在。
+            </div>
+            
+            <div class="form-group">
+                <label for="localKey">键名:</label>
+                <input type="text" id="localKey" placeholder="输入键名">
+            </div>
+            <div class="form-group">
+                <label for="localValue">值:</label>
+                <textarea id="localValue" placeholder="输入要存储的值"></textarea>
+            </div>
+            
+            <button onclick="setLocalStorage()">存储数据</button>
+            <button onclick="getLocalStorage()">获取数据</button>
+            <button onclick="removeLocalStorage()">删除数据</button>
+            <button onclick="clearLocalStorage()" class="danger">清空所有</button>
+            <button onclick="refreshLocalStorage()">刷新显示</button>
+            
+            <div class="storage-display" id="localStorageDisplay"></div>
+        </div>
+        
+        <!-- sessionStorage 示例 -->
+        <div class="storage-section">
+            <h3>2. sessionStorage - 会话存储</h3>
+            <div class="warning-box">
+                <strong>特点:</strong> 数据仅在当前会话中有效，关闭标签页或浏览器后数据会被清除。
+            </div>
+            
+            <div class="form-group">
+                <label for="sessionKey">键名:</label>
+                <input type="text" id="sessionKey" placeholder="输入键名">
+            </div>
+            <div class="form-group">
+                <label for="sessionValue">值:</label>
+                <textarea id="sessionValue" placeholder="输入要存储的值"></textarea>
+            </div>
+            
+            <button onclick="setSessionStorage()">存储数据</button>
+            <button onclick="getSessionStorage()">获取数据</button>
+            <button onclick="removeSessionStorage()">删除数据</button>
+            <button onclick="clearSessionStorage()" class="danger">清空所有</button>
+            <button onclick="refreshSessionStorage()">刷新显示</button>
+            
+            <div class="storage-display" id="sessionStorageDisplay"></div>
+        </div>
+        
+        <!-- 存储统计 -->
+        <div class="storage-section">
+            <h3>3. 存储统计信息</h3>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="localStorageCount">0</div>
+                    <div class="stat-label">localStorage 项目数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="sessionStorageCount">0</div>
+                    <div class="stat-label">sessionStorage 项目数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="localStorageSize">0 KB</div>
+                    <div class="stat-label">localStorage 大小</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="sessionStorageSize">0 KB</div>
+                    <div class="stat-label">sessionStorage 大小</div>
+                </div>
+            </div>
+            <button onclick="updateStats()">更新统计</button>
+        </div>
+        
+        <!-- 复杂数据存储 -->
+        <div class="storage-section">
+            <h3>4. 复杂数据存储示例</h3>
+            <div class="info-box">
+                演示如何存储和读取 JSON 对象、数组等复杂数据结构。
+            </div>
+            
+            <div class="form-group">
+                <label for="userName">用户名:</label>
+                <input type="text" id="userName" placeholder="输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="userEmail">邮箱:</label>
+                <input type="email" id="userEmail" placeholder="输入邮箱">
+            </div>
+            <div class="form-group">
+                <label for="userAge">年龄:</label>
+                <input type="number" id="userAge" placeholder="输入年龄">
+            </div>
+            
+            <button onclick="saveUserProfile()">保存用户资料</button>
+            <button onclick="loadUserProfile()">加载用户资料</button>
+            <button onclick="clearUserProfile()">清除用户资料</button>
+            
+            <div class="storage-display" id="userProfileDisplay"></div>
+        </div>
+        
+        <!-- 购物车示例 -->
+        <div class="storage-section">
+            <h3>5. 购物车示例</h3>
+            <div class="info-box">
+                模拟购物车功能，演示如何使用本地存储保持购物车状态。
+            </div>
+            
+            <div class="form-group">
+                <label for="productName">商品名称:</label>
+                <input type="text" id="productName" placeholder="输入商品名称">
+            </div>
+            <div class="form-group">
+                <label for="productPrice">价格:</label>
+                <input type="number" id="productPrice" step="0.01" placeholder="输入价格">
+            </div>
+            <div class="form-group">
+                <label for="productQuantity">数量:</label>
+                <input type="number" id="productQuantity" value="1" min="1">
+            </div>
+            
+            <button onclick="addToCart()">添加到购物车</button>
+            <button onclick="clearCart()" class="danger">清空购物车</button>
+            
+            <div class="storage-display" id="cartDisplay"></div>
+        </div>
+        
+        <!-- 存储事件监听 -->
+        <div class="storage-section">
+            <h3>6. 存储事件监听</h3>
+            <div class="info-box">
+                演示如何监听存储变化事件，实现多标签页数据同步。
+            </div>
+            
+            <button onclick="triggerStorageEvent()">触发存储事件</button>
+            <button onclick="openNewTab()">打开新标签页测试</button>
+            
+            <div class="storage-display" id="eventLog"></div>
+        </div>
+    </div>
+
+    <script>
+        let eventLogCount = 0;
+        
+        // localStorage 操作
+        function setLocalStorage() {
+            const key = document.getElementById('localKey').value.trim();
+            const value = document.getElementById('localValue').value;
+            
+            if (!key) {
+                alert('请输入键名');
+                return;
+            }
+            
+            try {
+                localStorage.setItem(key, value);
+                refreshLocalStorage();
+                updateStats();
+                document.getElementById('localKey').value = '';
+                document.getElementById('localValue').value = '';
+            } catch (error) {
+                alert('存储失败: ' + error.message);
+            }
+        }
+        
+        function getLocalStorage() {
+            const key = document.getElementById('localKey').value.trim();
+            if (!key) {
+                alert('请输入键名');
+                return;
+            }
+            
+            const value = localStorage.getItem(key);
+            if (value !== null) {
+                document.getElementById('localValue').value = value;
+            } else {
+                alert('未找到该键名的数据');
+            }
+        }
+        
+        function removeLocalStorage() {
+            const key = document.getElementById('localKey').value.trim();
+            if (!key) {
+                alert('请输入键名');
+                return;
+            }
+            
+            localStorage.removeItem(key);
+            refreshLocalStorage();
+            updateStats();
+        }
+        
+        function clearLocalStorage() {
+            if (confirm('确定要清空所有 localStorage 数据吗？')) {
+                localStorage.clear();
+                refreshLocalStorage();
+                updateStats();
+            }
+        }
+        
+        function refreshLocalStorage() {
+            const display = document.getElementById('localStorageDisplay');
+            display.innerHTML = '';
+            
+            if (localStorage.length === 0) {
+                display.innerHTML = '<p>localStorage 中没有数据</p>';
+                return;
+            }
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                
+                const item = document.createElement('div');
+                item.className = 'storage-item';
+                item.innerHTML = `
+                    <div>
+                        <span class="storage-key">${key}:</span>
+                        <span class="storage-value" title="${value}">${value}</span>
+                    </div>
+                    <div class="storage-actions">
+                        <button onclick="editLocalStorageItem('${key}')">编辑</button>
+                        <button onclick="deleteLocalStorageItem('${key}')" class="danger">删除</button>
+                    </div>
+                `;
+                display.appendChild(item);
+            }
+        }
+        
+        // sessionStorage 操作
+        function setSessionStorage() {
+            const key = document.getElementById('sessionKey').value.trim();
+            const value = document.getElementById('sessionValue').value;
+            
+            if (!key) {
+                alert('请输入键名');
+                return;
+            }
+            
+            try {
+                sessionStorage.setItem(key, value);
+                refreshSessionStorage();
+                updateStats();
+                document.getElementById('sessionKey').value = '';
+                document.getElementById('sessionValue').value = '';
+            } catch (error) {
+                alert('存储失败: ' + error.message);
+            }
+        }
+        
+        function getSessionStorage() {
+            const key = document.getElementById('sessionKey').value.trim();
+            if (!key) {
+                alert('请输入键名');
+                return;
+            }
+            
+            const value = sessionStorage.getItem(key);
+            if (value !== null) {
+                document.getElementById('sessionValue').value = value;
+            } else {
+                alert('未找到该键名的数据');
+            }
+        }
+        
+        function removeSessionStorage() {
+            const key = document.getElementById('sessionKey').value.trim();
+            if (!key) {
+                alert('请输入键名');
+                return;
+            }
+            
+            sessionStorage.removeItem(key);
+            refreshSessionStorage();
+            updateStats();
+        }
+        
+        function clearSessionStorage() {
+            if (confirm('确定要清空所有 sessionStorage 数据吗？')) {
+                sessionStorage.clear();
+                refreshSessionStorage();
+                updateStats();
+            }
+        }
+        
+        function refreshSessionStorage() {
+            const display = document.getElementById('sessionStorageDisplay');
+            display.innerHTML = '';
+            
+            if (sessionStorage.length === 0) {
+                display.innerHTML = '<p>sessionStorage 中没有数据</p>';
+                return;
+            }
+            
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                
+                const item = document.createElement('div');
+                item.className = 'storage-item';
+                item.innerHTML = `
+                    <div>
+                        <span class="storage-key">${key}:</span>
+                        <span class="storage-value" title="${value}">${value}</span>
+                    </div>
+                    <div class="storage-actions">
+                        <button onclick="editSessionStorageItem('${key}')">编辑</button>
+                        <button onclick="deleteSessionStorageItem('${key}')" class="danger">删除</button>
+                    </div>
+                `;
+                display.appendChild(item);
+            }
+        }
+        
+        // 统计信息
+        function updateStats() {
+            document.getElementById('localStorageCount').textContent = localStorage.length;
+            document.getElementById('sessionStorageCount').textContent = sessionStorage.length;
+            
+            // 计算存储大小
+            let localSize = 0;
+            let sessionSize = 0;
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                localSize += (key.length + value.length) * 2; // UTF-16 编码，每字符2字节
+            }
+            
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                sessionSize += (key.length + value.length) * 2;
+            }
+            
+            document.getElementById('localStorageSize').textContent = (localSize / 1024).toFixed(2) + ' KB';
+            document.getElementById('sessionStorageSize').textContent = (sessionSize / 1024).toFixed(2) + ' KB';
+        }
+        
+        // 用户资料示例
+        function saveUserProfile() {
+            const name = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const age = document.getElementById('userAge').value;
+            
+            if (!name || !email) {
+                alert('请填写用户名和邮箱');
+                return;
+            }
+            
+            const profile = {
+                name: name,
+                email: email,
+                age: parseInt(age) || 0,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+            loadUserProfile();
+            updateStats();
+        }
+        
+        function loadUserProfile() {
+            const profileData = localStorage.getItem('userProfile');
+            const display = document.getElementById('userProfileDisplay');
+            
+            if (!profileData) {
+                display.innerHTML = '<p>没有保存的用户资料</p>';
+                return;
+            }
+            
+            try {
+                const profile = JSON.parse(profileData);
+                document.getElementById('userName').value = profile.name || '';
+                document.getElementById('userEmail').value = profile.email || '';
+                document.getElementById('userAge').value = profile.age || '';
+                
+                display.innerHTML = `
+                    <div class="storage-item">
+                        <div>
+                            <strong>用户资料:</strong><br>
+                            姓名: ${profile.name}<br>
+                            邮箱: ${profile.email}<br>
+                            年龄: ${profile.age}<br>
+                            保存时间: ${new Date(profile.savedAt).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                display.innerHTML = '<p style="color: red;">用户资料数据格式错误</p>';
+            }
+        }
+        
+        function clearUserProfile() {
+            localStorage.removeItem('userProfile');
+            document.getElementById('userName').value = '';
+            document.getElementById('userEmail').value = '';
+            document.getElementById('userAge').value = '';
+            loadUserProfile();
+            updateStats();
+        }
+        
+        // 购物车示例
+        function addToCart() {
+            const name = document.getElementById('productName').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const quantity = parseInt(document.getElementById('productQuantity').value);
+            
+            if (!name || !price || !quantity) {
+                alert('请填写完整的商品信息');
+                return;
+            }
+            
+            let cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+            
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: Date.now(),
+                    name: name,
+                    price: price,
+                    quantity: quantity
+                });
+            }
+            
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            displayCart();
+            updateStats();
+            
+            // 清空输入
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productQuantity').value = '1';
+        }
+        
+        function displayCart() {
+            const cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+            const display = document.getElementById('cartDisplay');
+            
+            if (cart.length === 0) {
+                display.innerHTML = '<p>购物车为空</p>';
+                return;
+            }
+            
+            let total = 0;
+            let html = '<h4>购物车内容:</h4>';
+            
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                
+                html += `
+                    <div class="storage-item">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            价格: ¥${item.price.toFixed(2)} × ${item.quantity} = ¥${subtotal.toFixed(2)}
+                        </div>
+                        <div class="storage-actions">
+                            <button onclick="removeFromCart(${item.id})" class="danger">删除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `<div style="margin-top: 15px; font-size: 18px; font-weight: bold;">总计: ¥${total.toFixed(2)}</div>`;
+            display.innerHTML = html;
+        }
+        
+        function removeFromCart(itemId) {
+            let cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+            cart = cart.filter(item => item.id !== itemId);
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            displayCart();
+            updateStats();
+        }
+        
+        function clearCart() {
+            if (confirm('确定要清空购物车吗？')) {
+                localStorage.removeItem('shoppingCart');
+                displayCart();
+                updateStats();
+            }
+        }
+        
+        // 存储事件监听
+        function triggerStorageEvent() {
+            const timestamp = new Date().toLocaleString();
+            localStorage.setItem('testEvent', `事件触发时间: ${timestamp}`);
+        }
+        
+        function openNewTab() {
+            window.open(window.location.href, '_blank');
+        }
+        
+        function logStorageEvent(e) {
+            const eventLog = document.getElementById('eventLog');
+            eventLogCount++;
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'storage-item';
+            logEntry.innerHTML = `
+                <div>
+                    <strong>存储事件 #${eventLogCount}</strong><br>
+                    键名: ${e.key}<br>
+                    旧值: ${e.oldValue || '(无)'}<br>
+                    新值: ${e.newValue || '(已删除)'}<br>
+                    时间: ${new Date().toLocaleString()}
+                </div>
+            `;
+            
+            eventLog.insertBefore(logEntry, eventLog.firstChild);
+            
+            // 限制日志条数
+            while (eventLog.children.length > 10) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+        
+        // 辅助函数
+        function editLocalStorageItem(key) {
+            const value = localStorage.getItem(key);
+            const newValue = prompt(`编辑 "${key}" 的值:`, value);
+            if (newValue !== null) {
+                localStorage.setItem(key, newValue);
+                refreshLocalStorage();
+                updateStats();
+            }
+        }
+        
+        function deleteLocalStorageItem(key) {
+            if (confirm(`确定要删除 "${key}" 吗？`)) {
+                localStorage.removeItem(key);
+                refreshLocalStorage();
+                updateStats();
+            }
+        }
+        
+        function editSessionStorageItem(key) {
+            const value = sessionStorage.getItem(key);
+            const newValue = prompt(`编辑 "${key}" 的值:`, value);
+            if (newValue !== null) {
+                sessionStorage.setItem(key, newValue);
+                refreshSessionStorage();
+                updateStats();
+            }
+        }
+        
+        function deleteSessionStorageItem(key) {
+            if (confirm(`确定要删除 "${key}" 吗？`)) {
+                sessionStorage.removeItem(key);
+                refreshSessionStorage();
+                updateStats();
+            }
+        }
+        
+        // 初始化
+        window.onload = function() {
+            refreshLocalStorage();
+            refreshSessionStorage();
+            updateStats();
+            loadUserProfile();
+            displayCart();
+            
+            // 监听存储事件
+            window.addEventListener('storage', logStorageEvent);
+            
+            // 初始化事件日志显示
+            document.getElementById('eventLog').innerHTML = '<p>等待存储事件...</p>';
+        };
+    </script>
+</body>
+</html>

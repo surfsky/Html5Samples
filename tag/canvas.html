@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 Canvas 画布示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .canvas-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .canvas-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        canvas {
+            border: 2px solid #333;
+            margin: 10px 0;
+            display: block;
+        }
+        .controls {
+            margin: 15px 0;
+        }
+        .controls button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background: #0056b3;
+        }
+        .controls input, .controls select {
+            margin: 5px;
+            padding: 5px;
+        }
+        .drawing-canvas {
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 Canvas 画布示例</h1>
+        
+        <!-- 基本绘图 -->
+        <div class="canvas-section">
+            <h3>1. 基本图形绘制</h3>
+            <canvas id="basicCanvas" width="400" height="200"></canvas>
+            <div class="controls">
+                <button onclick="drawBasicShapes()">绘制基本图形</button>
+                <button onclick="clearCanvas('basicCanvas')">清除画布</button>
+            </div>
+        </div>
+        
+        <!-- 动画效果 -->
+        <div class="canvas-section">
+            <h3>2. 动画效果</h3>
+            <canvas id="animationCanvas" width="400" height="200"></canvas>
+            <div class="controls">
+                <button onclick="startAnimation()">开始动画</button>
+                <button onclick="stopAnimation()">停止动画</button>
+            </div>
+        </div>
+        
+        <!-- 交互绘图 -->
+        <div class="canvas-section">
+            <h3>3. 交互式绘图</h3>
+            <canvas id="drawingCanvas" class="drawing-canvas" width="400" height="300"></canvas>
+            <div class="controls">
+                <label>画笔颜色: <input type="color" id="colorPicker" value="#000000"></label>
+                <label>画笔大小: <input type="range" id="brushSize" min="1" max="20" value="5"></label>
+                <button onclick="clearCanvas('drawingCanvas')">清除画布</button>
+            </div>
+        </div>
+        
+        <!-- 图像处理 -->
+        <div class="canvas-section">
+            <h3>4. 图像处理</h3>
+            <canvas id="imageCanvas" width="400" height="200"></canvas>
+            <div class="controls">
+                <input type="file" id="imageInput" accept="image/*">
+                <button onclick="applyFilter('grayscale')">灰度</button>
+                <button onclick="applyFilter('sepia')">复古</button>
+                <button onclick="applyFilter('invert')">反色</button>
+                <button onclick="resetImage()">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let animationId;
+        let isDrawing = false;
+        let originalImageData;
+        
+        // 基本图形绘制
+        function drawBasicShapes() {
+            const canvas = document.getElementById('basicCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制矩形
+            ctx.fillStyle = '#ff6b6b';
+            ctx.fillRect(50, 50, 100, 80);
+            
+            // 绘制圆形
+            ctx.beginPath();
+            ctx.arc(250, 90, 40, 0, 2 * Math.PI);
+            ctx.fillStyle = '#4ecdc4';
+            ctx.fill();
+            
+            // 绘制线条
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(150, 150);
+            ctx.lineTo(100, 180);
+            ctx.strokeStyle = '#45b7d1';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // 绘制文字
+            ctx.font = '20px Arial';
+            ctx.fillStyle = '#333';
+            ctx.fillText('Canvas 绘图', 200, 170);
+        }
+        
+        // 动画效果
+        function startAnimation() {
+            const canvas = document.getElementById('animationCanvas');
+            const ctx = canvas.getContext('2d');
+            let x = 0;
+            let y = 100;
+            let dx = 2;
+            let dy = 1;
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制移动的球
+                ctx.beginPath();
+                ctx.arc(x, y, 20, 0, 2 * Math.PI);
+                ctx.fillStyle = '#ff6b6b';
+                ctx.fill();
+                
+                // 更新位置
+                x += dx;
+                y += dy;
+                
+                // 边界检测
+                if (x + 20 > canvas.width || x - 20 < 0) dx = -dx;
+                if (y + 20 > canvas.height || y - 20 < 0) dy = -dy;
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+        
+        // 交互式绘图
+        function initDrawing() {
+            const canvas = document.getElementById('drawingCanvas');
+            const ctx = canvas.getContext('2d');
+            const colorPicker = document.getElementById('colorPicker');
+            const brushSize = document.getElementById('brushSize');
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            function startDrawing(e) {
+                isDrawing = true;
+                draw(e);
+            }
+            
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                ctx.lineWidth = brushSize.value;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = colorPicker.value;
+                
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
+            
+            function stopDrawing() {
+                if (isDrawing) {
+                    isDrawing = false;
+                    ctx.beginPath();
+                }
+            }
+        }
+        
+        // 图像处理
+        function initImageProcessing() {
+            const imageInput = document.getElementById('imageInput');
+            const canvas = document.getElementById('imageCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            // 调整图像大小适应画布
+                            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                            const width = img.width * scale;
+                            const height = img.height * scale;
+                            const x = (canvas.width - width) / 2;
+                            const y = (canvas.height - height) / 2;
+                            
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(img, x, y, width, height);
+                            
+                            // 保存原始图像数据
+                            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        };
+                        img.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        function applyFilter(filterType) {
+            if (!originalImageData) return;
+            
+            const canvas = document.getElementById('imageCanvas');
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.createImageData(originalImageData);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const r = originalImageData.data[i];
+                const g = originalImageData.data[i + 1];
+                const b = originalImageData.data[i + 2];
+                
+                switch (filterType) {
+                    case 'grayscale':
+                        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                        data[i] = gray;
+                        data[i + 1] = gray;
+                        data[i + 2] = gray;
+                        break;
+                    case 'sepia':
+                        data[i] = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189));
+                        data[i + 1] = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168));
+                        data[i + 2] = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131));
+                        break;
+                    case 'invert':
+                        data[i] = 255 - r;
+                        data[i + 1] = 255 - g;
+                        data[i + 2] = 255 - b;
+                        break;
+                }
+                data[i + 3] = originalImageData.data[i + 3]; // alpha
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function resetImage() {
+            if (originalImageData) {
+                const canvas = document.getElementById('imageCanvas');
+                const ctx = canvas.getContext('2d');
+                ctx.putImageData(originalImageData, 0, 0);
+            }
+        }
+        
+        function clearCanvas(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        // 初始化
+        window.onload = function() {
+            initDrawing();
+            initImageProcessing();
+            drawBasicShapes(); // 默认显示基本图形
+        };
+    </script>
+</body>
+</html>

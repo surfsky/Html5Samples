@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 消息传递示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .message-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .message-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        button.success {
+            background: #28a745;
+        }
+        button.success:hover {
+            background: #218838;
+        }
+        button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        button.warning:hover {
+            background: #e0a800;
+        }
+        .message-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .error-display {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .success-display {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .warning-display {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .message-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .message-form label {
+            display: block;
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+        }
+        .message-form input, .message-form textarea, .message-form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .message-form textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .window-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .window-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .iframe-container {
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .iframe-container iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+        .worker-status {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        .message-log {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        .log-entry {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            font-size: 14px;
+        }
+        .log-entry.sent {
+            border-left-color: #28a745;
+        }
+        .log-entry.received {
+            border-left-color: #17a2b8;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+        }
+        .log-entry.worker {
+            border-left-color: #ffc107;
+        }
+        .channel-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .broadcast-status {
+            background: #d1ecf1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #bee5eb;
+        }
+        .message-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .connection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .connection-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .connection-card h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-connected {
+            background-color: #28a745;
+        }
+        .status-disconnected {
+            background-color: #dc3545;
+        }
+        .status-pending {
+            background-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 消息传递示例</h1>
+        
+        <!-- 浏览器支持检测 -->
+        <div class="message-section">
+            <h3>1. 浏览器支持检测</h3>
+            <div id="supportInfo"></div>
+        </div>
+        
+        <!-- 跨窗口通信 -->
+        <div class="message-section">
+            <h3>2. 跨窗口通信 (Window PostMessage)</h3>
+            <div class="window-controls">
+                <button onclick="openChildWindow()" class="success">打开子窗口</button>
+                <button onclick="closeChildWindow()" class="danger">关闭子窗口</button>
+                <button onclick="sendToChildWindow()">发送消息到子窗口</button>
+            </div>
+            
+            <div class="message-form">
+                <label for="windowMessage">消息内容:</label>
+                <input type="text" id="windowMessage" placeholder="输入要发送的消息" value="Hello from parent window!">
+                
+                <label for="messageType">消息类型:</label>
+                <select id="messageType">
+                    <option value="text">文本消息</option>
+                    <option value="json">JSON数据</option>
+                    <option value="command">命令</option>
+                    <option value="notification">通知</option>
+                </select>
+            </div>
+            
+            <div class="window-info" id="windowInfo">
+                <span class="status-indicator status-disconnected"></span>
+                子窗口状态: 未连接
+            </div>
+        </div>
+        
+        <!-- iframe 通信 -->
+        <div class="message-section">
+            <h3>3. iframe 通信</h3>
+            <div class="window-controls">
+                <button onclick="createIframe()">创建iframe</button>
+                <button onclick="sendToIframe()">发送消息到iframe</button>
+                <button onclick="removeIframe()" class="danger">移除iframe</button>
+            </div>
+            
+            <div class="message-form">
+                <label for="iframeMessage">iframe消息:</label>
+                <input type="text" id="iframeMessage" placeholder="输入要发送到iframe的消息" value="Hello from parent!">
+                
+                <label for="iframeUrl">iframe URL:</label>
+                <input type="text" id="iframeUrl" placeholder="输入iframe的URL" value="data:text/html,<html><body><h2>Child Frame</h2><script>window.addEventListener('message', function(e) { document.body.innerHTML += '<p>Received: ' + e.data + '</p>'; });</script></body></html>">
+            </div>
+            
+            <div class="iframe-container" id="iframeContainer">
+                <!-- iframe will be inserted here -->
+            </div>
+        </div>
+        
+        <!-- Web Workers -->
+        <div class="message-section">
+            <h3>4. Web Workers 通信</h3>
+            <div class="window-controls">
+                <button onclick="createWorker()" class="success">创建Worker</button>
+                <button onclick="sendToWorker()">发送任务到Worker</button>
+                <button onclick="terminateWorker()" class="danger">终止Worker</button>
+            </div>
+            
+            <div class="message-form">
+                <label for="workerTask">Worker任务:</label>
+                <select id="workerTask">
+                    <option value="calculate">数学计算</option>
+                    <option value="sort">数组排序</option>
+                    <option value="fibonacci">斐波那契数列</option>
+                    <option value="prime">质数计算</option>
+                </select>
+                
+                <label for="workerData">任务数据:</label>
+                <input type="text" id="workerData" placeholder="输入任务数据" value="1000">
+            </div>
+            
+            <div class="worker-status" id="workerStatus">
+                <span class="status-indicator status-disconnected"></span>
+                Worker状态: 未创建
+            </div>
+        </div>
+        
+        <!-- Broadcast Channel -->
+        <div class="message-section">
+            <h3>5. Broadcast Channel API</h3>
+            <div class="window-controls">
+                <button onclick="createBroadcastChannel()" class="success">创建广播频道</button>
+                <button onclick="sendBroadcastMessage()">发送广播消息</button>
+                <button onclick="closeBroadcastChannel()" class="danger">关闭频道</button>
+            </div>
+            
+            <div class="message-form">
+                <label for="channelName">频道名称:</label>
+                <input type="text" id="channelName" placeholder="输入频道名称" value="demo-channel">
+                
+                <label for="broadcastMessage">广播消息:</label>
+                <input type="text" id="broadcastMessage" placeholder="输入广播消息" value="Hello to all tabs!">
+            </div>
+            
+            <div class="broadcast-status" id="broadcastStatus">
+                <span class="status-indicator status-disconnected"></span>
+                广播频道状态: 未连接
+            </div>
+        </div>
+        
+        <!-- Message Channel -->
+        <div class="message-section">
+            <h3>6. Message Channel API</h3>
+            <div class="window-controls">
+                <button onclick="createMessageChannel()" class="success">创建消息通道</button>
+                <button onclick="sendChannelMessage()">发送通道消息</button>
+                <button onclick="closeMessageChannel()" class="danger">关闭通道</button>
+            </div>
+            
+            <div class="message-form">
+                <label for="channelMessage">通道消息:</label>
+                <input type="text" id="channelMessage" placeholder="输入通道消息" value="Channel message test">
+            </div>
+            
+            <div class="channel-info" id="channelInfo">
+                <span class="status-indicator status-disconnected"></span>
+                消息通道状态: 未创建
+            </div>
+        </div>
+        
+        <!-- 连接状态概览 -->
+        <div class="message-section">
+            <h3>7. 连接状态概览</h3>
+            <div class="connection-grid">
+                <div class="connection-card">
+                    <h4>子窗口连接</h4>
+                    <div id="childWindowStatus">
+                        <span class="status-indicator status-disconnected"></span>
+                        未连接
+                    </div>
+                </div>
+                <div class="connection-card">
+                    <h4>iframe连接</h4>
+                    <div id="iframeStatus">
+                        <span class="status-indicator status-disconnected"></span>
+                        未连接
+                    </div>
+                </div>
+                <div class="connection-card">
+                    <h4>Worker连接</h4>
+                    <div id="workerConnectionStatus">
+                        <span class="status-indicator status-disconnected"></span>
+                        未连接
+                    </div>
+                </div>
+                <div class="connection-card">
+                    <h4>广播频道</h4>
+                    <div id="broadcastConnectionStatus">
+                        <span class="status-indicator status-disconnected"></span>
+                        未连接
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="message-section">
+            <h3>8. 统计信息</h3>
+            <div class="message-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="messagesSent">0</div>
+                    <div class="stat-label">发送消息</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="messagesReceived">0</div>
+                    <div class="stat-label">接收消息</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeConnections">0</div>
+                    <div class="stat-label">活跃连接</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="errorCount">0</div>
+                    <div class="stat-label">错误次数</div>
+                </div>
+            </div>
+            <button onclick="resetStats()">重置统计</button>
+        </div>
+        
+        <!-- 消息日志 -->
+        <div class="message-section">
+            <h3>9. 消息日志</h3>
+            <button onclick="clearMessageLog()">清除日志</button>
+            <div class="message-log" id="messageLog"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let childWindow = null;
+        let currentIframe = null;
+        let worker = null;
+        let broadcastChannel = null;
+        let messageChannel = null;
+        let messagePort1 = null;
+        let messagePort2 = null;
+        
+        // 统计变量
+        let messagesSent = 0;
+        let messagesReceived = 0;
+        let activeConnections = 0;
+        let errorCount = 0;
+        
+        // 消息日志
+        let messageLog = [];
+        
+        // 检查浏览器支持
+        function checkMessageSupport() {
+            const supportInfo = document.getElementById('supportInfo');
+            const features = [];
+            
+            if (window.postMessage) {
+                features.push('✓ Window PostMessage');
+            } else {
+                features.push('✗ Window PostMessage');
+            }
+            
+            if (typeof Worker !== 'undefined') {
+                features.push('✓ Web Workers');
+            } else {
+                features.push('✗ Web Workers');
+            }
+            
+            if (typeof BroadcastChannel !== 'undefined') {
+                features.push('✓ Broadcast Channel');
+            } else {
+                features.push('✗ Broadcast Channel');
+            }
+            
+            if (typeof MessageChannel !== 'undefined') {
+                features.push('✓ Message Channel');
+            } else {
+                features.push('✗ Message Channel');
+            }
+            
+            if (typeof SharedWorker !== 'undefined') {
+                features.push('✓ Shared Worker');
+            } else {
+                features.push('✗ Shared Worker');
+            }
+            
+            const hasSupport = features.filter(f => f.startsWith('✓')).length >= 3;
+            
+            supportInfo.innerHTML = `
+                <div class="${hasSupport ? 'success' : 'warning'}-display">
+                    <strong>浏览器支持情况:</strong><br>
+                    ${features.join('<br>')}
+                </div>
+            `;
+        }
+        
+        // 跨窗口通信
+        function openChildWindow() {
+            if (childWindow && !childWindow.closed) {
+                addToLog('window', '子窗口已存在', 'warning');
+                return;
+            }
+            
+            const childHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>子窗口</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f8ff; }
+                        .message { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #007bff; }
+                        button { background: #007bff; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 4px; cursor: pointer; }
+                        button:hover { background: #0056b3; }
+                        input { width: 300px; padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; }
+                    </style>
+                </head>
+                <body>
+                    <h2>子窗口 - 消息接收器</h2>
+                    <div>
+                        <input type="text" id="replyMessage" placeholder="回复消息" value="Hello from child window!">
+                        <button onclick="sendReply()">回复父窗口</button>
+                        <button onclick="window.close()">关闭窗口</button>
+                    </div>
+                    <div id="messages"></div>
+                    
+                    <script>
+                        window.addEventListener('message', function(event) {
+                            console.log('Child received:', event.data);
+                            
+                            const messagesDiv = document.getElementById('messages');
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'message';
+                            messageDiv.innerHTML = `
+                                <strong>收到消息:</strong><br>
+                                类型: ${event.data.type || 'unknown'}<br>
+                                内容: ${JSON.stringify(event.data.content || event.data)}<br>
+                                来源: ${event.origin}<br>
+                                时间: ${new Date().toLocaleTimeString()}
+                            `;
+                            messagesDiv.insertBefore(messageDiv, messagesDiv.firstChild);
+                            
+                            // 自动回复确认消息
+                            event.source.postMessage({
+                                type: 'confirmation',
+                                content: 'Message received successfully',
+                                originalMessage: event.data
+                            }, event.origin);
+                        });
+                        
+                        function sendReply() {
+                            const message = document.getElementById('replyMessage').value;
+                            if (window.opener) {
+                                window.opener.postMessage({
+                                    type: 'reply',
+                                    content: message,
+                                    timestamp: Date.now()
+                                }, '*');
+                            }
+                        }
+                        
+                        window.addEventListener('beforeunload', function() {
+                            if (window.opener) {
+                                window.opener.postMessage({
+                                    type: 'window-closing',
+                                    content: 'Child window is closing'
+                                }, '*');
+                            }
+                        });
+                    </script>
+                </body>
+                </html>
+            `;
+            
+            const blob = new Blob([childHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            childWindow = window.open(url, 'childWindow', 'width=600,height=400,scrollbars=yes,resizable=yes');
+            
+            if (childWindow) {
+                updateConnectionStatus('childWindow', true);
+                addToLog('window', '子窗口已打开', 'success');
+                
+                // 检查窗口是否被关闭
+                const checkClosed = setInterval(() => {
+                    if (childWindow.closed) {
+                        clearInterval(checkClosed);
+                        updateConnectionStatus('childWindow', false);
+                        addToLog('window', '子窗口已关闭', 'warning');
+                        childWindow = null;
+                        URL.revokeObjectURL(url);
+                    }
+                }, 1000);
+            } else {
+                addToLog('window', '无法打开子窗口（可能被弹窗拦截器阻止）', 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function closeChildWindow() {
+            if (childWindow && !childWindow.closed) {
+                childWindow.close();
+                childWindow = null;
+                updateConnectionStatus('childWindow', false);
+                addToLog('window', '子窗口已关闭', 'success');
+            } else {
+                addToLog('window', '没有打开的子窗口', 'warning');
+            }
+        }
+        
+        function sendToChildWindow() {
+            if (!childWindow || childWindow.closed) {
+                addToLog('window', '子窗口未打开', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            const message = document.getElementById('windowMessage').value;
+            const type = document.getElementById('messageType').value;
+            
+            const messageData = {
+                type: type,
+                content: message,
+                timestamp: Date.now(),
+                sender: 'parent'
+            };
+            
+            try {
+                childWindow.postMessage(messageData, '*');
+                messagesSent++;
+                updateStats();
+                addToLog('window', `发送消息到子窗口: ${JSON.stringify(messageData)}`, 'sent');
+            } catch (error) {
+                addToLog('window', `发送消息失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        // iframe 通信
+        function createIframe() {
+            const container = document.getElementById('iframeContainer');
+            const url = document.getElementById('iframeUrl').value;
+            
+            // 移除现有iframe
+            container.innerHTML = '';
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.id = 'messageIframe';
+            
+            iframe.onload = function() {
+                currentIframe = iframe;
+                updateConnectionStatus('iframe', true);
+                addToLog('iframe', 'iframe已加载', 'success');
+            };
+            
+            iframe.onerror = function() {
+                addToLog('iframe', 'iframe加载失败', 'error');
+                errorCount++;
+                updateStats();
+            };
+            
+            container.appendChild(iframe);
+        }
+        
+        function sendToIframe() {
+            if (!currentIframe) {
+                addToLog('iframe', 'iframe未创建', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            const message = document.getElementById('iframeMessage').value;
+            
+            try {
+                currentIframe.contentWindow.postMessage({
+                    type: 'parent-message',
+                    content: message,
+                    timestamp: Date.now()
+                }, '*');
+                
+                messagesSent++;
+                updateStats();
+                addToLog('iframe', `发送消息到iframe: ${message}`, 'sent');
+            } catch (error) {
+                addToLog('iframe', `发送消息失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function removeIframe() {
+            const container = document.getElementById('iframeContainer');
+            container.innerHTML = '';
+            currentIframe = null;
+            updateConnectionStatus('iframe', false);
+            addToLog('iframe', 'iframe已移除', 'success');
+        }
+        
+        // Web Workers
+        function createWorker() {
+            if (worker) {
+                addToLog('worker', 'Worker已存在', 'warning');
+                return;
+            }
+            
+            const workerCode = `
+                self.addEventListener('message', function(e) {
+                    const { task, data } = e.data;
+                    let result;
+                    
+                    try {
+                        switch(task) {
+                            case 'calculate':
+                                result = calculateSum(parseInt(data));
+                                break;
+                            case 'sort':
+                                const arr = data.split(',').map(n => parseInt(n.trim()));
+                                result = arr.sort((a, b) => a - b);
+                                break;
+                            case 'fibonacci':
+                                result = fibonacci(parseInt(data));
+                                break;
+                            case 'prime':
+                                result = findPrimes(parseInt(data));
+                                break;
+                            default:
+                                result = 'Unknown task';
+                        }
+                        
+                        self.postMessage({
+                            success: true,
+                            task: task,
+                            result: result,
+                            timestamp: Date.now()
+                        });
+                    } catch (error) {
+                        self.postMessage({
+                            success: false,
+                            task: task,
+                            error: error.message,
+                            timestamp: Date.now()
+                        });
+                    }
+                });
+                
+                function calculateSum(n) {
+                    let sum = 0;
+                    for (let i = 1; i <= n; i++) {
+                        sum += i;
+                    }
+                    return sum;
+                }
+                
+                function fibonacci(n) {
+                    if (n <= 1) return n;
+                    let a = 0, b = 1;
+                    for (let i = 2; i <= n; i++) {
+                        [a, b] = [b, a + b];
+                    }
+                    return b;
+                }
+                
+                function findPrimes(max) {
+                    const primes = [];
+                    for (let i = 2; i <= max; i++) {
+                        let isPrime = true;
+                        for (let j = 2; j <= Math.sqrt(i); j++) {
+                            if (i % j === 0) {
+                                isPrime = false;
+                                break;
+                            }
+                        }
+                        if (isPrime) primes.push(i);
+                    }
+                    return primes;
+                }
+            `;
+            
+            try {
+                const blob = new Blob([workerCode], { type: 'application/javascript' });
+                const workerUrl = URL.createObjectURL(blob);
+                
+                worker = new Worker(workerUrl);
+                
+                worker.onmessage = function(e) {
+                    messagesReceived++;
+                    updateStats();
+                    
+                    if (e.data.success) {
+                        addToLog('worker', `Worker任务完成: ${e.data.task} -> ${JSON.stringify(e.data.result)}`, 'received');
+                    } else {
+                        addToLog('worker', `Worker任务失败: ${e.data.error}`, 'error');
+                        errorCount++;
+                        updateStats();
+                    }
+                };
+                
+                worker.onerror = function(error) {
+                    addToLog('worker', `Worker错误: ${error.message}`, 'error');
+                    errorCount++;
+                    updateStats();
+                };
+                
+                updateConnectionStatus('worker', true);
+                addToLog('worker', 'Worker已创建', 'success');
+                
+            } catch (error) {
+                addToLog('worker', `创建Worker失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function sendToWorker() {
+            if (!worker) {
+                addToLog('worker', 'Worker未创建', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            const task = document.getElementById('workerTask').value;
+            const data = document.getElementById('workerData').value;
+            
+            const message = { task, data };
+            
+            try {
+                worker.postMessage(message);
+                messagesSent++;
+                updateStats();
+                addToLog('worker', `发送任务到Worker: ${task}(${data})`, 'sent');
+            } catch (error) {
+                addToLog('worker', `发送任务失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function terminateWorker() {
+            if (worker) {
+                worker.terminate();
+                worker = null;
+                updateConnectionStatus('worker', false);
+                addToLog('worker', 'Worker已终止', 'success');
+            } else {
+                addToLog('worker', '没有活跃的Worker', 'warning');
+            }
+        }
+        
+        // Broadcast Channel
+        function createBroadcastChannel() {
+            if (typeof BroadcastChannel === 'undefined') {
+                addToLog('broadcast', '浏览器不支持Broadcast Channel', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            if (broadcastChannel) {
+                addToLog('broadcast', '广播频道已存在', 'warning');
+                return;
+            }
+            
+            const channelName = document.getElementById('channelName').value;
+            
+            try {
+                broadcastChannel = new BroadcastChannel(channelName);
+                
+                broadcastChannel.onmessage = function(e) {
+                    messagesReceived++;
+                    updateStats();
+                    addToLog('broadcast', `收到广播消息: ${JSON.stringify(e.data)}`, 'received');
+                };
+                
+                broadcastChannel.onmessageerror = function(e) {
+                    addToLog('broadcast', `广播消息错误: ${e}`, 'error');
+                    errorCount++;
+                    updateStats();
+                };
+                
+                updateConnectionStatus('broadcast', true);
+                addToLog('broadcast', `广播频道已创建: ${channelName}`, 'success');
+                
+            } catch (error) {
+                addToLog('broadcast', `创建广播频道失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function sendBroadcastMessage() {
+            if (!broadcastChannel) {
+                addToLog('broadcast', '广播频道未创建', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            const message = document.getElementById('broadcastMessage').value;
+            
+            const messageData = {
+                type: 'broadcast',
+                content: message,
+                timestamp: Date.now(),
+                sender: window.location.href
+            };
+            
+            try {
+                broadcastChannel.postMessage(messageData);
+                messagesSent++;
+                updateStats();
+                addToLog('broadcast', `发送广播消息: ${JSON.stringify(messageData)}`, 'sent');
+            } catch (error) {
+                addToLog('broadcast', `发送广播消息失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function closeBroadcastChannel() {
+            if (broadcastChannel) {
+                broadcastChannel.close();
+                broadcastChannel = null;
+                updateConnectionStatus('broadcast', false);
+                addToLog('broadcast', '广播频道已关闭', 'success');
+            } else {
+                addToLog('broadcast', '没有打开的广播频道', 'warning');
+            }
+        }
+        
+        // Message Channel
+        function createMessageChannel() {
+            if (typeof MessageChannel === 'undefined') {
+                addToLog('channel', '浏览器不支持Message Channel', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            if (messageChannel) {
+                addToLog('channel', '消息通道已存在', 'warning');
+                return;
+            }
+            
+            try {
+                messageChannel = new MessageChannel();
+                messagePort1 = messageChannel.port1;
+                messagePort2 = messageChannel.port2;
+                
+                messagePort1.onmessage = function(e) {
+                    messagesReceived++;
+                    updateStats();
+                    addToLog('channel', `Port1收到消息: ${JSON.stringify(e.data)}`, 'received');
+                };
+                
+                messagePort2.onmessage = function(e) {
+                    messagesReceived++;
+                    updateStats();
+                    addToLog('channel', `Port2收到消息: ${JSON.stringify(e.data)}`, 'received');
+                };
+                
+                messagePort1.start();
+                messagePort2.start();
+                
+                updateConnectionStatus('channel', true);
+                addToLog('channel', '消息通道已创建', 'success');
+                
+            } catch (error) {
+                addToLog('channel', `创建消息通道失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function sendChannelMessage() {
+            if (!messageChannel || !messagePort1 || !messagePort2) {
+                addToLog('channel', '消息通道未创建', 'error');
+                errorCount++;
+                updateStats();
+                return;
+            }
+            
+            const message = document.getElementById('channelMessage').value;
+            
+            const messageData = {
+                type: 'channel',
+                content: message,
+                timestamp: Date.now()
+            };
+            
+            try {
+                // 从port1发送到port2
+                messagePort1.postMessage(messageData);
+                messagesSent++;
+                updateStats();
+                addToLog('channel', `通过Port1发送消息: ${JSON.stringify(messageData)}`, 'sent');
+                
+                // 模拟从port2回复
+                setTimeout(() => {
+                    messagePort2.postMessage({
+                        type: 'reply',
+                        content: 'Reply from Port2',
+                        originalMessage: messageData,
+                        timestamp: Date.now()
+                    });
+                    messagesSent++;
+                    updateStats();
+                }, 1000);
+                
+            } catch (error) {
+                addToLog('channel', `发送通道消息失败: ${error.message}`, 'error');
+                errorCount++;
+                updateStats();
+            }
+        }
+        
+        function closeMessageChannel() {
+            if (messagePort1) {
+                messagePort1.close();
+                messagePort1 = null;
+            }
+            if (messagePort2) {
+                messagePort2.close();
+                messagePort2 = null;
+            }
+            messageChannel = null;
+            updateConnectionStatus('channel', false);
+            addToLog('channel', '消息通道已关闭', 'success');
+        }
+        
+        // 连接状态更新
+        function updateConnectionStatus(type, connected) {
+            const statusElements = {
+                'childWindow': 'childWindowStatus',
+                'iframe': 'iframeStatus',
+                'worker': 'workerConnectionStatus',
+                'broadcast': 'broadcastConnectionStatus'
+            };
+            
+            const elementId = statusElements[type];
+            if (elementId) {
+                const element = document.getElementById(elementId);
+                const indicator = element.querySelector('.status-indicator');
+                
+                if (connected) {
+                    indicator.className = 'status-indicator status-connected';
+                    element.innerHTML = indicator.outerHTML + ' 已连接';
+                } else {
+                    indicator.className = 'status-indicator status-disconnected';
+                    element.innerHTML = indicator.outerHTML + ' 未连接';
+                }
+            }
+            
+            // 更新特定状态显示
+            if (type === 'childWindow') {
+                const windowInfo = document.getElementById('windowInfo');
+                const indicator = windowInfo.querySelector('.status-indicator');
+                if (connected) {
+                    indicator.className = 'status-indicator status-connected';
+                    windowInfo.innerHTML = indicator.outerHTML + ' 子窗口状态: 已连接';
+                } else {
+                    indicator.className = 'status-indicator status-disconnected';
+                    windowInfo.innerHTML = indicator.outerHTML + ' 子窗口状态: 未连接';
+                }
+            } else if (type === 'worker') {
+                const workerStatus = document.getElementById('workerStatus');
+                const indicator = workerStatus.querySelector('.status-indicator');
+                if (connected) {
+                    indicator.className = 'status-indicator status-connected';
+                    workerStatus.innerHTML = indicator.outerHTML + ' Worker状态: 已创建';
+                } else {
+                    indicator.className = 'status-indicator status-disconnected';
+                    workerStatus.innerHTML = indicator.outerHTML + ' Worker状态: 未创建';
+                }
+            } else if (type === 'broadcast') {
+                const broadcastStatus = document.getElementById('broadcastStatus');
+                const indicator = broadcastStatus.querySelector('.status-indicator');
+                if (connected) {
+                    indicator.className = 'status-indicator status-connected';
+                    broadcastStatus.innerHTML = indicator.outerHTML + ' 广播频道状态: 已连接';
+                } else {
+                    indicator.className = 'status-indicator status-disconnected';
+                    broadcastStatus.innerHTML = indicator.outerHTML + ' 广播频道状态: 未连接';
+                }
+            } else if (type === 'channel') {
+                const channelInfo = document.getElementById('channelInfo');
+                const indicator = channelInfo.querySelector('.status-indicator');
+                if (connected) {
+                    indicator.className = 'status-indicator status-connected';
+                    channelInfo.innerHTML = indicator.outerHTML + ' 消息通道状态: 已创建';
+                } else {
+                    indicator.className = 'status-indicator status-disconnected';
+                    channelInfo.innerHTML = indicator.outerHTML + ' 消息通道状态: 未创建';
+                }
+            }
+            
+            updateActiveConnections();
+        }
+        
+        function updateActiveConnections() {
+            let count = 0;
+            if (childWindow && !childWindow.closed) count++;
+            if (currentIframe) count++;
+            if (worker) count++;
+            if (broadcastChannel) count++;
+            if (messageChannel) count++;
+            
+            activeConnections = count;
+            updateStats();
+        }
+        
+        // 统计更新
+        function updateStats() {
+            document.getElementById('messagesSent').textContent = messagesSent;
+            document.getElementById('messagesReceived').textContent = messagesReceived;
+            document.getElementById('activeConnections').textContent = activeConnections;
+            document.getElementById('errorCount').textContent = errorCount;
+        }
+        
+        function resetStats() {
+            messagesSent = 0;
+            messagesReceived = 0;
+            activeConnections = 0;
+            errorCount = 0;
+            updateStats();
+            addToLog('system', '统计数据已重置');
+        }
+        
+        // 日志管理
+        function addToLog(type, message, level = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = {
+                type: type,
+                message: message,
+                level: level,
+                timestamp: timestamp
+            };
+            
+            messageLog.unshift(logEntry);
+            
+            // 限制日志数量
+            if (messageLog.length > 100) {
+                messageLog = messageLog.slice(0, 100);
+            }
+            
+            updateLogDisplay();
+        }
+        
+        function updateLogDisplay() {
+            const logDiv = document.getElementById('messageLog');
+            
+            if (messageLog.length === 0) {
+                logDiv.innerHTML = '<p>暂无消息日志</p>';
+                return;
+            }
+            
+            let html = '';
+            messageLog.forEach((entry, index) => {
+                html += `
+                    <div class="log-entry ${entry.level}">
+                        <strong>[${entry.timestamp}]</strong> [${entry.type.toUpperCase()}] ${entry.message}
+                    </div>
+                `;
+            });
+            
+            logDiv.innerHTML = html;
+        }
+        
+        function clearMessageLog() {
+            messageLog = [];
+            updateLogDisplay();
+        }
+        
+        // 消息事件监听
+        window.addEventListener('message', function(event) {
+            messagesReceived++;
+            updateStats();
+            
+            // 根据消息来源添加不同的日志
+            if (event.source === childWindow) {
+                addToLog('window', '收到子窗口消息: ' + JSON.stringify(event.data), 'received');
+            } else if (event.source && event.source.parent === window) {
+                addToLog('iframe', '收到iframe消息: ' + JSON.stringify(event.data), 'received');
+            } else {
+                addToLog('message', '收到消息: ' + JSON.stringify(event.data) + ' (来源: ' + event.origin + ')', 'received');
+            }
+        });
+        
+        // 页面加载时的初始化
+        window.addEventListener('load', function() {
+            checkMessageSupport();
+            updateStats();
+            updateLogDisplay();
+            addToLog('system', '页面加载完成');
+        });
+        
+        // 页面卸载前的清理
+        window.addEventListener('beforeunload', function() {
+            if (childWindow && !childWindow.closed) {
+                childWindow.close();
+            }
+            if (worker) {
+                worker.terminate();
+            }
+            if (broadcastChannel) {
+                broadcastChannel.close();
+            }
+            if (messagePort1) {
+                messagePort1.close();
+            }
+            if (messagePort2) {
+                messagePort2.close();
+            }
+            
+            addToLog('system', '页面即将卸载，清理资源');
+        });
+    </script>
+</body>
+</html>

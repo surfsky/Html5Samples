@@ -191,7 +191,6 @@
             .header h1 {
                 font-size: 1.2rem;
             }
-            
             .sidebar {
                 min-width: 200px;
             }
@@ -206,29 +205,17 @@
         
         <main class="main-content">
             <!-- 主分割面板：左右布局 -->
-            <split-panel id="mainSplitPanel" 
-                        direction="horizontal" 
-                        sizes="300px,1fr" 
-                        splitter-style="main-splitter">
+            <split-panel id="mainSplitPanel" direction="horizontal" sizes="30%,70%" height="100%" width="100%">
                 <!-- 左侧目录树 -->
                 <div class="sidebar">
                     <div id="menuTree" class="tree"></div>
                 </div>
                 
                 <!-- 右侧内容区域：上下分割 -->
-                <split-panel id="contentSplitPanel" 
-                            direction="vertical" 
-                            sizes="1fr,300px" 
-                            splitter-style="content-splitter">
+                <split-panel id="contentSplitPanel" direction="vertical" sizes="1fr,300px">
                     <!-- 上方页面显示区域 -->
                     <div class="page-viewer">
-                        <iframe id="pageFrame" 
-                                src="about.html" 
-                                frameborder="0" 
-                                width="100%" 
-                                height="100%"
-                                style="border: none;">
-                        </iframe>
+                        <iframe id="pageFrame" src="about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
                     </div>
                     
                     <!-- 下方代码显示区域 -->
@@ -247,7 +234,7 @@
     </div>
     
     <!-- 引入依赖 -->
-    <script src="eg-customTag/splitPanel.js"></script>
+    <script src="tagCustom/splitPanel/splitPanel.js"></script>
     <script type="module" src="index.js"></script>
 </body>
 </html>

@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 离线应用示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .offline-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .offline-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        button.success {
+            background: #28a745;
+        }
+        button.success:hover {
+            background: #218838;
+        }
+        button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        button.warning:hover {
+            background: #e0a800;
+        }
+        .info-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+        .error-display {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .success-display {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .warning-display {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-online {
+            background-color: #28a745;
+        }
+        .status-offline {
+            background-color: #dc3545;
+        }
+        .connection-status {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+            font-family: monospace;
+        }
+        .cache-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        .cache-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            font-size: 14px;
+        }
+        .cache-item.cached {
+            border-left-color: #28a745;
+        }
+        .cache-item.error {
+            border-left-color: #dc3545;
+        }
+        .offline-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .offline-form label {
+            display: block;
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+        }
+        .offline-form input, .offline-form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .offline-form textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .offline-log {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        .log-entry {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            font-size: 14px;
+        }
+        .log-entry.success {
+            border-left-color: #28a745;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+        }
+        .log-entry.warning {
+            border-left-color: #ffc107;
+        }
+        .offline-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .data-simulator {
+            background: #fff;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .data-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .data-item {
+            background: #f8f9fa;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+        }
+        .sync-status {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+        .network-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 离线应用示例</h1>
+        
+        <!-- 浏览器支持检测 -->
+        <div class="offline-section">
+            <h3>1. 浏览器支持检测</h3>
+            <div id="supportInfo"></div>
+        </div>
+        
+        <!-- 网络状态监测 -->
+        <div class="offline-section">
+            <h3>2. 网络状态监测</h3>
+            <button onclick="checkNetworkStatus()">检查网络状态</button>
+            <button onclick="simulateOffline()">模拟离线</button>
+            <button onclick="simulateOnline()">模拟在线</button>
+            
+            <div class="connection-status" id="connectionStatus"></div>
+            <div class="network-info" id="networkInfo"></div>
+        </div>
+        
+        <!-- Service Worker -->
+        <div class="offline-section">
+            <h3>3. Service Worker 管理</h3>
+            <button onclick="registerServiceWorker()" class="success">注册 Service Worker</button>
+            <button onclick="unregisterServiceWorker()" class="danger">注销 Service Worker</button>
+            <button onclick="updateServiceWorker()" class="warning">更新 Service Worker</button>
+            
+            <div id="serviceWorkerStatus"></div>
+        </div>
+        
+        <!-- 缓存管理 -->
+        <div class="offline-section">
+            <h3>4. 缓存管理</h3>
+            <button onclick="cacheResources()">缓存资源</button>
+            <button onclick="listCachedResources()">查看缓存</button>
+            <button onclick="clearCache()" class="danger">清除缓存</button>
+            
+            <div class="cache-info" id="cacheInfo"></div>
+        </div>
+        
+        <!-- 离线数据存储 -->
+        <div class="offline-section">
+            <h3>5. 离线数据存储</h3>
+            <div class="offline-form">
+                <label for="dataKey">数据键:</label>
+                <input type="text" id="dataKey" placeholder="输入数据键" value="user_data">
+                
+                <label for="dataValue">数据值:</label>
+                <textarea id="dataValue" placeholder="输入数据内容（JSON格式）">{"name": "张三", "age": 25, "city": "北京"}</textarea>
+                
+                <div style="margin-top: 15px;">
+                    <button onclick="saveOfflineData()" class="success">保存数据</button>
+                    <button onclick="loadOfflineData()">加载数据</button>
+                    <button onclick="deleteOfflineData()" class="danger">删除数据</button>
+                </div>
+            </div>
+            
+            <div class="data-simulator" id="dataSimulator">
+                <h4>离线数据列表</h4>
+                <div class="data-list" id="dataList"></div>
+            </div>
+        </div>
+        
+        <!-- 数据同步 -->
+        <div class="offline-section">
+            <h3>6. 数据同步</h3>
+            <button onclick="syncData()">同步数据</button>
+            <button onclick="forceSyncData()" class="warning">强制同步</button>
+            <button onclick="clearSyncQueue()" class="danger">清除同步队列</button>
+            
+            <div class="sync-status" id="syncStatus">
+                <div>同步状态: <span id="syncStatusText">就绪</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="syncProgress" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div id="syncInfo"></div>
+        </div>
+        
+        <!-- 离线功能测试 -->
+        <div class="offline-section">
+            <h3>7. 离线功能测试</h3>
+            <button onclick="testOfflineFeatures()">测试离线功能</button>
+            <button onclick="simulateNetworkError()">模拟网络错误</button>
+            <button onclick="testCacheFirst()">测试缓存优先</button>
+            
+            <div id="testResults"></div>
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="offline-section">
+            <h3>8. 统计信息</h3>
+            <div class="offline-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="cacheHits">0</div>
+                    <div class="stat-label">缓存命中</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="cacheMisses">0</div>
+                    <div class="stat-label">缓存未命中</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="syncAttempts">0</div>
+                    <div class="stat-label">同步尝试</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="offlineTime">0</div>
+                    <div class="stat-label">离线时间(秒)</div>
+                </div>
+            </div>
+            <button onclick="resetStats()">重置统计</button>
+        </div>
+        
+        <!-- 操作日志 -->
+        <div class="offline-section">
+            <h3>9. 操作日志</h3>
+            <button onclick="clearLog()">清除日志</button>
+            <div class="offline-log" id="offlineLog"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let cacheHits = 0;
+        let cacheMisses = 0;
+        let syncAttempts = 0;
+        let offlineTime = 0;
+        let offlineStartTime = null;
+        let offlineLog = [];
+        let syncQueue = [];
+        let serviceWorkerRegistration = null;
+        
+        // 检查浏览器支持
+        function checkOfflineSupport() {
+            const supportInfo = document.getElementById('supportInfo');
+            const features = [];
+            
+            if ('serviceWorker' in navigator) {
+                features.push('✓ Service Worker');
+            } else {
+                features.push('✗ Service Worker');
+            }
+            
+            if ('caches' in window) {
+                features.push('✓ Cache API');
+            } else {
+                features.push('✗ Cache API');
+            }
+            
+            if (navigator.onLine !== undefined) {
+                features.push('✓ 网络状态检测');
+            } else {
+                features.push('✗ 网络状态检测');
+            }
+            
+            if ('localStorage' in window) {
+                features.push('✓ 本地存储');
+            } else {
+                features.push('✗ 本地存储');
+            }
+            
+            if ('indexedDB' in window) {
+                features.push('✓ IndexedDB');
+            } else {
+                features.push('✗ IndexedDB');
+            }
+            
+            const hasSupport = features.every(f => f.startsWith('✓'));
+            
+            supportInfo.innerHTML = `
+                <div class="${hasSupport ? 'success' : 'warning'}-display">
+                    <strong>浏览器支持情况:</strong><br>
+                    ${features.join('<br>')}
+                </div>
+            `;
+        }
+        
+        // 网络状态监测
+        function checkNetworkStatus() {
+            const statusDiv = document.getElementById('connectionStatus');
+            const networkDiv = document.getElementById('networkInfo');
+            const isOnline = navigator.onLine;
+            
+            statusDiv.innerHTML = `
+                <span class="status-indicator ${isOnline ? 'status-online' : 'status-offline'}"></span>
+                网络状态: ${isOnline ? '在线' : '离线'}
+            `;
+            
+            // 获取网络信息（如果支持）
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
+                networkDiv.innerHTML = `
+                    <strong>网络详细信息:</strong><br>
+                    连接类型: ${connection.effectiveType || '未知'}<br>
+                    下行速度: ${connection.downlink || '未知'} Mbps<br>
+                    RTT: ${connection.rtt || '未知'} ms<br>
+                    数据节省: ${connection.saveData ? '开启' : '关闭'}
+                `;
+            } else {
+                networkDiv.innerHTML = '<strong>网络详细信息:</strong><br>浏览器不支持网络信息API';
+            }
+            
+            addToLog('network', `检查网络状态: ${isOnline ? '在线' : '离线'}`);
+        }
+        
+        function simulateOffline() {
+            // 模拟离线状态
+            Object.defineProperty(navigator, 'onLine', {
+                writable: true,
+                value: false
+            });
+            
+            window.dispatchEvent(new Event('offline'));
+            addToLog('simulation', '模拟离线状态', 'warning');
+        }
+        
+        function simulateOnline() {
+            // 模拟在线状态
+            Object.defineProperty(navigator, 'onLine', {
+                writable: true,
+                value: true
+            });
+            
+            window.dispatchEvent(new Event('online'));
+            addToLog('simulation', '模拟在线状态', 'success');
+        }
+        
+        // Service Worker 管理
+        function registerServiceWorker() {
+            if (!('serviceWorker' in navigator)) {
+                updateServiceWorkerStatus('浏览器不支持 Service Worker', 'error');
+                return;
+            }
+            
+            // 创建一个简单的 Service Worker 代码
+            const swCode = `
+                const CACHE_NAME = 'offline-demo-v1';
+                const urlsToCache = [
+                    '/',
+                    '/tag/offline.html',
+                    'data:text/css;base64,Ym9keSB7IGZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgfQ=='
+                ];
+                
+                self.addEventListener('install', function(event) {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then(function(cache) {
+                                return cache.addAll(urlsToCache);
+                            })
+                    );
+                });
+                
+                self.addEventListener('fetch', function(event) {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then(function(response) {
+                                if (response) {
+                                    return response;
+                                }
+                                return fetch(event.request);
+                            }
+                        )
+                    );
+                });
+            `;
+            
+            // 创建 Blob URL
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then(function(registration) {
+                    serviceWorkerRegistration = registration;
+                    updateServiceWorkerStatus('Service Worker 注册成功', 'success');
+                    addToLog('sw', 'Service Worker 注册成功', 'success');
+                })
+                .catch(function(error) {
+                    updateServiceWorkerStatus('Service Worker 注册失败: ' + error.message, 'error');
+                    addToLog('sw', 'Service Worker 注册失败: ' + error.message, 'error');
+                });
+        }
+        
+        function unregisterServiceWorker() {
+            if (!serviceWorkerRegistration) {
+                updateServiceWorkerStatus('没有已注册的 Service Worker', 'warning');
+                return;
+            }
+            
+            serviceWorkerRegistration.unregister()
+                .then(function(success) {
+                    if (success) {
+                        serviceWorkerRegistration = null;
+                        updateServiceWorkerStatus('Service Worker 注销成功', 'success');
+                        addToLog('sw', 'Service Worker 注销成功', 'success');
+                    } else {
+                        updateServiceWorkerStatus('Service Worker 注销失败', 'error');
+                        addToLog('sw', 'Service Worker 注销失败', 'error');
+                    }
+                });
+        }
+        
+        function updateServiceWorker() {
+            if (!serviceWorkerRegistration) {
+                updateServiceWorkerStatus('没有已注册的 Service Worker', 'warning');
+                return;
+            }
+            
+            serviceWorkerRegistration.update()
+                .then(function() {
+                    updateServiceWorkerStatus('Service Worker 更新检查完成', 'success');
+                    addToLog('sw', 'Service Worker 更新检查完成', 'success');
+                });
+        }
+        
+        function updateServiceWorkerStatus(message, type) {
+            const statusDiv = document.getElementById('serviceWorkerStatus');
+            statusDiv.innerHTML = `<div class="${type}-display">${message}</div>`;
+        }
+        
+        // 缓存管理
+        function cacheResources() {
+            if (!('caches' in window)) {
+                updateCacheInfo('浏览器不支持 Cache API', 'error');
+                return;
+            }
+            
+            const resourcesToCache = [
+                window.location.href,
+                'data:text/plain;base64,SGVsbG8gV29ybGQ=', // "Hello World"
+                'data:application/json;base64,eyJtZXNzYWdlIjogIkNhY2hlZCBkYXRhIn0=' // {"message": "Cached data"}
+            ];
+            
+            caches.open('offline-demo-cache')
+                .then(function(cache) {
+                    return cache.addAll(resourcesToCache);
+                })
+                .then(function() {
+                    updateCacheInfo('资源缓存成功', 'success');
+                    addToLog('cache', '资源缓存成功', 'success');
+                    listCachedResources();
+                })
+                .catch(function(error) {
+                    updateCacheInfo('资源缓存失败: ' + error.message, 'error');
+                    addToLog('cache', '资源缓存失败: ' + error.message, 'error');
+                });
+        }
+        
+        function listCachedResources() {
+            if (!('caches' in window)) {
+                updateCacheInfo('浏览器不支持 Cache API', 'error');
+                return;
+            }
+            
+            caches.open('offline-demo-cache')
+                .then(function(cache) {
+                    return cache.keys();
+                })
+                .then(function(requests) {
+                    let html = '<h4>缓存的资源:</h4>';
+                    
+                    if (requests.length === 0) {
+                        html += '<p>暂无缓存资源</p>';
+                    } else {
+                        requests.forEach(function(request) {
+                            html += `<div class="cache-item cached">${request.url}</div>`;
+                        });
+                    }
+                    
+                    document.getElementById('cacheInfo').innerHTML = html;
+                    addToLog('cache', `列出缓存资源: ${requests.length}个`);
+                })
+                .catch(function(error) {
+                    updateCacheInfo('获取缓存列表失败: ' + error.message, 'error');
+                    addToLog('cache', '获取缓存列表失败: ' + error.message, 'error');
+                });
+        }
+        
+        function clearCache() {
+            if (!('caches' in window)) {
+                updateCacheInfo('浏览器不支持 Cache API', 'error');
+                return;
+            }
+            
+            caches.delete('offline-demo-cache')
+                .then(function(success) {
+                    if (success) {
+                        updateCacheInfo('缓存清除成功', 'success');
+                        addToLog('cache', '缓存清除成功', 'success');
+                    } else {
+                        updateCacheInfo('缓存清除失败', 'error');
+                        addToLog('cache', '缓存清除失败', 'error');
+                    }
+                });
+        }
+        
+        function updateCacheInfo(message, type) {
+            const cacheDiv = document.getElementById('cacheInfo');
+            cacheDiv.innerHTML = `<div class="${type}-display">${message}</div>`;
+        }
+        
+        // 离线数据存储
+        function saveOfflineData() {
+            const key = document.getElementById('dataKey').value;
+            const value = document.getElementById('dataValue').value;
+            
+            if (!key) {
+                alert('请输入数据键');
+                return;
+            }
+            
+            try {
+                // 验证JSON格式
+                JSON.parse(value);
+                
+                localStorage.setItem('offline_' + key, value);
+                addToLog('storage', `保存数据: ${key}`, 'success');
+                updateDataList();
+            } catch (e) {
+                alert('数据值不是有效的JSON格式');
+                addToLog('storage', `保存数据失败: ${e.message}`, 'error');
+            }
+        }
+        
+        function loadOfflineData() {
+            const key = document.getElementById('dataKey').value;
+            
+            if (!key) {
+                alert('请输入数据键');
+                return;
+            }
+            
+            const value = localStorage.getItem('offline_' + key);
+            
+            if (value !== null) {
+                document.getElementById('dataValue').value = value;
+                addToLog('storage', `加载数据: ${key}`, 'success');
+            } else {
+                alert('未找到指定的数据');
+                addToLog('storage', `数据不存在: ${key}`, 'warning');
+            }
+        }
+        
+        function deleteOfflineData() {
+            const key = document.getElementById('dataKey').value;
+            
+            if (!key) {
+                alert('请输入数据键');
+                return;
+            }
+            
+            localStorage.removeItem('offline_' + key);
+            addToLog('storage', `删除数据: ${key}`, 'success');
+            updateDataList();
+        }
+        
+        function updateDataList() {
+            const dataList = document.getElementById('dataList');
+            let html = '';
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('offline_')) {
+                    const displayKey = key.substring(8); // 移除 'offline_' 前缀
+                    const value = localStorage.getItem(key);
+                    
+                    html += `
+                        <div class="data-item">
+                            <strong>${displayKey}</strong><br>
+                            <small>${value.substring(0, 100)}${value.length > 100 ? '...' : ''}</small>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (html === '') {
+                html = '<p>暂无离线数据</p>';
+            }
+            
+            dataList.innerHTML = html;
+        }
+        
+        // 数据同步
+        function syncData() {
+            syncAttempts++;
+            updateStats();
+            
+            const statusText = document.getElementById('syncStatusText');
+            const progress = document.getElementById('syncProgress');
+            
+            statusText.textContent = '同步中...';
+            
+            // 模拟同步过程
+            let progressValue = 0;
+            const interval = setInterval(() => {
+                progressValue += 10;
+                progress.style.width = progressValue + '%';
+                
+                if (progressValue >= 100) {
+                    clearInterval(interval);
+                    statusText.textContent = '同步完成';
+                    
+                    setTimeout(() => {
+                        statusText.textContent = '就绪';
+                        progress.style.width = '0%';
+                    }, 2000);
+                    
+                    addToLog('sync', '数据同步完成', 'success');
+                }
+            }, 200);
+            
+            addToLog('sync', '开始数据同步');
+        }
+        
+        function forceSyncData() {
+            addToLog('sync', '强制同步数据', 'warning');
+            syncData();
+        }
+        
+        function clearSyncQueue() {
+            syncQueue = [];
+            addToLog('sync', '清除同步队列', 'success');
+        }
+        
+        // 离线功能测试
+        function testOfflineFeatures() {
+            const resultsDiv = document.getElementById('testResults');
+            let results = [];
+            
+            // 测试本地存储
+            try {
+                localStorage.setItem('test_key', 'test_value');
+                const value = localStorage.getItem('test_key');
+                localStorage.removeItem('test_key');
+                results.push('✓ 本地存储功能正常');
+            } catch (e) {
+                results.push('✗ 本地存储功能异常: ' + e.message);
+            }
+            
+            // 测试缓存API
+            if ('caches' in window) {
+                results.push('✓ 缓存API可用');
+            } else {
+                results.push('✗ 缓存API不可用');
+            }
+            
+            // 测试Service Worker
+            if ('serviceWorker' in navigator) {
+                results.push('✓ Service Worker可用');
+            } else {
+                results.push('✗ Service Worker不可用');
+            }
+            
+            // 测试网络状态
+            if (navigator.onLine !== undefined) {
+                results.push(`✓ 网络状态: ${navigator.onLine ? '在线' : '离线'}`);
+            } else {
+                results.push('✗ 无法检测网络状态');
+            }
+            
+            resultsDiv.innerHTML = `
+                <div class="info-display">
+                    <strong>离线功能测试结果:</strong><br>
+                    ${results.join('<br>')}
+                </div>
+            `;
+            
+            addToLog('test', '执行离线功能测试');
+        }
+        
+        function simulateNetworkError() {
+            addToLog('test', '模拟网络错误', 'error');
+            
+            // 模拟网络请求失败
+            fetch('/nonexistent-resource')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络请求失败');
+                    }
+                })
+                .catch(error => {
+                    cacheMisses++;
+                    updateStats();
+                    addToLog('network', '网络请求失败: ' + error.message, 'error');
+                });
+        }
+        
+        function testCacheFirst() {
+            if (!('caches' in window)) {
+                addToLog('test', '浏览器不支持缓存API', 'error');
+                return;
+            }
+            
+            const testUrl = window.location.href;
+            
+            caches.match(testUrl)
+                .then(response => {
+                    if (response) {
+                        cacheHits++;
+                        addToLog('cache', '缓存命中: ' + testUrl, 'success');
+                    } else {
+                        cacheMisses++;
+                        addToLog('cache', '缓存未命中: ' + testUrl, 'warning');
+                    }
+                    updateStats();
+                });
+        }
+        
+        // 统计更新
+        function updateStats() {
+            document.getElementById('cacheHits').textContent = cacheHits;
+            document.getElementById('cacheMisses').textContent = cacheMisses;
+            document.getElementById('syncAttempts').textContent = syncAttempts;
+            document.getElementById('offlineTime').textContent = offlineTime;
+        }
+        
+        function resetStats() {
+            cacheHits = 0;
+            cacheMisses = 0;
+            syncAttempts = 0;
+            offlineTime = 0;
+            updateStats();
+            addToLog('system', '统计数据已重置');
+        }
+        
+        // 日志管理
+        function addToLog(type, message, level = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = {
+                type: type,
+                message: message,
+                level: level,
+                timestamp: timestamp
+            };
+            
+            offlineLog.unshift(logEntry);
+            
+            // 限制日志数量
+            if (offlineLog.length > 50) {
+                offlineLog = offlineLog.slice(0, 50);
+            }
+            
+            updateLogDisplay();
+        }
+        
+        function updateLogDisplay() {
+            const logDiv = document.getElementById('offlineLog');
+            
+            if (offlineLog.length === 0) {
+                logDiv.innerHTML = '<p>暂无操作日志</p>';
+                return;
+            }
+            
+            let html = '';
+            offlineLog.forEach((entry, index) => {
+                html += `
+                    <div class="log-entry ${entry.level}">
+                        <strong>[${entry.timestamp}]</strong> [${entry.type.toUpperCase()}] ${entry.message}
+                    </div>
+                `;
+            });
+            
+            logDiv.innerHTML = html;
+        }
+        
+        function clearLog() {
+            offlineLog = [];
+            updateLogDisplay();
+        }
+        
+        // 事件监听
+        window.addEventListener('online', function() {
+            if (offlineStartTime) {
+                offlineTime += Math.floor((Date.now() - offlineStartTime) / 1000);
+                offlineStartTime = null;
+                updateStats();
+            }
+            
+            checkNetworkStatus();
+            addToLog('network', '网络连接恢复', 'success');
+        });
+        
+        window.addEventListener('offline', function() {
+            offlineStartTime = Date.now();
+            checkNetworkStatus();
+            addToLog('network', '网络连接断开', 'warning');
+        });
+        
+        // 页面加载时的初始化
+        window.addEventListener('load', function() {
+            checkOfflineSupport();
+            checkNetworkStatus();
+            updateStats();
+            updateLogDisplay();
+            updateDataList();
+            
+            addToLog('system', '页面加载完成');
+        });
+        
+        // 页面卸载前的清理
+        window.addEventListener('beforeunload', function() {
+            if (offlineStartTime) {
+                offlineTime += Math.floor((Date.now() - offlineStartTime) / 1000);
+                updateStats();
+            }
+            
+            addToLog('system', '页面即将卸载');
+        });
+        
+        // 页面可见性变化处理
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                addToLog('visibility', '页面隐藏');
+            } else {
+                addToLog('visibility', '页面显示');
+                checkNetworkStatus();
+            }
+        });
+    </script>
+</body>
+</html>

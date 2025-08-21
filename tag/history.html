@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 历史 API 示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .history-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .history-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        button.success {
+            background: #28a745;
+        }
+        button.success:hover {
+            background: #218838;
+        }
+        .info-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+        .error-display {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .success-display {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .warning-display {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .current-state {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+            font-family: monospace;
+        }
+        .history-log {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        .log-entry {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            font-size: 14px;
+        }
+        .log-entry.pushstate {
+            border-left-color: #28a745;
+        }
+        .log-entry.replacestate {
+            border-left-color: #ffc107;
+        }
+        .log-entry.popstate {
+            border-left-color: #dc3545;
+        }
+        .navigation-controls {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .state-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .state-form label {
+            display: block;
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+        }
+        .state-form input, .state-form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .state-form textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .page-simulator {
+            background: #fff;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 200px;
+        }
+        .page-content {
+            text-align: center;
+            padding: 20px;
+        }
+        .page-content h2 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .breadcrumb {
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .url-display {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 历史 API 示例</h1>
+        
+        <!-- 浏览器支持检测 -->
+        <div class="history-section">
+            <h3>1. 浏览器支持检测</h3>
+            <div id="supportInfo"></div>
+        </div>
+        
+        <!-- 当前状态显示 -->
+        <div class="history-section">
+            <h3>2. 当前状态信息</h3>
+            <button onclick="updateCurrentState()">刷新状态</button>
+            <div id="currentState"></div>
+            <div class="url-display" id="currentUrl"></div>
+        </div>
+        
+        <!-- 历史操作控制 -->
+        <div class="history-section">
+            <h3>3. 历史记录操作</h3>
+            <div class="navigation-controls">
+                <button onclick="goBack()" id="backBtn">← 后退</button>
+                <button onclick="goForward()" id="forwardBtn">前进 →</button>
+                <button onclick="goToStep()" id="goBtn">跳转到指定步数</button>
+                <input type="number" id="stepInput" placeholder="步数" style="width: 80px; margin: 0 10px;">
+            </div>
+            <div class="warning-display">
+                <strong>注意:</strong> 后退/前进操作只在有历史记录时有效。在本示例中，您需要先使用pushState创建一些历史记录。
+            </div>
+        </div>
+        
+        <!-- 状态管理 -->
+        <div class="history-section">
+            <h3>4. 状态管理 (pushState & replaceState)</h3>
+            <div class="state-form">
+                <label for="stateTitle">页面标题:</label>
+                <input type="text" id="stateTitle" placeholder="输入页面标题">
+                
+                <label for="stateUrl">URL路径:</label>
+                <input type="text" id="stateUrl" placeholder="例如: /page1 或 ?id=123">
+                
+                <label for="stateData">状态数据 (JSON):</label>
+                <textarea id="stateData" placeholder='例如: {"page": "home", "id": 1}'></textarea>
+                
+                <div style="margin-top: 15px;">
+                    <button onclick="pushNewState()" class="success">pushState (添加新状态)</button>
+                    <button onclick="replaceCurrentState()" class="warning">replaceState (替换当前状态)</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 快速导航示例 -->
+        <div class="history-section">
+            <h3>5. 快速导航示例</h3>
+            <div class="navigation-controls">
+                <button onclick="navigateToPage('home')">首页</button>
+                <button onclick="navigateToPage('about')">关于我们</button>
+                <button onclick="navigateToPage('products')">产品列表</button>
+                <button onclick="navigateToPage('contact')">联系我们</button>
+                <button onclick="navigateToPage('profile', {userId: 123})">用户资料</button>
+            </div>
+            
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb" id="breadcrumb"></div>
+            
+            <!-- 模拟页面内容 -->
+            <div class="page-simulator" id="pageContent">
+                <div class="page-content">
+                    <h2>欢迎来到首页</h2>
+                    <p>这是一个模拟的单页应用，使用 History API 进行导航。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 历史记录统计 -->
+        <div class="history-section">
+            <h3>6. 操作统计</h3>
+            <div class="history-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="pushStateCount">0</div>
+                    <div class="stat-label">pushState 调用次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="replaceStateCount">0</div>
+                    <div class="stat-label">replaceState 调用次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="popStateCount">0</div>
+                    <div class="stat-label">popstate 事件次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="navigationCount">0</div>
+                    <div class="stat-label">总导航次数</div>
+                </div>
+            </div>
+            <button onclick="resetStats()">重置统计</button>
+        </div>
+        
+        <!-- 历史记录日志 -->
+        <div class="history-section">
+            <h3>7. 操作日志</h3>
+            <button onclick="clearLog()">清除日志</button>
+            <div class="history-log" id="historyLog"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let pushStateCount = 0;
+        let replaceStateCount = 0;
+        let popStateCount = 0;
+        let navigationCount = 0;
+        let historyLog = [];
+        
+        // 页面数据
+        const pages = {
+            home: {
+                title: '首页',
+                content: '<h2>欢迎来到首页</h2><p>这是一个模拟的单页应用，使用 History API 进行导航。</p>'
+            },
+            about: {
+                title: '关于我们',
+                content: '<h2>关于我们</h2><p>我们是一家专注于Web技术的公司，致力于提供最佳的用户体验。</p>'
+            },
+            products: {
+                title: '产品列表',
+                content: '<h2>产品列表</h2><p>这里展示我们的所有产品。</p><ul><li>产品A</li><li>产品B</li><li>产品C</li></ul>'
+            },
+            contact: {
+                title: '联系我们',
+                content: '<h2>联系我们</h2><p>电话: 123-456-7890<br>邮箱: info@example.com<br>地址: 北京市朝阳区</p>'
+            },
+            profile: {
+                title: '用户资料',
+                content: '<h2>用户资料</h2><p>用户ID: <span id="userId"></span></p><p>这里显示用户的详细信息。</p>'
+            }
+        };
+        
+        // 检查浏览器支持
+        function checkHistorySupport() {
+            const supportInfo = document.getElementById('supportInfo');
+            
+            if (window.history && window.history.pushState) {
+                supportInfo.innerHTML = `
+                    <div class="success-display">
+                        <strong>✓ 浏览器支持 History API</strong><br>
+                        支持的方法: pushState, replaceState, back, forward, go<br>
+                        支持的事件: popstate
+                    </div>
+                `;
+            } else {
+                supportInfo.innerHTML = `
+                    <div class="error-display">
+                        <strong>✗ 浏览器不支持 History API</strong><br>
+                        请使用现代浏览器访问此页面。
+                    </div>
+                `;
+            }
+        }
+        
+        // 更新当前状态显示
+        function updateCurrentState() {
+            const currentStateDiv = document.getElementById('currentState');
+            const currentUrlDiv = document.getElementById('currentUrl');
+            
+            const state = history.state;
+            const url = window.location.href;
+            const pathname = window.location.pathname;
+            const search = window.location.search;
+            const hash = window.location.hash;
+            
+            currentStateDiv.innerHTML = `
+                <div class="current-state">
+                    <strong>当前状态信息:</strong><br>
+                    State: ${state ? JSON.stringify(state, null, 2) : 'null'}<br>
+                    Title: ${document.title}<br>
+                    Pathname: ${pathname}<br>
+                    Search: ${search || '(空)'}<br>
+                    Hash: ${hash || '(空)'}<br>
+                    Length: ${history.length}
+                </div>
+            `;
+            
+            currentUrlDiv.textContent = `当前URL: ${url}`;
+        }
+        
+        // 历史记录导航
+        function goBack() {
+            if (history.length > 1) {
+                history.back();
+                addToLog('back', '执行后退操作');
+            } else {
+                alert('没有可后退的历史记录');
+            }
+        }
+        
+        function goForward() {
+            history.forward();
+            addToLog('forward', '执行前进操作');
+        }
+        
+        function goToStep() {
+            const steps = parseInt(document.getElementById('stepInput').value);
+            if (isNaN(steps)) {
+                alert('请输入有效的步数');
+                return;
+            }
+            
+            history.go(steps);
+            addToLog('go', `跳转 ${steps} 步`);
+        }
+        
+        // 状态管理
+        function pushNewState() {
+            const title = document.getElementById('stateTitle').value || '新页面';
+            const url = document.getElementById('stateUrl').value || `/page-${Date.now()}`;
+            const dataStr = document.getElementById('stateData').value;
+            
+            let stateData = null;
+            if (dataStr) {
+                try {
+                    stateData = JSON.parse(dataStr);
+                } catch (e) {
+                    alert('状态数据不是有效的JSON格式');
+                    return;
+                }
+            }
+            
+            history.pushState(stateData, title, url);
+            document.title = title;
+            
+            pushStateCount++;
+            navigationCount++;
+            updateStats();
+            updateCurrentState();
+            
+            addToLog('pushstate', `添加新状态: ${title} (${url})`, stateData);
+        }
+        
+        function replaceCurrentState() {
+            const title = document.getElementById('stateTitle').value || '替换页面';
+            const url = document.getElementById('stateUrl').value || window.location.pathname;
+            const dataStr = document.getElementById('stateData').value;
+            
+            let stateData = null;
+            if (dataStr) {
+                try {
+                    stateData = JSON.parse(dataStr);
+                } catch (e) {
+                    alert('状态数据不是有效的JSON格式');
+                    return;
+                }
+            }
+            
+            history.replaceState(stateData, title, url);
+            document.title = title;
+            
+            replaceStateCount++;
+            updateStats();
+            updateCurrentState();
+            
+            addToLog('replacestate', `替换当前状态: ${title} (${url})`, stateData);
+        }
+        
+        // 快速导航
+        function navigateToPage(pageName, data = null) {
+            const page = pages[pageName];
+            if (!page) {
+                alert('页面不存在');
+                return;
+            }
+            
+            const stateData = { page: pageName, ...data };
+            const url = `/${pageName}${data && data.userId ? `?userId=${data.userId}` : ''}`;
+            
+            history.pushState(stateData, page.title, url);
+            document.title = page.title;
+            
+            updatePageContent(pageName, data);
+            updateBreadcrumb(pageName);
+            
+            pushStateCount++;
+            navigationCount++;
+            updateStats();
+            updateCurrentState();
+            
+            addToLog('pushstate', `导航到: ${page.title}`, stateData);
+        }
+        
+        // 更新页面内容
+        function updatePageContent(pageName, data = null) {
+            const pageContentDiv = document.getElementById('pageContent');
+            const page = pages[pageName];
+            
+            if (page) {
+                pageContentDiv.innerHTML = `<div class="page-content">${page.content}</div>`;
+                
+                // 如果是用户资料页面，更新用户ID
+                if (pageName === 'profile' && data && data.userId) {
+                    const userIdSpan = document.getElementById('userId');
+                    if (userIdSpan) {
+                        userIdSpan.textContent = data.userId;
+                    }
+                }
+            }
+        }
+        
+        // 更新面包屑导航
+        function updateBreadcrumb(currentPage) {
+            const breadcrumbDiv = document.getElementById('breadcrumb');
+            const pageNames = {
+                home: '首页',
+                about: '关于我们',
+                products: '产品列表',
+                contact: '联系我们',
+                profile: '用户资料'
+            };
+            
+            breadcrumbDiv.innerHTML = `
+                <a href="#" onclick="navigateToPage('home')">首页</a> > 
+                <span>${pageNames[currentPage] || currentPage}</span>
+            `;
+        }
+        
+        // 统计更新
+        function updateStats() {
+            document.getElementById('pushStateCount').textContent = pushStateCount;
+            document.getElementById('replaceStateCount').textContent = replaceStateCount;
+            document.getElementById('popStateCount').textContent = popStateCount;
+            document.getElementById('navigationCount').textContent = navigationCount;
+        }
+        
+        function resetStats() {
+            pushStateCount = 0;
+            replaceStateCount = 0;
+            popStateCount = 0;
+            navigationCount = 0;
+            updateStats();
+            addToLog('system', '统计数据已重置');
+        }
+        
+        // 日志管理
+        function addToLog(type, message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = {
+                type: type,
+                message: message,
+                data: data,
+                timestamp: timestamp
+            };
+            
+            historyLog.unshift(logEntry);
+            
+            // 限制日志数量
+            if (historyLog.length > 50) {
+                historyLog = historyLog.slice(0, 50);
+            }
+            
+            updateLogDisplay();
+        }
+        
+        function updateLogDisplay() {
+            const logDiv = document.getElementById('historyLog');
+            
+            if (historyLog.length === 0) {
+                logDiv.innerHTML = '<p>暂无操作日志</p>';
+                return;
+            }
+            
+            let html = '';
+            historyLog.forEach((entry, index) => {
+                html += `
+                    <div class="log-entry ${entry.type}">
+                        <strong>[${entry.timestamp}]</strong> ${entry.message}
+                        ${entry.data ? `<br><small>数据: ${JSON.stringify(entry.data)}</small>` : ''}
+                    </div>
+                `;
+            });
+            
+            logDiv.innerHTML = html;
+        }
+        
+        function clearLog() {
+            historyLog = [];
+            updateLogDisplay();
+        }
+        
+        // 事件监听
+        window.addEventListener('popstate', function(event) {
+            popStateCount++;
+            updateStats();
+            updateCurrentState();
+            
+            const state = event.state;
+            addToLog('popstate', 'popstate事件触发', state);
+            
+            // 如果有状态数据，更新页面内容
+            if (state && state.page) {
+                updatePageContent(state.page, state);
+                updateBreadcrumb(state.page);
+                
+                const page = pages[state.page];
+                if (page) {
+                    document.title = page.title;
+                }
+            }
+        });
+        
+        // 页面加载时的初始化
+        window.addEventListener('load', function() {
+            checkHistorySupport();
+            updateCurrentState();
+            updateStats();
+            updateLogDisplay();
+            updateBreadcrumb('home');
+            
+            // 设置初始状态
+            if (history.state === null) {
+                history.replaceState({ page: 'home' }, '首页', '/home');
+                addToLog('system', '设置初始状态');
+            }
+        });
+        
+        // 页面卸载前的清理
+        window.addEventListener('beforeunload', function() {
+            addToLog('system', '页面即将卸载');
+        });
+    </script>
+</body>
+</html>

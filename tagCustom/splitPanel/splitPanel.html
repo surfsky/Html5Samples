@@ -71,7 +71,27 @@
             border-radius: 4px;
             margin-bottom: 15px;
         }
+
+        /*Feature list*/
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
         
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feature-list li:before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        
+        /**PanelItem*/
         .panel-item {
             padding: 20px 20px 20px 10px;
             background: #f0f8ff;
@@ -84,6 +104,7 @@
             text-align: center;
             min-height: 100px;
             box-sizing: border-box;
+            overflow: hidden;
         }
         
         .panel-item:nth-child(even) {
@@ -101,6 +122,7 @@
             border-radius: 4px;
         }
         
+        /**Button*/
         .btn {
             background: #007bff;
             color: white;
@@ -112,28 +134,14 @@
             margin-bottom: 5px;
             transition: background-color 0.2s;
         }
-        
         .btn:hover {
             background: #0056b3;
-        }
-        
+        }        
         .btn-secondary {
             background: #6c757d;
-        }
-        
+        }        
         .btn-secondary:hover {
             background: #545b62;
-        }
-        
-        .code-block {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            padding: 15px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            overflow-x: auto;
         }
         
         .log-area {
@@ -147,7 +155,6 @@
             max-height: 120px;
             overflow-y: auto;
         }
-        
         .log-content {
             color: #495057;
             line-height: 1.4;
@@ -158,23 +165,6 @@
             margin: 20px 0 10px 0;
             font-size: 16px;
             font-weight: 600;
-        }
-        
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .feature-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .feature-list li:before {
-            content: '✓';
-            color: #28a745;
-            font-weight: bold;
-            margin-right: 10px;
         }
         
         .result {
@@ -227,12 +217,10 @@
             .container {
                 margin: 10px;
                 border-radius: 0;
-            }
-            
+            }            
             .content {
                 padding: 15px;
-            }
-            
+            }            
             .test-panel {
                 height: 250px;
             }
@@ -256,16 +244,13 @@
                         <li>支持水平和垂直方向的分隔</li>
                         <li>可拖拽分隔条动态调整子元素大小</li>
                         <li>基于Flex布局的响应式设计</li>
-                        <li>自定义分隔条样式</li>
+                        <li>移动端自适应</li>
                         <li>支持 sizes 参数精确控制子元素大小</li>
                         <li>支持百分比和像素值混合使用</li>
                         <li>支持 resizable 参数控制分隔条显示</li>
-                        <li>移除 Shadow DOM，支持主程序直接访问子元素</li>
-                        <li>支持 minSizes 参数设置最小尺寸限制</li>
-                        <li>支持 splitterColor 和 splitterHoverColor 自定义分隔条颜色</li>
-                        <li>API 控制时支持平滑动画效果</li>
+                        <li>支持自定义分隔条颜色</li>
                         <li>支持 splitterClick 事件处理分隔条点击</li>
-                        <li>移动端自适应</li>
+                        <li>API 控制时支持平滑动画效果</li>
                         <li>丰富的API方法</li>
                     </ul>
                 </div>
@@ -275,14 +260,14 @@
             <div class="test-section">
                 <h2 class="test-title">水平分隔 ✅</h2>
                 <div class="test-content">
-                    <split-panel direction="horizontal" class="test-panel" id="panel1" sizes="10%, 80%, 10%">
-                        <div class="panel-item">左侧面板<br>可拖拽右侧分隔条调整大小</div>
-                        <div class="panel-item">中间面板<br>两侧都有分隔条</div>
-                        <div class="panel-item">右侧面板<br>可拖拽左侧分隔条调整大小</div>
+                    <split-panel direction="horizontal" class="test-panel" id="panel1" sizes="10%, 80%, 10%" splitter-color="#bbb" splitter-hover-color="#ee5a24">
+                        <div class="panel-item">左侧面板</div>
+                        <div class="panel-item">中间面板</div>
+                        <div class="panel-item">右侧面板</div>
                     </split-panel>
                     
                     <div class="controls">
-                        <button class="btn" onclick="resetPanel('panel1')">重置大小</button>
+                        <button class="btn" onclick="equalSizes('panel1')">均分</button>
                         <button class="btn btn-secondary" onclick="setCustomSize('panel1')">自定义大小</button>
                         <button class="btn btn-secondary" onclick="showSizes('panel1')">显示当前大小</button>
                     </div>
@@ -296,7 +281,7 @@
                         <div class="panel-item">底部面板<br>可拖拽上方分隔条调整高度</div>
                     </split-panel>
                     <div class="controls">
-                        <button class="btn" onclick="resetPanel('panel2')">重置大小</button>
+                        <button class="btn" onclick="equalSizes('panel2')">均分</button>
                         <button class="btn btn-secondary" onclick="setVerticalSize('panel2')">设置7:3比例</button>
                     </div>
                 </div>
@@ -327,7 +312,7 @@
                     <div class="controls">
                         <button class="btn" onclick="toggleResizable()">切换可调整性</button>
                         <button class="btn" onclick="toggleDirection()">切换方向</button>
-                        <button class="btn btn-secondary" onclick="resetDynamicSizes()">重置大小</button>
+                        <button class="btn btn-secondary" onclick="equalSizes('dynamicPanel')">均分</button>
                     </div>
                 </div>
             </div>
@@ -356,7 +341,7 @@
                         <button class="btn" onclick="changePanelSizes('sizesPanel1', '30%, 70%')">30% - 70%</button>
                         <button class="btn" onclick="changePanelSizes('sizesPanel1', '50%, 50%')">50% - 50%</button>
                         <button class="btn" onclick="changePanelSizes('sizesPanel1', '70%, 30%')">70% - 30%</button>
-                        <button class="btn btn-secondary" onclick="resetPanelSizes('sizesPanel1')">重置</button>
+                        <button class="btn btn-secondary" onclick="equalSizes('sizesPanel1')">均分</button>
                     </div>
                     
                     <!-- 三等分测试 -->
@@ -376,7 +361,7 @@
                         <button class="btn" onclick="changePanelSizes('sizesPanel2', '50%, 25%, 25%')">50% - 25% - 25%</button>
                         <button class="btn" onclick="changePanelSizes('sizesPanel2', '25%, 50%, 25%')">25% - 50% - 25%</button>
                         <button class="btn" onclick="changePanelSizes('sizesPanel2', '25%, 25%, 50%')">25% - 25% - 50%</button>
-                        <button class="btn btn-secondary" onclick="resetPanelSizes('sizesPanel2')">重置</button>
+                        <button class="btn btn-secondary" onclick="equalSizes('sizesPanel2')">均分</button>
                     </div>
                     
                     <!-- 混合单位测试 -->
@@ -395,7 +380,7 @@
                     <div class="controls">
                         <button class="btn" onclick="changePanelSizes('sizesPanel3', '150px, 70%, 30%')">150px - 70% - 30%</button>
                         <button class="btn" onclick="changePanelSizes('sizesPanel3', '250px, 40%, 60%')">250px - 40% - 60%</button>
-                        <button class="btn btn-secondary" onclick="resetPanelSizes('sizesPanel3')">重置</button>
+                        <button class="btn btn-secondary" onclick="equalSizes('sizesPanel3')">均分</button>
                     </div>
 
 
@@ -407,67 +392,11 @@
                         <div class="panel-item">动画面板C<br>现代化体验</div>
                     </split-panel>
                     <div class="controls">
-                        <button class="btn" onclick="setItemSize('animationPanel', 0, '20%', true)">面板1→20% (动画)</button>
-                        <button class="btn" onclick="setItemSize('animationPanel', 1, '60%', true)">面板2→60% (动画)</button>
-                        <button class="btn" onclick="setItemSize('animationPanel', 2, '20%', true)">面板3→20% (动画)</button>
-                        <button class="btn btn-secondary" onclick="resetPanelSizes('animationPanel',true)">重置 (动画)</button>
+                        <button class="btn" onclick="setItemSize('animationPanel', 0, '20%')">面板1→20%</button>
+                        <button class="btn" onclick="setItemSize('animationPanel', 1, '60%')">面板2→60%</button>
+                        <button class="btn" onclick="setItemSize('animationPanel', 2, '20%')">面板3→20%</button>
+                        <button class="btn btn-secondary" onclick="equalSizes('animationPanel')">均分</button>
                     </div>
-                </div>
-            </div>
-
-            
-            <!-- minSizes 参数测试 -->
-            <div class="test-section">
-                <h2 class="test-title">MinSizes 最小尺寸限制 ❌</h2>
-                <div class="test-content">
-                    <p>通过 <code>min-sizes</code> 参数可以设置每个面板的最小尺寸，防止面板被拖拽得过小。</p>
-                    
-                    <h4>像素值最小尺寸 (100px, 150px, 100px)</h4>
-                    <split-panel direction="horizontal" height="200px" min-sizes="100px, 150px, 100px" id="minSizesPanel1">
-                        <div class="panel-item">最小 100px<br>尝试拖拽分隔条</div>
-                        <div class="panel-item">最小 150px<br>无法缩小到限制以下</div>
-                        <div class="panel-item">最小 100px<br>保护面板内容</div>
-                    </split-panel>
-                    
-                    <div class="controls">
-                        <button class="btn" onclick="changeMinSizes('minSizesPanel1', '80px, 120px, 80px')">设置更小限制</button>
-                        <button class="btn" onclick="changeMinSizes('minSizesPanel1', '150px, 200px, 150px')">设置更大限制</button>
-                        <button class="btn btn-secondary" onclick="resetMinSizes('minSizesPanel1')">移除限制</button>
-                    </div>
-                    
-                    <h4 style="margin-top: 25px;">百分比最小尺寸 (20%, 30%, 20%)</h4>
-                    <split-panel direction="horizontal" height="200px" min-sizes="20%, 30%, 20%" id="minSizesPanel2">
-                        <div class="panel-item">最小 20%<br>响应式限制</div>
-                        <div class="panel-item">最小 30%<br>主要内容区</div>
-                        <div class="panel-item">最小 20%<br>侧边栏保护</div>
-                    </split-panel>
-                </div>
-            </div>
-            
-            <!-- 自定义分隔条颜色 -->
-            <div class="test-section">
-                <h2 class="test-title">自定义分隔条颜色 ❌</h2>
-                <div class="test-content">
-                    <p>使用 <code>splitter-color</code> 和 <code>splitter-hover-color</code> 参数自定义分隔条颜色。</p>
-                    
-                    <h4>蓝色主题分隔条</h4>
-                    <split-panel direction="horizontal" height="150px" splitter-color="#007bff" splitter-hover-color="#0056b3" id="colorPanel1">
-                        <div class="panel-item">蓝色分隔条<br>悬停变深蓝</div>
-                        <div class="panel-item">平滑颜色过渡<br>现代化设计</div>
-                    </split-panel>
-                    
-                    <div class="controls">
-                        <button class="btn" onclick="changeColors('colorPanel1', '#28a745', '#1e7e34')">绿色主题</button>
-                        <button class="btn" onclick="changeColors('colorPanel1', '#dc3545', '#c82333')">红色主题</button>
-                        <button class="btn" onclick="changeColors('colorPanel1', '#ffc107', '#e0a800')">黄色主题</button>
-                        <button class="btn btn-secondary" onclick="resetColors('colorPanel1')">重置颜色</button>
-                    </div>
-                    
-                    <h4 style="margin-top: 25px;">渐变色分隔条</h4>
-                    <split-panel direction="horizontal" height="150px" splitter-color="#ff6b6b" splitter-hover-color="#ee5a24" id="colorPanel2">
-                        <div class="panel-item">橙红色分隔条<br>醒目的视觉效果</div>
-                        <div class="panel-item">悬停时颜色变化<br>良好的交互反馈</div>
-                    </split-panel>
                 </div>
             </div>
             
@@ -516,11 +445,39 @@
     <script src="splitPanel.js"></script>
     
     <script>
-        // 基础工具函数
-        function resetPanel(panelId) {
+        //--------------------------------------------------------------------
+        // 通用 SpitPanel 设置
+        //--------------------------------------------------------------------
+        // 动画效果测试函数
+        function setItemSize(panelId, index, size) {
+            document.getElementById(panelId).setItemSize(index, size);
+        }
+        
+        // 均分面板大小
+        function equalSizes(panelId) {
+            document.getElementById(panelId)?.equalSizes(animated);
+        }
+        
+        // splitterClick 事件测试函数
+        function togglePanel(panelId, panelIndex) {
+            /** @type {SplitPanel} */
+            const panel = document.getElementById(panelId); // as SplitPanel;
+            var size = panel.getItemSize(panelIndex);
+            if(size < 60){
+                size = '200px';
+            }else{
+                size = '0px';
+            }
+            panel.setItemSize(panelIndex, size, true);
+        }
+                
+
+        // 
+        function showSizes(panelId) {
             const panel = document.getElementById(panelId);
             if (panel) {
-                panel.resetSizes();
+                const sizes = panel.getItemSizes();
+                alert('当前大小：' + sizes.map((size, i) => `面板${i+1}: ${size}px`).join(', '));
             }
         }
         
@@ -532,14 +489,6 @@
             }
         }
         
-        function showSizes(panelId) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                const sizes = panel.getSizes();
-                alert('当前大小：' + sizes.map((size, i) => `面板${i+1}: ${size}px`).join(', '));
-            }
-        }
-        
         function setVerticalSize(panelId) {
             const panel = document.getElementById(panelId);
             if (panel) {
@@ -547,61 +496,15 @@
                 panel.setItemSize(1, '30%');
             }
         }
-        
-        // Sizes 参数测试函数
+
+        // 尺寸控制函数
         function changePanelSizes(panelId, sizes) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                panel.setSizes(sizes);
-            }
+            document.getElementById(panelId)?.setSizes(sizes);
         }
-        
-        function resetPanelSizes(panelId) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                panel.removeAttribute('sizes');
-                setTimeout(() => {
-                    panel.render();
-                }, 10);
-            }
-        }
-        
-        // minSizes 控制函数
-        function changeMinSizes(panelId, minSizes) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                panel.option.minSizes = minSizes;
-                panel.render();
-            }
-        }
-        
-        function resetMinSizes(panelId) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                panel.option.minSizes = null;
-                panel.render();
-            }
-        }
-        
-        // 颜色控制函数
-        function changeColors(panelId, color, hoverColor) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                panel.option.splitterColor = color;
-                panel.option.splitterHoverColor = hoverColor;
-                panel.render();
-            }
-        }
-        
-        function resetColors(panelId) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-                panel.option.splitterColor = null;
-                panel.option.splitterHoverColor = null;
-                panel.render();
-            }
-        }
-        
+           
+        //--------------------------------------------------------------------
+        // 测试子元素
+        //--------------------------------------------------------------------
         // 子元素访问测试函数
         function addResult(message, isSuccess = true) {
             const results = document.getElementById('accessResults');
@@ -697,10 +600,11 @@
             }
         }
         
+        //----------------------------------------------------------
         // 动态控制测试
+        //----------------------------------------------------------
         let isResizable = true;
         let isHorizontal = true;
-        
         function toggleResizable() {
             const panel = document.getElementById('dynamicPanel');
             isResizable = !isResizable;
@@ -716,13 +620,6 @@
             updateStatus();
         }
         
-        function resetDynamicSizes() {
-            const panel = document.getElementById('dynamicPanel');
-            if (panel && panel.resetSizes) {
-                panel.resetSizes();
-            }
-        }
-        
         function updateStatus() {
             const status = document.getElementById('dynamicStatus');
             const direction = isHorizontal ? '水平分隔' : '垂直分隔';
@@ -730,38 +627,10 @@
             status.textContent = `当前：${direction}，${resizable}`;
         }
         
-
         
-        // 动画效果测试函数
-        function setItemSize(panelId, index, size, animated) {
-            document.getElementById(panelId).setItemSize(index, size, animated);
-        }
-        
-        // 重置面板大小
-        function resetPanelSizes(panelId, animated) {
-            document.getElementById(panelId)?.resetSizes(animated);
-        }
-        
-        // splitterClick 事件测试函数
-        function togglePanel(panelId, panelIndex) {
-            const panel = document.getElementById(panelId);
-            var size = panel.getItemSize(panelIndex);
-            if(size < 10){
-                size = '200px';
-            }else{
-                size = '0px';
-            }
-            panel.setItemSize(panelIndex, size, true);
-        }
-                
-        function logSplitterClick(splitterIndex, leftIndex, rightIndex) {
-            const logContent = document.querySelector('#clickLog .log-content');
-            if (logContent) {
-                const time = new Date().toLocaleTimeString();
-                logContent.innerHTML = `[${time}] 分隔条 ${splitterIndex} 被点击 (左面板: ${leftIndex}, 右面板: ${rightIndex})<br>` + logContent.innerHTML;
-            }
-        }
-        
+        //--------------------------------------------------------------------
+        // event
+        //--------------------------------------------------------------------
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 自动运行子元素访问测试
@@ -779,7 +648,12 @@
                         e.detail.leftPanelIndex,
                         e.detail.rightPanelIndex
                     );
-                    togglePanel('clickPanel', e.detail.leftPanelIndex);
+                    if (e.detail.leftPanelIndex === 0) {
+                        togglePanel('clickPanel', e.detail.leftPanelIndex);
+                    }
+                    else if (e.detail.leftPanelIndex === 1) {
+                        togglePanel('clickPanel', e.detail.rightPanelIndex);
+                    }
                 });
             }
             
@@ -791,6 +665,16 @@
             console.log('SplitPanel 综合测试页面加载完成');
             console.log('包含功能：基础分隔、resizable参数、子元素访问、sizes参数、自定义样式、嵌套分隔、动态控制、API演示、动画效果、splitterClick事件');
         });
+
+        /**记录点击日志*/
+        function logSplitterClick(splitterIndex, leftIndex, rightIndex) {
+            const logContent = document.querySelector('#clickLog .log-content');
+            if (logContent) {
+                const time = new Date().toLocaleTimeString();
+                logContent.innerHTML = `[${time}] 分隔条 ${splitterIndex} 被点击 (左面板: ${leftIndex}, 右面板: ${rightIndex})<br>` + logContent.innerHTML;
+            }
+        }
+
         
         // 监听窗口大小变化
         window.addEventListener('resize', function() {

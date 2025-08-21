@@ -29,7 +29,6 @@ class App {
         // 延迟初始化，等待 SplitPanel 组件渲染完成
         setTimeout(() => {
             this.initElements();
-            this.initSplitPanels();
             this.renderMenuTree();
             this.loadDefaultContent();
             this.bindEvents();
@@ -96,26 +95,6 @@ class App {
         return null;
     }
     
-    /**
-     * 初始化SplitPanel组件
-     */
-    initSplitPanels() {
-        // 设置主分隔面板初始大小
-        if (this.mainSplitPanel) {
-            // 左侧目录树初始宽度300px
-            setTimeout(() => {
-                this.mainSplitPanel.setItemSize(0, '300px');
-            }, 100);
-        }
-        
-        // 设置内容分隔面板初始大小
-        if (this.contentSplitPanel) {
-            // 上方页面区域初始占65%
-            setTimeout(() => {
-                this.contentSplitPanel.setItemSize(0, '65%');
-            }, 100);
-        }
-    }
     
     /**
      * 渲染菜单目录树
@@ -149,9 +128,9 @@ class App {
             
             let html = `
                 <div class="tree-item ${hasChildren}" data-level="${level}">
-                    <div class="tree-node ${itemClass}" data-path="${item.path || ''}" data-name="${item.name}">
+                    <div class="tree-node ${itemClass}" data-path="${item.url || ''}" data-name="${item.name}">
                         <span class="tree-icon"></span>
-                        <span class="tree-label">${item.name}</span>
+                        <span class="tree-label">${item.text || item.name}</span>
                     </div>
             `;
             

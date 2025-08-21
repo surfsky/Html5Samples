@@ -1,0 +1,320 @@
+        if (typeof sizes === 'string') {
+            // 存储为字符串格式，保持与getter的兼容性
+            this.option.sizes = sizes;
+        } else if (Array.isArray(sizes)) {
+            // 将数组转换为字符串格式
+            this.option.sizes = sizes.join(', ');
+        } else {
+            this.option.sizes = sizes;
+        }
+    //get direction() { return this.option.direction;}
+    //get splitterColor() {return this.option.splitterColor;}
+    //get splitterHoverColor() {return this.option.splitterHoverColor;}
+    //get containerWidth() {return this.option.width;}
+    //get containerHeight() { return this.option.height;}
+    //get resizable() {return this.option.resizable;}
+
+        
+        // 清除所有空白文本节点
+        //Array.from(this.childNodes).forEach(node => {
+        //    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === '') {
+        //        node.remove();
+        //    }
+        //});
+
+
+        // 初始化子元素大小
+        this.initChildrenSizes();
+        
+        // 监听容器尺寸变化，用于嵌套布局的响应式调整
+        if (window.ResizeObserver) {
+            this.resizeObserver = new ResizeObserver(() => {
+                // 防止频繁触发，使用节流
+                if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
+                this.resizeTimeout = setTimeout(() => {
+                    this.initChildrenSizes();
+                }, 50);
+            });
+            this.resizeObserver.observe(this);
+        }
+
+        
+        // 清理ResizeObserver
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+            this.resizeObserver = null;
+        }
+        
+        // 清理定时器
+        if (this.resizeTimeout) {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = null;
+        }
+
+    /**应用自定义分隔条样式 */
+    setSplitterStyle() {
+        const splitterColor = this.option.splitterColor;
+        const splitterHoverColor = this.option.splitterHoverColor;
+        
+        // 移除之前的自定义样式
+        const existingStyle = this.querySelector('style[data-splitter-custom]');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        
+        // 添加新的自定义样式
+        const style = document.createElement('style');
+        style.setAttribute('data-splitter-custom', 'true');
+        style.textContent = `
+            .splitter {
+                background-color: ${splitterColor} !important;
+                transition: background-color 0.2s ease;
+            }
+            .splitter:hover {
+                background-color: ${splitterHoverColor} !important;
+            }
+        `;
+        this.appendChild(style);
+    }
+        const children = Array.from(this.children);
+
+
+            /* 水平分隔条指示器 */
+            .splitter.horizontal::after {
+                content: '';
+                position: absolute;
+                transition: opacity 0.2s;
+                opacity: 0;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 2px;
+                height: 20px;
+            }
+            
+            /* 垂直分隔条指示器 */
+            .splitter.vertical::after {
+                content: '';
+                position: absolute;
+                transition: opacity 0.2s;
+                opacity: 0;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 20px;
+                height: 2px;
+            }
+            
+
+            .splitter:hover::after,
+            .splitter.dragging::after {
+                opacity: 1;
+            }
+
+
+        // 清除现有的包装元素和分隔条, 将子元素移回原位置
+        //const existingElements = this.querySelectorAll('.split-panel-item, .splitter');
+        //existingElements.forEach(el => {
+        //    if (el.classList.contains('split-panel-item') && el.firstChild) {
+        //        this.appendChild(el.firstChild);
+        //    }
+        //    el.remove();
+        //});
+
+（除了最后一个子元素，且仅在 resizable 为 true 时）
+
+        
+        // 应用自定义分隔条样式
+        //this.setSplitterStyle();
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            if (name === 'splitter-color' || name === 'splitter-hover-color') {
+                // 只更新分隔条样式，不需要重新渲染整个组件
+                this.setSplitterStyle();
+            } else {
+                // 延迟渲染，确保DOM已更新
+                //setTimeout(() => {
+                //    console.debug(`render ${this.tagName} by ${name}`);
+                //    this.render();
+                //}, 0);
+            }
+        }
+    }
+
+
+    /**获取最小尺寸数组 */
+    getMinSizes() {
+        const minSizesAttr = this.option.minSizes;
+        return minSizesAttr.split(',').map(size => size.trim());
+    }
+
+    /**获取解析后的最小尺寸数组 */
+    getMinSizes() {
+        const minSizes = this.getMinSizes();
+        if (!minSizes) return [];
+        
+        const items = this.querySelectorAll('.split-panel-item');
+        const isHorizontal = this.option.direction === 'horizontal';
+        const containerSize = isHorizontal ? this.offsetWidth : this.offsetHeight;
+        const splitterCount = items.length - 1;
+        const splitterSize = 4;
+        const availableSize = containerSize - (splitterCount * splitterSize);
+        
+        return minSizes.map(size => {
+            if (size.endsWith('%')) {
+                return Math.floor(availableSize * parseFloat(size) / 100);
+            } else if (size.endsWith('px')) {
+                return parseInt(size);
+            } else {
+                return parseInt(size) || 50;
+            }
+        });
+    }
+        
+, 'min-sizes'        this.option.minSizes           = this.getAttribute('min-sizes') ?? this.option.minSizes;
+
+            // 获取最小尺寸限制
+            const minSizes = this.getMinSizes();
+            const leftMinSize = minSizes[splitterIndex] || 50;
+            const rightMinSize = minSizes[splitterIndex + 1] || 50;
+            
+            // 应用最小尺寸限制
+            if (newLeftSize < leftMinSize) {
+                newLeftSize = leftMinSize;
+                newRightSize = leftStartSize + rightStartSize - leftMinSize;
+            } else if (newRightSize < rightMinSize) {
+                newRightSize = rightMinSize;
+                newLeftSize = leftStartSize + rightStartSize - rightMinSize;
+            }
+
+            const minSizes = this.getMinSizes();
+                const minSize = minSizes[index] || 50;
+                
+                // 确保不小于最小尺寸
+                if (itemSize < minSize) {
+                    itemSize = minSize;
+                }
+                
+            const minSizes = this.getMinSizes();
+                const minSize = minSizes[index] || 50;
+                const finalSize = Math.max(itemSize, minSize);
+                
+            // 应用最小尺寸限制
+            const minSizes = this.getMinSizes();
+            const minSize = minSizes[index] || 50;
+            sizeValue = Math.max(sizeValue, minSize);
+            
+        const minSizes = this.getMinSizes();
+        minSizes: '',
+
+        // 清除现有的包装元素和分隔条, 将子元素移回原位置
+        //const existingElements = this.querySelectorAll('.split-panel-item, .splitter');
+        //existingElements.forEach(el => {
+        //    if (el.classList.contains('split-panel-item') && el.firstChild) {
+        //        this.appendChild(el.firstChild);
+        //    }
+        //    el.remove();
+        //});
+
+        
+
+            <!-- minSizes 参数测试 -->
+            <div class="test-section">
+                <h2 class="test-title">MinSizes 最小尺寸限制 ❌</h2>
+                <div class="test-content">
+                    <p>通过 <code>min-sizes</code> 参数可以设置每个面板的最小尺寸，防止面板被拖拽得过小。</p>
+                    
+                    <h4>像素值最小尺寸 (100px, 150px, 100px)</h4>
+                    <split-panel direction="horizontal" height="200px" min-sizes="100px, 150px, 100px" id="minSizesPanel1">
+                        <div class="panel-item">最小 100px<br>尝试拖拽分隔条</div>
+                        <div class="panel-item">最小 150px<br>无法缩小到限制以下</div>
+                        <div class="panel-item">最小 100px<br>保护面板内容</div>
+                    </split-panel>
+                    
+                    <div class="controls">
+                        <button class="btn" onclick="changeMinSizes('minSizesPanel1', '80px, 120px, 80px')">设置更小限制</button>
+                        <button class="btn" onclick="changeMinSizes('minSizesPanel1', '150px, 200px, 150px')">设置更大限制</button>
+                        <button class="btn btn-secondary" onclick="resetMinSizes('minSizesPanel1')">移除限制</button>
+                    </div>
+                    
+                    <h4 style="margin-top: 25px;">百分比最小尺寸 (20%, 30%, 20%)</h4>
+                    <split-panel direction="horizontal" height="200px" min-sizes="20%, 30%, 20%" id="minSizesPanel2">
+                        <div class="panel-item">最小 20%<br>响应式限制</div>
+                        <div class="panel-item">最小 30%<br>主要内容区</div>
+                        <div class="panel-item">最小 20%<br>侧边栏保护</div>
+                    </split-panel>
+                </div>
+            </div>
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+
+                    
+                    <div class="controls">
+                        <button class="btn" onclick="changeColors('colorPanel1', '#28a745', '#1e7e34')">绿色主题</button>
+                        <button class="btn" onclick="changeColors('colorPanel1', '#dc3545', '#c82333')">红色主题</button>
+                        <button class="btn" onclick="changeColors('colorPanel1', '#ffc107', '#e0a800')">黄色主题</button>
+                        <button class="btn btn-secondary" onclick="resetColors('colorPanel1')">重置颜色</button>
+                    </div>
+                    
+                    <h4 style="margin-top: 25px;">渐变色分隔条</h4>
+                    <split-panel direction="horizontal" height="150px" splitter-color="#ff6b6b" splitter-hover-color="#ee5a24" id="colorPanel2">
+                        <div class="panel-item">橙红色分隔条<br>醒目的视觉效果</div>
+                        <div class="panel-item">悬停时颜色变化<br>良好的交互反馈</div>
+                    </split-panel>
+
+            
+
+            
+
+            <!-- 自定义分隔条颜色 -->
+            <div class="test-section">
+                <h2 class="test-title">自定义分隔条颜色 ❌</h2>
+                <div class="test-content">
+                    <h4>橙色分隔条</h4>
+                    <split-panel direction="horizontal" height="150px" splitter-color="#ff6b6b" splitter-hover-color="#ee5a24" id="colorPanel1">
+                        <div class="panel-item">面板1</div>
+                        <div class="panel-item">面板2</div>
+                        <div class="panel-item">面板3</div>
+                    </split-panel>
+                </div>
+            </div>
+
+
+        // 如果容器尺寸为0（可能是嵌套布局还未完成渲染），延迟初始化
+        //if (containerSize === 0) {
+        //    setTimeout(() => this.initChildrenSizes(), 10);
+        //    return;
+        //}
+        
+
+    /**
+     * 初始化SplitPanel组件
+     */
+    initSplitPanels() {
+        // 设置主分隔面板初始大小
+        if (this.mainSplitPanel) {
+            // 左侧目录树初始宽度300px
+            setTimeout(() => {
+                this.mainSplitPanel.setItemSize(0, '300px');
+            }, 100);
+        }
+        
+        // 设置内容分隔面板初始大小
+        if (this.contentSplitPanel) {
+            // 上方页面区域初始占65%
+            setTimeout(() => {
+                this.contentSplitPanel.setItemSize(0, '65%');
+            }, 100);
+        }
+    }
+            this.initSplitPanels();

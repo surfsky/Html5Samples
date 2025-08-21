@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 通知 API 示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .notification-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .notification-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        button.success {
+            background: #28a745;
+        }
+        button.success:hover {
+            background: #218838;
+        }
+        button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        button.warning:hover {
+            background: #e0a800;
+        }
+        .info-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+        .error-display {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .success-display {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .warning-display {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .permission-status {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+            font-family: monospace;
+        }
+        .notification-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .notification-form label {
+            display: block;
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+        }
+        .notification-form input, .notification-form textarea, .notification-form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .notification-form textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .notification-form input[type="checkbox"], .notification-form input[type="radio"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        .notification-log {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        .log-entry {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            font-size: 14px;
+        }
+        .log-entry.success {
+            border-left-color: #28a745;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+        }
+        .log-entry.warning {
+            border-left-color: #ffc107;
+        }
+        .notification-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .notification-preview {
+            background: #fff;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        .notification-preview::before {
+            content: "通知预览";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #007bff;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .notification-preview .title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .notification-preview .body {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .notification-preview .icon {
+            width: 32px;
+            height: 32px;
+            float: left;
+            margin-right: 10px;
+            background: #ddd;
+            border-radius: 4px;
+        }
+        .quick-actions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .timer-controls {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .timer-controls input[type="number"] {
+            width: 80px;
+            margin: 0 5px;
+        }
+        .permission-guide {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .permission-guide ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 通知 API 示例</h1>
+        
+        <!-- 浏览器支持检测 -->
+        <div class="notification-section">
+            <h3>1. 浏览器支持检测</h3>
+            <div id="supportInfo"></div>
+        </div>
+        
+        <!-- 权限管理 -->
+        <div class="notification-section">
+            <h3>2. 通知权限管理</h3>
+            <button onclick="checkPermission()">检查权限状态</button>
+            <button onclick="requestPermission()" class="success">请求通知权限</button>
+            <div id="permissionStatus"></div>
+            
+            <div class="permission-guide">
+                <strong>权限说明:</strong>
+                <ul>
+                    <li><strong>granted:</strong> 用户已授权，可以发送通知</li>
+                    <li><strong>denied:</strong> 用户已拒绝，无法发送通知</li>
+                    <li><strong>default:</strong> 用户尚未做出选择，需要请求权限</li>
+                </ul>
+                
+                <strong>如果权限被拒绝，请按以下步骤重新启用:</strong>
+                <ol>
+                    <li>点击浏览器地址栏左侧的锁图标</li>
+                    <li>找到"通知"选项并设置为"允许"</li>
+                    <li>刷新页面重新测试</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- 基础通知 -->
+        <div class="notification-section">
+            <h3>3. 基础通知</h3>
+            <div class="quick-actions">
+                <button onclick="showSimpleNotification()">简单通知</button>
+                <button onclick="showWelcomeNotification()">欢迎通知</button>
+                <button onclick="showInfoNotification()">信息通知</button>
+                <button onclick="showWarningNotification()">警告通知</button>
+                <button onclick="showErrorNotification()">错误通知</button>
+            </div>
+        </div>
+        
+        <!-- 自定义通知 -->
+        <div class="notification-section">
+            <h3>4. 自定义通知</h3>
+            <div class="notification-form">
+                <label for="notificationTitle">通知标题:</label>
+                <input type="text" id="notificationTitle" placeholder="输入通知标题" value="自定义通知">
+                
+                <label for="notificationBody">通知内容:</label>
+                <textarea id="notificationBody" placeholder="输入通知内容">这是一个自定义的通知消息。</textarea>
+                
+                <label for="notificationIcon">图标URL:</label>
+                <input type="text" id="notificationIcon" placeholder="输入图标URL (可选)" value="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzAwN2JmZiIvPgo8cGF0aCBkPSJNMTYgOEMxMi42ODYzIDggMTAgMTAuNjg2MyAxMCAxNEMxMCAxNy4zMTM3IDEyLjY4NjMgMjAgMTYgMjBDMTkuMzEzNyAyMCAyMiAxNy4zMTM3IDIyIDE0QzIyIDEwLjY4NjMgMTkuMzEzNyA4IDE2IDhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+                
+                <label for="notificationTag">通知标签 (用于分组):</label>
+                <input type="text" id="notificationTag" placeholder="输入标签 (可选)">
+                
+                <label>
+                    <input type="checkbox" id="requireInteraction"> 需要用户交互才能关闭
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="silent"> 静音通知
+                </label>
+                
+                <label for="notificationDir">文本方向:</label>
+                <select id="notificationDir">
+                    <option value="auto">自动</option>
+                    <option value="ltr">从左到右</option>
+                    <option value="rtl">从右到左</option>
+                </select>
+                
+                <div style="margin-top: 15px;">
+                    <button onclick="showCustomNotification()" class="success">发送自定义通知</button>
+                    <button onclick="previewNotification()">预览通知</button>
+                </div>
+            </div>
+            
+            <!-- 通知预览 -->
+            <div class="notification-preview" id="notificationPreview" style="display: none;">
+                <div class="icon" id="previewIcon"></div>
+                <div class="title" id="previewTitle">通知标题</div>
+                <div class="body" id="previewBody">通知内容</div>
+            </div>
+        </div>
+        
+        <!-- 定时通知 -->
+        <div class="notification-section">
+            <h3>5. 定时通知</h3>
+            <div class="timer-controls">
+                <label>延迟时间:</label>
+                <input type="number" id="delaySeconds" value="5" min="1" max="60"> 秒
+                <button onclick="scheduleNotification()" class="warning">设置定时通知</button>
+                <button onclick="cancelScheduledNotifications()" class="danger">取消所有定时通知</button>
+            </div>
+            <div id="timerStatus"></div>
+        </div>
+        
+        <!-- 批量通知 -->
+        <div class="notification-section">
+            <h3>6. 批量通知</h3>
+            <div class="quick-actions">
+                <button onclick="sendBatchNotifications()">发送批量通知</button>
+                <button onclick="sendProgressNotifications()">进度通知序列</button>
+                <button onclick="closeAllNotifications()" class="danger">关闭所有通知</button>
+            </div>
+        </div>
+        
+        <!-- 通知统计 -->
+        <div class="notification-section">
+            <h3>7. 通知统计</h3>
+            <div class="notification-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalNotifications">0</div>
+                    <div class="stat-label">总通知数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="clickedNotifications">0</div>
+                    <div class="stat-label">点击次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="closedNotifications">0</div>
+                    <div class="stat-label">关闭次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="errorNotifications">0</div>
+                    <div class="stat-label">错误次数</div>
+                </div>
+            </div>
+            <button onclick="resetStats()">重置统计</button>
+        </div>
+        
+        <!-- 操作日志 -->
+        <div class="notification-section">
+            <h3>8. 操作日志</h3>
+            <button onclick="clearLog()">清除日志</button>
+            <div class="notification-log" id="notificationLog"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let totalNotifications = 0;
+        let clickedNotifications = 0;
+        let closedNotifications = 0;
+        let errorNotifications = 0;
+        let notificationLog = [];
+        let scheduledTimers = [];
+        let activeNotifications = [];
+        
+        // 检查浏览器支持
+        function checkNotificationSupport() {
+            const supportInfo = document.getElementById('supportInfo');
+            
+            if ('Notification' in window) {
+                supportInfo.innerHTML = `
+                    <div class="success-display">
+                        <strong>✓ 浏览器支持通知 API</strong><br>
+                        支持的功能: 基础通知、权限管理、事件监听<br>
+                        最大操作数: ${Notification.maxActions || '不限制'}
+                    </div>
+                `;
+            } else {
+                supportInfo.innerHTML = `
+                    <div class="error-display">
+                        <strong>✗ 浏览器不支持通知 API</strong><br>
+                        请使用现代浏览器访问此页面。
+                    </div>
+                `;
+            }
+        }
+        
+        // 权限管理
+        function checkPermission() {
+            if (!('Notification' in window)) {
+                updatePermissionStatus('浏览器不支持通知 API', 'error');
+                return;
+            }
+            
+            const permission = Notification.permission;
+            updatePermissionStatus(`当前权限状态: ${permission}`, getPermissionClass(permission));
+            addToLog('permission', `检查权限状态: ${permission}`);
+        }
+        
+        function requestPermission() {
+            if (!('Notification' in window)) {
+                updatePermissionStatus('浏览器不支持通知 API', 'error');
+                return;
+            }
+            
+            if (Notification.permission === 'granted') {
+                updatePermissionStatus('权限已授权，可以发送通知', 'success');
+                addToLog('permission', '权限已存在，无需重新请求');
+                return;
+            }
+            
+            Notification.requestPermission().then(function(permission) {
+                updatePermissionStatus(`权限请求结果: ${permission}`, getPermissionClass(permission));
+                addToLog('permission', `权限请求结果: ${permission}`);
+                
+                if (permission === 'granted') {
+                    showSimpleNotification('权限授权成功！', '您现在可以接收通知了。');
+                }
+            });
+        }
+        
+        function updatePermissionStatus(message, type) {
+            const statusDiv = document.getElementById('permissionStatus');
+            statusDiv.innerHTML = `<div class="${type}-display">${message}</div>`;
+        }
+        
+        function getPermissionClass(permission) {
+            switch (permission) {
+                case 'granted': return 'success';
+                case 'denied': return 'error';
+                case 'default': return 'warning';
+                default: return 'info';
+            }
+        }
+        
+        // 基础通知
+        function showSimpleNotification(title = '简单通知', body = '这是一个简单的通知示例。') {
+            if (!checkNotificationPermission()) return;
+            
+            const notification = new Notification(title, {
+                body: body,
+                icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzAwN2JmZiIvPgo8cGF0aCBkPSJNMTYgOEMxMi42ODYzIDggMTAgMTAuNjg2MyAxMCAxNEMxMCAxNy4zMTM3IDEyLjY4NjMgMjAgMTYgMjBDMTkuMzEzNyAyMCAyMiAxNy4zMTM3IDIyIDE0QzIyIDEwLjY4NjMgMTkuMzEzNyA4IDE2IDhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K'
+            });
+            
+            setupNotificationEvents(notification, title);
+            activeNotifications.push(notification);
+            
+            totalNotifications++;
+            updateStats();
+            addToLog('notification', `发送通知: ${title}`);
+        }
+        
+        function showWelcomeNotification() {
+            showSimpleNotification('欢迎！', '欢迎使用HTML5通知API示例。');
+        }
+        
+        function showInfoNotification() {
+            showSimpleNotification('信息提示', '这是一个信息类型的通知。');
+        }
+        
+        function showWarningNotification() {
+            showSimpleNotification('警告', '这是一个警告类型的通知，请注意！');
+        }
+        
+        function showErrorNotification() {
+            showSimpleNotification('错误', '发生了一个错误，请检查相关设置。');
+        }
+        
+        // 自定义通知
+        function showCustomNotification() {
+            if (!checkNotificationPermission()) return;
+            
+            const title = document.getElementById('notificationTitle').value || '自定义通知';
+            const body = document.getElementById('notificationBody').value || '这是一个自定义通知。';
+            const icon = document.getElementById('notificationIcon').value;
+            const tag = document.getElementById('notificationTag').value;
+            const requireInteraction = document.getElementById('requireInteraction').checked;
+            const silent = document.getElementById('silent').checked;
+            const dir = document.getElementById('notificationDir').value;
+            
+            const options = {
+                body: body,
+                dir: dir,
+                requireInteraction: requireInteraction,
+                silent: silent
+            };
+            
+            if (icon) options.icon = icon;
+            if (tag) options.tag = tag;
+            
+            const notification = new Notification(title, options);
+            setupNotificationEvents(notification, title);
+            activeNotifications.push(notification);
+            
+            totalNotifications++;
+            updateStats();
+            addToLog('notification', `发送自定义通知: ${title}`);
+        }
+        
+        function previewNotification() {
+            const title = document.getElementById('notificationTitle').value || '通知标题';
+            const body = document.getElementById('notificationBody').value || '通知内容';
+            const icon = document.getElementById('notificationIcon').value;
+            
+            const previewDiv = document.getElementById('notificationPreview');
+            const previewIcon = document.getElementById('previewIcon');
+            const previewTitle = document.getElementById('previewTitle');
+            const previewBody = document.getElementById('previewBody');
+            
+            previewTitle.textContent = title;
+            previewBody.textContent = body;
+            
+            if (icon) {
+                previewIcon.style.backgroundImage = `url(${icon})`;
+                previewIcon.style.backgroundSize = 'cover';
+            } else {
+                previewIcon.style.backgroundImage = 'none';
+                previewIcon.style.backgroundColor = '#ddd';
+            }
+            
+            previewDiv.style.display = 'block';
+            addToLog('preview', '预览通知');
+        }
+        
+        // 定时通知
+        function scheduleNotification() {
+            const delay = parseInt(document.getElementById('delaySeconds').value) * 1000;
+            const statusDiv = document.getElementById('timerStatus');
+            
+            if (isNaN(delay) || delay < 1000) {
+                statusDiv.innerHTML = '<div class="error-display">请输入有效的延迟时间（至少1秒）</div>';
+                return;
+            }
+            
+            const timerId = setTimeout(() => {
+                showSimpleNotification('定时通知', `这是一个延迟 ${delay/1000} 秒的通知。`);
+                statusDiv.innerHTML = '<div class="success-display">定时通知已发送</div>';
+            }, delay);
+            
+            scheduledTimers.push(timerId);
+            
+            statusDiv.innerHTML = `<div class="info-display">定时通知已设置，将在 ${delay/1000} 秒后发送</div>`;
+            addToLog('timer', `设置定时通知: ${delay/1000}秒后发送`);
+        }
+        
+        function cancelScheduledNotifications() {
+            scheduledTimers.forEach(timerId => clearTimeout(timerId));
+            scheduledTimers = [];
+            
+            const statusDiv = document.getElementById('timerStatus');
+            statusDiv.innerHTML = '<div class="warning-display">所有定时通知已取消</div>';
+            addToLog('timer', '取消所有定时通知');
+        }
+        
+        // 批量通知
+        function sendBatchNotifications() {
+            if (!checkNotificationPermission()) return;
+            
+            const notifications = [
+                { title: '通知 1', body: '这是第一个批量通知' },
+                { title: '通知 2', body: '这是第二个批量通知' },
+                { title: '通知 3', body: '这是第三个批量通知' },
+                { title: '通知 4', body: '这是第四个批量通知' },
+                { title: '通知 5', body: '这是第五个批量通知' }
+            ];
+            
+            notifications.forEach((notif, index) => {
+                setTimeout(() => {
+                    showSimpleNotification(notif.title, notif.body);
+                }, index * 1000);
+            });
+            
+            addToLog('batch', `发送批量通知: ${notifications.length}个`);
+        }
+        
+        function sendProgressNotifications() {
+            if (!checkNotificationPermission()) return;
+            
+            const steps = ['开始处理', '处理中...', '即将完成', '处理完成'];
+            
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    const progress = Math.round((index + 1) / steps.length * 100);
+                    showSimpleNotification(`进度 ${progress}%`, step);
+                }, index * 2000);
+            });
+            
+            addToLog('progress', '发送进度通知序列');
+        }
+        
+        function closeAllNotifications() {
+            activeNotifications.forEach(notification => {
+                if (notification && typeof notification.close === 'function') {
+                    notification.close();
+                }
+            });
+            activeNotifications = [];
+            addToLog('close', '关闭所有活动通知');
+        }
+        
+        // 通知事件处理
+        function setupNotificationEvents(notification, title) {
+            notification.onclick = function() {
+                clickedNotifications++;
+                updateStats();
+                addToLog('click', `点击通知: ${title}`, 'success');
+                notification.close();
+            };
+            
+            notification.onclose = function() {
+                closedNotifications++;
+                updateStats();
+                addToLog('close', `关闭通知: ${title}`);
+                
+                // 从活动通知列表中移除
+                const index = activeNotifications.indexOf(notification);
+                if (index > -1) {
+                    activeNotifications.splice(index, 1);
+                }
+            };
+            
+            notification.onerror = function() {
+                errorNotifications++;
+                updateStats();
+                addToLog('error', `通知错误: ${title}`, 'error');
+            };
+            
+            notification.onshow = function() {
+                addToLog('show', `显示通知: ${title}`, 'success');
+            };
+        }
+        
+        // 工具函数
+        function checkNotificationPermission() {
+            if (!('Notification' in window)) {
+                addToLog('error', '浏览器不支持通知 API', 'error');
+                return false;
+            }
+            
+            if (Notification.permission !== 'granted') {
+                addToLog('error', '通知权限未授权，请先请求权限', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // 统计更新
+        function updateStats() {
+            document.getElementById('totalNotifications').textContent = totalNotifications;
+            document.getElementById('clickedNotifications').textContent = clickedNotifications;
+            document.getElementById('closedNotifications').textContent = closedNotifications;
+            document.getElementById('errorNotifications').textContent = errorNotifications;
+        }
+        
+        function resetStats() {
+            totalNotifications = 0;
+            clickedNotifications = 0;
+            closedNotifications = 0;
+            errorNotifications = 0;
+            updateStats();
+            addToLog('system', '统计数据已重置');
+        }
+        
+        // 日志管理
+        function addToLog(type, message, level = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = {
+                type: type,
+                message: message,
+                level: level,
+                timestamp: timestamp
+            };
+            
+            notificationLog.unshift(logEntry);
+            
+            // 限制日志数量
+            if (notificationLog.length > 50) {
+                notificationLog = notificationLog.slice(0, 50);
+            }
+            
+            updateLogDisplay();
+        }
+        
+        function updateLogDisplay() {
+            const logDiv = document.getElementById('notificationLog');
+            
+            if (notificationLog.length === 0) {
+                logDiv.innerHTML = '<p>暂无操作日志</p>';
+                return;
+            }
+            
+            let html = '';
+            notificationLog.forEach((entry, index) => {
+                html += `
+                    <div class="log-entry ${entry.level}">
+                        <strong>[${entry.timestamp}]</strong> [${entry.type.toUpperCase()}] ${entry.message}
+                    </div>
+                `;
+            });
+            
+            logDiv.innerHTML = html;
+        }
+        
+        function clearLog() {
+            notificationLog = [];
+            updateLogDisplay();
+        }
+        
+        // 页面加载时的初始化
+        window.addEventListener('load', function() {
+            checkNotificationSupport();
+            checkPermission();
+            updateStats();
+            updateLogDisplay();
+            
+            addToLog('system', '页面加载完成');
+        });
+        
+        // 页面卸载前的清理
+        window.addEventListener('beforeunload', function() {
+            // 取消所有定时器
+            scheduledTimers.forEach(timerId => clearTimeout(timerId));
+            
+            // 关闭所有活动通知
+            activeNotifications.forEach(notification => {
+                if (notification && typeof notification.close === 'function') {
+                    notification.close();
+                }
+            });
+            
+            addToLog('system', '页面即将卸载，清理资源');
+        });
+        
+        // 页面可见性变化处理
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                addToLog('visibility', '页面隐藏');
+            } else {
+                addToLog('visibility', '页面显示');
+            }
+        });
+    </script>
+</body>
+</html>

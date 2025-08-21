@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 地理位置示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .geo-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .geo-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        .info-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+        .error-display {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .success-display {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .coordinates {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .map-container {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .position-history {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .position-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            font-size: 14px;
+        }
+        .settings-group {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .settings-group label {
+            display: block;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .settings-group input, .settings-group select {
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .accuracy-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .accuracy-high {
+            background: #d4edda;
+            color: #155724;
+        }
+        .accuracy-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .accuracy-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .distance-info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML5 地理位置 API 示例</h1>
+        
+        <!-- 浏览器支持检测 -->
+        <div class="geo-section">
+            <h3>1. 浏览器支持检测</h3>
+            <div id="supportInfo"></div>
+        </div>
+        
+        <!-- 获取当前位置 -->
+        <div class="geo-section">
+            <h3>2. 获取当前位置</h3>
+            <button id="getCurrentPosition" onclick="getCurrentPosition()">获取当前位置</button>
+            <button onclick="clearCurrentPosition()">清除信息</button>
+            
+            <div id="currentPositionResult"></div>
+        </div>
+        
+        <!-- 位置监听 -->
+        <div class="geo-section">
+            <h3>3. 实时位置监听</h3>
+            <button id="startWatching" onclick="startWatching()">开始监听</button>
+            <button id="stopWatching" onclick="stopWatching()" disabled>停止监听</button>
+            <button onclick="clearWatchHistory()">清除历史</button>
+            
+            <div id="watchStatus"></div>
+            <div class="position-history" id="positionHistory"></div>
+        </div>
+        
+        <!-- 定位设置 -->
+        <div class="geo-section">
+            <h3>4. 定位设置</h3>
+            <div class="settings-group">
+                <label>
+                    <input type="checkbox" id="enableHighAccuracy" checked>
+                    启用高精度定位（可能消耗更多电量）
+                </label>
+                <label>
+                    超时时间（毫秒）:
+                    <input type="number" id="timeout" value="10000" min="1000" max="60000" step="1000">
+                </label>
+                <label>
+                    缓存时间（毫秒）:
+                    <input type="number" id="maximumAge" value="60000" min="0" max="600000" step="10000">
+                </label>
+            </div>
+            <button onclick="testWithSettings()">使用当前设置测试定位</button>
+            <div id="settingsTestResult"></div>
+        </div>
+        
+        <!-- 距离计算 -->
+        <div class="geo-section">
+            <h3>5. 距离计算</h3>
+            <div class="settings-group">
+                <label>
+                    目标纬度:
+                    <input type="number" id="targetLat" placeholder="例如: 39.9042" step="any">
+                </label>
+                <label>
+                    目标经度:
+                    <input type="number" id="targetLng" placeholder="例如: 116.4074" step="any">
+                </label>
+                <button onclick="calculateDistance()">计算距离</button>
+                <button onclick="setBeijing()">设为北京</button>
+                <button onclick="setShanghai()">设为上海</button>
+            </div>
+            <div id="distanceResult"></div>
+        </div>
+        
+        <!-- 地图显示 -->
+        <div class="geo-section">
+            <h3>6. 简单地图显示</h3>
+            <div class="map-container" id="mapContainer">
+                点击"显示地图"按钮在新窗口中查看位置
+            </div>
+            <button onclick="showOnMap()" id="showMapBtn" disabled>在地图中显示</button>
+            <button onclick="showOnGoogleMaps()" id="showGoogleMapBtn" disabled>在Google地图中显示</button>
+        </div>
+        
+        <!-- 位置信息详情 -->
+        <div class="geo-section">
+            <h3>7. 详细位置信息</h3>
+            <div id="detailedInfo"></div>
+        </div>
+    </div>
+
+    <script>
+        let watchId = null;
+        let currentPosition = null;
+        let positionHistory = [];
+        
+        // 检查浏览器支持
+        function checkGeolocationSupport() {
+            const supportInfo = document.getElementById('supportInfo');
+            
+            if ('geolocation' in navigator) {
+                supportInfo.innerHTML = `
+                    <div class="success-display">
+                        <strong>✓ 浏览器支持地理位置 API</strong><br>
+                        用户代理: ${navigator.userAgent}
+                    </div>
+                `;
+            } else {
+                supportInfo.innerHTML = `
+                    <div class="error-display">
+                        <strong>✗ 浏览器不支持地理位置 API</strong><br>
+                        请使用现代浏览器访问此页面。
+                    </div>
+                `;
+            }
+        }
+        
+        // 获取当前位置
+        function getCurrentPosition() {
+            const resultDiv = document.getElementById('currentPositionResult');
+            const btn = document.getElementById('getCurrentPosition');
+            
+            if (!navigator.geolocation) {
+                resultDiv.innerHTML = '<div class="error-display">浏览器不支持地理位置 API</div>';
+                return;
+            }
+            
+            btn.disabled = true;
+            resultDiv.innerHTML = '<div class="info-display"><span class="loading"></span>正在获取位置信息...</div>';
+            
+            const options = getPositionOptions();
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    currentPosition = position;
+                    displayPosition(position, resultDiv);
+                    updateMapButtons();
+                    btn.disabled = false;
+                },
+                function(error) {
+                    displayError(error, resultDiv);
+                    btn.disabled = false;
+                },
+                options
+            );
+        }
+        
+        // 开始位置监听
+        function startWatching() {
+            if (!navigator.geolocation) {
+                alert('浏览器不支持地理位置 API');
+                return;
+            }
+            
+            const statusDiv = document.getElementById('watchStatus');
+            const startBtn = document.getElementById('startWatching');
+            const stopBtn = document.getElementById('stopWatching');
+            
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            statusDiv.innerHTML = '<div class="info-display"><span class="loading"></span>开始监听位置变化...</div>';
+            
+            const options = getPositionOptions();
+            
+            watchId = navigator.geolocation.watchPosition(
+                function(position) {
+                    addToPositionHistory(position);
+                    statusDiv.innerHTML = `
+                        <div class="success-display">
+                            <strong>正在监听位置变化</strong><br>
+                            监听ID: ${watchId}<br>
+                            最后更新: ${new Date().toLocaleString()}
+                        </div>
+                    `;
+                },
+                function(error) {
+                    statusDiv.innerHTML = `
+                        <div class="error-display">
+                            <strong>位置监听出错:</strong> ${getErrorMessage(error)}
+                        </div>
+                    `;
+                },
+                options
+            );
+        }
+        
+        // 停止位置监听
+        function stopWatching() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                
+                const statusDiv = document.getElementById('watchStatus');
+                const startBtn = document.getElementById('startWatching');
+                const stopBtn = document.getElementById('stopWatching');
+                
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                
+                statusDiv.innerHTML = '<div class="info-display">位置监听已停止</div>';
+            }
+        }
+        
+        // 使用设置测试定位
+        function testWithSettings() {
+            const resultDiv = document.getElementById('settingsTestResult');
+            
+            if (!navigator.geolocation) {
+                resultDiv.innerHTML = '<div class="error-display">浏览器不支持地理位置 API</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="info-display"><span class="loading"></span>使用自定义设置获取位置...</div>';
+            
+            const options = getPositionOptions();
+            
+            const startTime = Date.now();
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const endTime = Date.now();
+                    const duration = endTime - startTime;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success-display">
+                            <strong>定位成功</strong><br>
+                            耗时: ${duration}ms<br>
+                            设置: 高精度=${options.enableHighAccuracy}, 超时=${options.timeout}ms, 缓存=${options.maximumAge}ms
+                        </div>
+                        ${formatPositionInfo(position)}
+                    `;
+                },
+                function(error) {
+                    const endTime = Date.now();
+                    const duration = endTime - startTime;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error-display">
+                            <strong>定位失败</strong><br>
+                            耗时: ${duration}ms<br>
+                            错误: ${getErrorMessage(error)}
+                        </div>
+                    `;
+                },
+                options
+            );
+        }
+        
+        // 计算距离
+        function calculateDistance() {
+            const targetLat = parseFloat(document.getElementById('targetLat').value);
+            const targetLng = parseFloat(document.getElementById('targetLng').value);
+            const resultDiv = document.getElementById('distanceResult');
+            
+            if (!currentPosition) {
+                resultDiv.innerHTML = '<div class="error-display">请先获取当前位置</div>';
+                return;
+            }
+            
+            if (isNaN(targetLat) || isNaN(targetLng)) {
+                resultDiv.innerHTML = '<div class="error-display">请输入有效的目标坐标</div>';
+                return;
+            }
+            
+            const currentLat = currentPosition.coords.latitude;
+            const currentLng = currentPosition.coords.longitude;
+            
+            const distance = calculateHaversineDistance(currentLat, currentLng, targetLat, targetLng);
+            
+            resultDiv.innerHTML = `
+                <div class="distance-info">
+                    <strong>距离计算结果:</strong><br>
+                    当前位置: ${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}<br>
+                    目标位置: ${targetLat.toFixed(6)}, ${targetLng.toFixed(6)}<br>
+                    直线距离: <strong>${distance.toFixed(2)} 公里</strong>
+                </div>
+            `;
+        }
+        
+        // 在地图中显示
+        function showOnMap() {
+            if (!currentPosition) {
+                alert('请先获取当前位置');
+                return;
+            }
+            
+            const lat = currentPosition.coords.latitude;
+            const lng = currentPosition.coords.longitude;
+            
+            // 使用OpenStreetMap
+            const url = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15`;
+            window.open(url, '_blank');
+        }
+        
+        function showOnGoogleMaps() {
+            if (!currentPosition) {
+                alert('请先获取当前位置');
+                return;
+            }
+            
+            const lat = currentPosition.coords.latitude;
+            const lng = currentPosition.coords.longitude;
+            
+            // 使用Google Maps
+            const url = `https://www.google.com/maps?q=${lat},${lng}&z=15`;
+            window.open(url, '_blank');
+        }
+        
+        // 工具函数
+        function getPositionOptions() {
+            return {
+                enableHighAccuracy: document.getElementById('enableHighAccuracy').checked,
+                timeout: parseInt(document.getElementById('timeout').value),
+                maximumAge: parseInt(document.getElementById('maximumAge').value)
+            };
+        }
+        
+        function displayPosition(position, container) {
+            const info = formatPositionInfo(position);
+            container.innerHTML = `
+                <div class="success-display">
+                    <strong>位置获取成功!</strong>
+                </div>
+                ${info}
+            `;
+            
+            updateDetailedInfo(position);
+        }
+        
+        function formatPositionInfo(position) {
+            const coords = position.coords;
+            const accuracy = getAccuracyLevel(coords.accuracy);
+            
+            return `
+                <div class="coordinates">
+                    <strong>坐标信息:</strong><br>
+                    纬度: ${coords.latitude.toFixed(6)}°<br>
+                    经度: ${coords.longitude.toFixed(6)}°<br>
+                    精度: ${coords.accuracy.toFixed(0)}米 <span class="accuracy-indicator ${accuracy.class}">${accuracy.text}</span><br>
+                    ${coords.altitude !== null ? `海拔: ${coords.altitude.toFixed(2)}米<br>` : ''}
+                    ${coords.altitudeAccuracy !== null ? `海拔精度: ${coords.altitudeAccuracy.toFixed(0)}米<br>` : ''}
+                    ${coords.heading !== null ? `方向: ${coords.heading.toFixed(0)}°<br>` : ''}
+                    ${coords.speed !== null ? `速度: ${(coords.speed * 3.6).toFixed(2)}km/h<br>` : ''}
+                    时间戳: ${new Date(position.timestamp).toLocaleString()}
+                </div>
+            `;
+        }
+        
+        function displayError(error, container) {
+            container.innerHTML = `
+                <div class="error-display">
+                    <strong>获取位置失败:</strong><br>
+                    ${getErrorMessage(error)}
+                </div>
+            `;
+        }
+        
+        function getErrorMessage(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    return "用户拒绝了地理位置请求。请在浏览器设置中允许位置访问。";
+                case error.POSITION_UNAVAILABLE:
+                    return "位置信息不可用。请检查网络连接或GPS设置。";
+                case error.TIMEOUT:
+                    return "获取位置信息超时。请尝试增加超时时间或检查网络连接。";
+                default:
+                    return "发生未知错误: " + error.message;
+            }
+        }
+        
+        function getAccuracyLevel(accuracy) {
+            if (accuracy <= 10) {
+                return { class: 'accuracy-high', text: '高精度' };
+            } else if (accuracy <= 100) {
+                return { class: 'accuracy-medium', text: '中等精度' };
+            } else {
+                return { class: 'accuracy-low', text: '低精度' };
+            }
+        }
+        
+        function addToPositionHistory(position) {
+            positionHistory.unshift({
+                position: position,
+                timestamp: Date.now()
+            });
+            
+            // 限制历史记录数量
+            if (positionHistory.length > 20) {
+                positionHistory = positionHistory.slice(0, 20);
+            }
+            
+            updatePositionHistoryDisplay();
+        }
+        
+        function updatePositionHistoryDisplay() {
+            const historyDiv = document.getElementById('positionHistory');
+            
+            if (positionHistory.length === 0) {
+                historyDiv.innerHTML = '<p>暂无位置历史记录</p>';
+                return;
+            }
+            
+            let html = '';
+            positionHistory.forEach((item, index) => {
+                const coords = item.position.coords;
+                const time = new Date(item.timestamp).toLocaleTimeString();
+                
+                html += `
+                    <div class="position-item">
+                        <strong>#${index + 1}</strong> ${time}<br>
+                        ${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)} (±${coords.accuracy.toFixed(0)}m)
+                    </div>
+                `;
+            });
+            
+            historyDiv.innerHTML = html;
+        }
+        
+        function updateDetailedInfo(position) {
+            const detailedDiv = document.getElementById('detailedInfo');
+            const coords = position.coords;
+            
+            detailedDiv.innerHTML = `
+                <div class="info-display">
+                    <h4>详细位置信息</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>纬度</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.latitude}°</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>经度</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.longitude}°</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>精度</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.accuracy} 米</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>海拔</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.altitude !== null ? coords.altitude + ' 米' : '不可用'}</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>海拔精度</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.altitudeAccuracy !== null ? coords.altitudeAccuracy + ' 米' : '不可用'}</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>方向</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.heading !== null ? coords.heading + '°' : '不可用'}</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>速度</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${coords.speed !== null ? (coords.speed * 3.6).toFixed(2) + ' km/h' : '不可用'}</td></tr>
+                        <tr><td style="padding: 5px; border: 1px solid #ddd;"><strong>时间戳</strong></td><td style="padding: 5px; border: 1px solid #ddd;">${new Date(position.timestamp).toLocaleString()}</td></tr>
+                    </table>
+                </div>
+            `;
+        }
+        
+        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // 地球半径（公里）
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        function updateMapButtons() {
+            const showMapBtn = document.getElementById('showMapBtn');
+            const showGoogleMapBtn = document.getElementById('showGoogleMapBtn');
+            
+            if (currentPosition) {
+                showMapBtn.disabled = false;
+                showGoogleMapBtn.disabled = false;
+            }
+        }
+        
+        // 清除函数
+        function clearCurrentPosition() {
+            document.getElementById('currentPositionResult').innerHTML = '';
+            document.getElementById('detailedInfo').innerHTML = '';
+            currentPosition = null;
+            updateMapButtons();
+        }
+        
+        function clearWatchHistory() {
+            positionHistory = [];
+            updatePositionHistoryDisplay();
+        }
+        
+        // 预设位置
+        function setBeijing() {
+            document.getElementById('targetLat').value = '39.9042';
+            document.getElementById('targetLng').value = '116.4074';
+        }
+        
+        function setShanghai() {
+            document.getElementById('targetLat').value = '31.2304';
+            document.getElementById('targetLng').value = '121.4737';
+        }
+        
+        // 初始化
+        window.onload = function() {
+            checkGeolocationSupport();
+            updatePositionHistoryDisplay();
+            updateMapButtons();
+        };
+        
+        // 页面卸载时清理监听
+        window.onbeforeunload = function() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+            }
+        };
+    </script>
+</body>
+</html>
