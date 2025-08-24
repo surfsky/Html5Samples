@@ -38,7 +38,7 @@ export const menuData = [
             { name: 'splitPanel', text: '分割面板', icon: '📄', url: 'tagCustom/splitPanel/test.html', children: null },
             { name: 'tabPanel', text: '标签面板', icon: '📄', url: 'tagCustom/tabPanel/test.html', children: null },
             { name: 'treeView', text: '树视图', icon: '📄', url: 'tagCustom/treeView/test.html', children: null },
-            { name: 'panel', text: '面板', icon: '📄', url: 'tagCustom/panel/test.html', children: null }
+            { name: 'panel', text: '面板', icon: '📄', url: 'tagCustom/xpanel/test.html', children: null }
         ]
     },
     {

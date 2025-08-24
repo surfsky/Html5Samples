@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XPanel 组件测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .panel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .demo-section {
+            margin-bottom: 30px;
+        }
+        
+        .demo-title {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+    </style>
+    <script src="xpanel.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>XPanel 通用面板组件测试</h1>
+        
+        <div class="demo-section">
+            <h2 class="demo-title">基础面板演示</h2>
+            <div class="panel-grid">
+                <!-- 普通HTML内容面板 -->
+                <x-panel 
+                    title="HTML内容面板" 
+                    width="100%" 
+                    height="300px" 
+                    border="2px solid #28a745" 
+                    radius="12px"
+                    expandable="true" 
+                    expand="true">
+                    <h3>欢迎使用 XPanel 组件！</h3>
+                    <p>这是一个全新设计的通用面板组件，具有以下特点：</p>
+                    <ul>
+                        <li>支持普通HTML内容显示</li>
+                        <li>支持iframe嵌入</li>
+                        <li>可配置的外观样式</li>
+                        <li>可展开/收起功能</li>
+                        <li>响应式设计</li>
+                    </ul>
+                    <p><strong>配置选项：</strong> title, width, height, border, radius, expandable, expand, iframeurl</p>
+                </x-panel>
+                
+                <!-- iframe面板 -->
+                <x-panel 
+                    title="iframe内容面板" 
+                    width="100%" 
+                    height="300px" 
+                    border="2px solid #007bff" 
+                    radius="12px"
+                    expandable="true" 
+                    expand="true"
+                    iframeurl="https://www.example.com">
+                </x-panel>
+            </div>
+        </div>
+
+    </div>
+    
+
+</body>
+</html>
