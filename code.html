@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>代码查看器</title>
+    <!-- Prism.js 代码高亮库 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <style>
         * {
             margin: 0;
@@ -96,31 +98,138 @@
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
         }
         
-        /* 行号样式 */
-        .line-numbers {
-            display: flex;
-        }
-        
-        .line-numbers-column {
-            background: #252526;
-            color: #858585;
-            padding: 16px 8px;
-            text-align: right;
-            user-select: none;
-            border-right: 1px solid #3e3e42;
-            min-width: 50px;
-            font-size: 12px;
+        /* Prism.js 样式覆盖 */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            color: #d4d4d4 !important;
+            margin: 0;
+            padding: 16px;
+            overflow: visible;
+            border-radius: 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+            font-size: 14px;
             line-height: 1.5;
         }
         
-        .code-lines {
-            flex: 1;
-            padding: 16px;
+        .show-line-numbers pre[class*="language-"] {
+            padding: 0;
         }
         
-        .show-line-numbers .code-content {
-            padding: 0;
-            display: flex;
+        code[class*="language-"] {
+            background: transparent !important;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+        
+        /* 行号样式优化 */
+        .line-numbers .line-numbers-rows {
+            border-right: 1px solid #3e3e42;
+            background: #252526;
+            color: #858585;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        .line-numbers .line-numbers-rows > span:before {
+            color: #858585;
+            text-align: right;
+            padding-right: 8px;
+        }
+        
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+        
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+        
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol,
+        .token.deleted {
+            color: #b5cea8 !important;
+        }
+        
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin,
+        .token.inserted {
+            color: #ce9178 !important;
+        }
+        
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+        
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+        
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+        
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+        
+        /* Prism.js行号插件样式覆盖 */
+        .line-numbers {
+            position: relative;
+            padding-left: 3.8em;
+            counter-reset: linenumber;
+        }
+        
+        .line-numbers > code {
+            position: relative;
+            white-space: inherit;
+        }
+        
+        .line-numbers .line-numbers-rows {
+            position: absolute;
+            pointer-events: none;
+            top: 0;
+            font-size: 100%;
+            left: -3.8em;
+            width: 3em;
+            letter-spacing: -1px;
+            border-right: 1px solid #3e3e42;
+            user-select: none;
+            counter-reset: linenumber;
+        }
+        
+        .line-numbers-rows > span {
+            pointer-events: none;
+            display: block;
+            counter-increment: linenumber;
+        }
+        
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #858585;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
         }
         
         /* 工具栏样式 */
@@ -162,7 +271,6 @@
         </div>
         
         <div class="toolbar">
-            <button id="toggleLineNumbers" title="切换行号显示">行号</button>
             <button id="copyCode" title="复制代码">复制</button>
             <button id="downloadCode" title="下载代码">下载</button>
             <span style="margin-left: auto; color: #888;" id="fileInfo"></span>
@@ -179,7 +287,7 @@
                 this.codeContent = document.getElementById('codeContent');
                 this.codeFileName = document.getElementById('codeFileName');
                 this.fileInfo = document.getElementById('fileInfo');
-                this.showLineNumbers = false;
+                this.showLineNumbers = true;
                 this.currentCode = '';
                 this.currentFilePath = '';
                 
@@ -192,11 +300,6 @@
             }
             
             bindEvents() {
-                // 切换行号显示
-                document.getElementById('toggleLineNumbers').addEventListener('click', () => {
-                    this.toggleLineNumbers();
-                });
-                
                 // 复制代码
                 document.getElementById('copyCode').addEventListener('click', () => {
                     this.copyCode();
@@ -251,54 +354,128 @@
              * 显示源代码
              */
             displaySourceCode(code) {
-                // 简单的HTML转义
-                const escapedCode = code
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;');
+                const language = this.detectLanguage(this.currentFilePath);
                 
                 if (this.showLineNumbers) {
-                    this.displayWithLineNumbers(escapedCode);
+                    this.displayWithLineNumbers(code, language);
                 } else {
-                    this.codeContent.innerHTML = escapedCode;
+                    this.displayWithHighlight(code, language);
                 }
             }
             
             /**
-             * 显示带行号的代码
+             * 显示带语法高亮的代码
              */
-            displayWithLineNumbers(code) {
-                const lines = code.split('\n');
-                const lineNumbers = lines.map((_, index) => index + 1).join('\n');
+            displayWithHighlight(code, language) {
+                const pre = document.createElement('pre');
+                const codeElement = document.createElement('code');
                 
-                this.codeContent.innerHTML = `
-                    <div class="line-numbers-column">${lineNumbers}</div>
-                    <div class="code-lines">${code}</div>
-                `;
+                if (language) {
+                    pre.className = `language-${language}`;
+                    codeElement.className = `language-${language}`;
+                }
                 
-                this.codeContent.classList.add('show-line-numbers');
+                codeElement.textContent = code;
+                pre.appendChild(codeElement);
+                
+                this.codeContent.innerHTML = '';
+                this.codeContent.appendChild(pre);
+                
+                // 应用语法高亮
+                if (window.Prism) {
+                    Prism.highlightElement(codeElement);
+                }
             }
             
             /**
-             * 切换行号显示
-             */
-            toggleLineNumbers() {
-                this.showLineNumbers = !this.showLineNumbers;
-                const button = document.getElementById('toggleLineNumbers');
-                
-                if (this.showLineNumbers) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                    this.codeContent.classList.remove('show-line-numbers');
-                }
-                
-                if (this.currentCode) {
-                    this.displaySourceCode(this.currentCode);
-                }
+         * 显示带行号的代码
+         */
+        displayWithLineNumbers(code, language) {
+            const pre = document.createElement('pre');
+            const codeElement = document.createElement('code');
+            
+            // 使用Prism.js官方行号插件
+            pre.className = 'line-numbers';
+            if (language) {
+                pre.className += ` language-${language}`;
+                codeElement.className = `language-${language}`;
             }
+            
+            codeElement.textContent = code;
+            pre.appendChild(codeElement);
+            
+            // 清空内容并添加pre元素
+            this.codeContent.innerHTML = '';
+            this.codeContent.appendChild(pre);
+            
+            // 移除自定义行号样式类
+            this.codeContent.classList.remove('show-line-numbers');
+            
+            // 应用语法高亮
+            if (window.Prism) {
+                Prism.highlightElement(codeElement);
+            }
+        }
+            
+            /**
+             * 根据文件扩展名检测编程语言
+             */
+            detectLanguage(filePath) {
+                if (!filePath) return null;
+                
+                const extension = filePath.split('.').pop().toLowerCase();
+                const languageMap = {
+                    'js': 'javascript',
+                    'jsx': 'jsx',
+                    'ts': 'typescript',
+                    'tsx': 'tsx',
+                    'html': 'html',
+                    'htm': 'html',
+                    'css': 'css',
+                    'scss': 'scss',
+                    'sass': 'sass',
+                    'less': 'less',
+                    'json': 'json',
+                    'xml': 'xml',
+                    'py': 'python',
+                    'java': 'java',
+                    'c': 'c',
+                    'cpp': 'cpp',
+                    'cc': 'cpp',
+                    'cxx': 'cpp',
+                    'cs': 'csharp',
+                    'php': 'php',
+                    'rb': 'ruby',
+                    'go': 'go',
+                    'rs': 'rust',
+                    'swift': 'swift',
+                    'kt': 'kotlin',
+                    'scala': 'scala',
+                    'sh': 'bash',
+                    'bash': 'bash',
+                    'zsh': 'bash',
+                    'fish': 'bash',
+                    'ps1': 'powershell',
+                    'sql': 'sql',
+                    'md': 'markdown',
+                    'markdown': 'markdown',
+                    'yml': 'yaml',
+                    'yaml': 'yaml',
+                    'toml': 'toml',
+                    'ini': 'ini',
+                    'conf': 'ini',
+                    'dockerfile': 'docker',
+                    'vue': 'vue',
+                    'svelte': 'svelte',
+                    'r': 'r',
+                    'matlab': 'matlab',
+                    'm': 'matlab'
+                };
+                
+                return languageMap[extension] || null;
+            }
+            
+
             
             /**
              * 复制代码
@@ -416,5 +593,11 @@
             }
         });
     </script>
+    
+    <!-- Prism.js 核心库和语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
 </body>
 </html>

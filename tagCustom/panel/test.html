@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplePanel Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-controls {
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .test-controls button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .test-controls button:hover {
+            background: #218838;
+        }
+        
+        .info {
+            margin-top: 20px;
+            padding: 16px;
+            background: #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SimplePanel 测试页面</h1>
+        
+        <div class="test-controls">
+            <button onclick="testGetCurrentUrl()">获取当前URL</button>
+            <button onclick="testChangeUrl('demo1.html')">外部修改到Demo1</button>
+            <button onclick="testChangeUrl('demo2.html')">外部修改到Demo2</button>
+            <button onclick="testChangeUrl('../../../index.html')">外部修改到首页</button>
+        </div>
+        
+        <simple-panel id="testPanel"></simple-panel>
+        
+        <div class="info">
+            <h4>测试说明：</h4>
+            <ul>
+                <li>上方按钮可以从外部JavaScript修改iframe的URL</li>
+                <li>面板内的按钮可以从组件内部修改iframe的URL</li>
+                <li>打开浏览器控制台可以看到详细的日志信息</li>
+                <li>这个测试验证了自定义组件中iframe的URL修改功能</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="simplePanel.js"></script>
+    <script>
+        /**测试获取当前URL */
+        function testGetCurrentUrl() {
+            const panel = document.getElementById('testPanel');
+            const currentUrl = panel.getCurrentUrl();
+            console.log('当前iframe URL:', currentUrl);
+            alert('当前iframe URL: ' + currentUrl);
+        }
+        
+        /**测试修改URL */
+        function testChangeUrl(url) {
+            const panel = document.getElementById('testPanel');
+            console.log('外部调用修改iframe URL到:', url);
+            panel.changeIframeUrl(url);
+        }
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SimplePanel测试页面加载完成');
+            
+            // 测试组件是否正确初始化
+            const panel = document.getElementById('testPanel');
+            if (panel) {
+                console.log('SimplePanel组件已找到:', panel);
+                
+                // 延迟检查iframe是否正确加载
+                setTimeout(() => {
+                    const iframe = panel.querySelector('#panel-iframe');
+                    if (iframe) {
+                        console.log('iframe元素已找到:', iframe);
+                        console.log('初始src:', iframe.src);
+                    } else {
+                        console.error('未找到iframe元素');
+                    }
+                }, 100);
+            } else {
+                console.error('未找到SimplePanel组件');
+            }
+        });
+    </script>
+</body>
+</html>

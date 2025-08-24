@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo1 Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        p {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .timestamp {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Demo1 页面</h1>
+    <p>这是第一个演示页面</p>
+    <p>用于测试SimplePanel组件中的iframe功能</p>
+    <div class="timestamp">页面加载时间: <span id="loadTime"></span></div>
+    
+    <script>
+        document.getElementById('loadTime').textContent = new Date().toLocaleString();
+        console.log('Demo1页面已加载');
+    </script>
+</body>
+</html>

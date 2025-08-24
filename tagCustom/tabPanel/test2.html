@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabPanel with iFrame Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .btn-group {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        .btn-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button:active {
+            background: #004085;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TabPanel with iFrame 示例</h1>
+        <iframe id="iframe1" src="demo1.html" frameborder="0" width="100%" height="200px" style="border: none;"></iframe>
+        <tab-panel id="styledPanel">
+            <tab-item title="Iframe页" padding="0" iframeurl="demo1.html">
+            </tab-item>
+            <tab-item title='Normal'>
+                <h1>This is normal page</h1>
+            </tab-item>
+        </tab-panel>
+        <div class="controls">
+            <button onclick="changeIframe('demo2.html')">修改iframe</button>
+        </div>
+        
+        
+    </div>
+    
+    <script src="tabPanel.js"></script>
+    <script>
+        /**切换标签页2的iframe内容 */
+        function changeIframe(url) {
+            const iframe1 = document.getElementById('iframe1');
+            iframe1.src = url;
+                
+            // 获取TabPanel组件实例
+            const tabPanel = document.querySelector('tab-panel');
+            const success = tabPanel.setIframeUrl(0, url);
+
+            // or
+            tabPanel.items[0].setIframeUrl(url);
+        }
+    </script>
+</body>
+</html>

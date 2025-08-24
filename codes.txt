@@ -458,3 +458,60 @@
                     <tab-item title="代码" padding="0">
                     </tab-item>
                 </tab-panel>
+
+
+
+            
+            // 检查是否包含iframe，如果是则延迟设置src
+            if (tab.innerHTML.includes('<iframe')) {
+                // 先设置iframe结构但不设置src
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = tab.innerHTML;
+                const iframe = tempDiv.querySelector('iframe');
+                if (iframe) {
+                    const originalSrc = iframe.getAttribute('src'); // 使用getAttribute获取原始src
+                    iframe.removeAttribute('src'); // 移除src属性
+                    content.innerHTML = tempDiv.innerHTML;
+                    
+                    // 延迟设置src，确保DOM准备就绪
+                    setTimeout(() => {
+                        const newIframe = content.querySelector('iframe');
+                        if (newIframe && originalSrc) {
+                            newIframe.src = originalSrc;
+                        }
+                    }, 200); // 增加延迟时间
+                } else {
+                    content.innerHTML = tab.innerHTML;
+                }
+            } else {
+                // 非iframe内容直接加载
+            }
+            
+            contentsContainer.appendChild(content);
+        });
+        
+
+        //this.pageFrame = null;
+        //this.codeFrame = null;        
+        this.pageFrame = document.getElementById('pageFrame');
+        this.codeFrame = document.getElementById('codeFrame');
+        // 监听iframe加载完成事件
+        this.pageFrame.addEventListener('load', () => {
+            console.log(`页面已加载: ${this.currentFile}`);
+        });
+        
+            // 如果codeFrame、pageFrame放在tabPanel中，死活无法刷新页面。
+            //this.pageFrame.src = `${filePath}?r=${Utils.getRandomInt(1, 1000000)}`;
+            //this.codeFrame.src = `code.html?file=${encodeURIComponent(filePath)}&r=${Utils.getRandomInt(1, 1000000)}`;
+            //console.log(`加载文件: ${this.pageFrame.src}`);
+            //console.log(`加载文件: ${this.codeFrame.src}`);
+
+
+        this.menuTree.setOnNodeToggle((nodeInfo) => {
+            console.log(`文件夹 ${nodeInfo.name} ${nodeInfo.expanded ? '展开' : '收起'}`);
+        });
+        
+        // 默认展开第一个文件夹
+        setTimeout(() => {
+            this.menuTree.expandFirst();
+        }, 100);

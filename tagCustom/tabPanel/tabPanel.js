@@ -2,7 +2,7 @@
  * TabPanel 自定义标签面板组件
  * 支持多标签页切换，可自定义样式和行为
  * 作者：surfsky.github.io
- * Last Update: 2025-01-21
+ * Last Update: 2025-08-21
  */
 class TabPanel extends HTMLElement {
     option = {
@@ -16,12 +16,13 @@ class TabPanel extends HTMLElement {
         height: '500px',
         closable: false,
         scrollable: true,
-        padding: '16px'
+        padding: '16px',
+        border: '1px solid #ddd'
     };
 
     /**支持的属性列表 */
     static get observedAttributes() {
-        return ['active-index', 'tab-position', 'tab-color', 'active-tab-color', 'tab-text-color', 'active-tab-text-color', 'width', 'height', 'closable', 'scrollable', 'padding'];
+        return ['active-index', 'tab-position', 'tab-color', 'tab-text-color', 'active-tab-color', 'active-tab-text-color', 'width', 'height', 'closable', 'scrollable', 'padding', 'border'];
     }
 
     //------------------------------------------------------
@@ -99,6 +100,72 @@ class TabPanel extends HTMLElement {
         }
     }
 
+    /**修改指定标签页中iframe的URL */
+    setIframeUrl(tabIndex, url) {
+        const contentsContainer = this.querySelector('.tab-contents');
+        if (!contentsContainer) {
+            console.error('未找到tab-contents容器');
+            return false;
+        }
+        
+        const tabContents = contentsContainer.querySelectorAll('.tab-content');
+        if (tabIndex < 0 || tabIndex >= tabContents.length) {
+            console.error('标签页索引超出范围:', tabIndex);
+            return false;
+        }
+        
+        const targetTabContent = tabContents[tabIndex];
+        const iframe = targetTabContent.querySelector('iframe');
+        
+        if (iframe) {
+            iframe.src = url;
+            //console.log(`修改标签页${tabIndex}中iframe URL到:`, url);
+            //console.log('iframe元素:', iframe);
+            //console.log('当前src:', iframe.src);
+            return true;
+        } else {
+            console.error(`标签页${tabIndex}中未找到iframe元素`);
+            return false;
+        }
+    }
+
+
+    /**获取指定标签页中iframe的URL */
+    getIframeUrl(tabIndex) {
+        const contentsContainer = this.querySelector('.tab-contents');
+        if (!contentsContainer) return null;
+        
+        const tabContents = contentsContainer.querySelectorAll('.tab-content');
+        if (tabIndex < 0 || tabIndex >= tabContents.length) return null;
+        
+        const targetTabContent = tabContents[tabIndex];
+        const iframe = targetTabContent.querySelector('iframe');
+        
+        return iframe ? iframe.src : null;
+    }
+
+    /**获取当前激活标签页中iframe的URL */
+    getActiveIframeUrl() {
+        return this.getIframeUrl(this.option.activeIndex);
+    }
+
+    /**获取item数组，支持tabPanel.item[0].setIframeUrl()调用方式 */
+    get items() {
+        const tabs = this.getTabs();
+        return tabs.map((tab, index) => {
+            return {
+                setIframeUrl: (url) => {
+                    return this.setIframeUrl(index, url);
+                },
+                getIframeUrl: () => {
+                    return this.getIframeUrl(index);
+                },
+                element: tab,
+                index: index
+            };
+        });
+    }
+
     /**加载激活标签页的内容 */
     loadActiveTabContent() {
         const contents = this.querySelectorAll('.tab-content');
@@ -152,6 +219,7 @@ class TabPanel extends HTMLElement {
         }
         return false;
     }
+
     
     //------------------------------------------------------
     // 渲染方法
@@ -191,6 +259,7 @@ class TabPanel extends HTMLElement {
                 width: 100%;
                 height: 100%;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                border: ${this.option.border};
             }
             
             /* 隐藏原始的 tab-item 元素 */
@@ -318,7 +387,6 @@ class TabPanel extends HTMLElement {
                     min-width: 60px;
                     font-size: 14px;
                 }
-                
                 .tab-content {
                     padding: ${this.option.padding};
                 }
@@ -335,12 +403,13 @@ class TabPanel extends HTMLElement {
             existingHeaders.remove();
         }
         
+        //
         const tabs = this.getTabs();
-        if (tabs.length === 0) return;
-        
+        if (tabs.length === 0) return;        
         const headersContainer = document.createElement('div');
         headersContainer.className = `tab-headers position-${this.option.tabPosition}`;
         
+        //
         tabs.forEach((tab, index) => {
             const header = document.createElement('button');
             header.className = 'tab-header';
@@ -374,53 +443,58 @@ class TabPanel extends HTMLElement {
     renderTabContents() {
         // 移除现有的内容容器
         const existingContents = this.querySelector('.tab-contents');
-        if (existingContents) {
+        if (existingContents)
             existingContents.remove();
-        }
         
+        //
         const tabs = this.getTabs();
         if (tabs.length === 0) return;
-        
         const contentsContainer = document.createElement('div');
         contentsContainer.className = `tab-contents position-${this.option.tabPosition}`;
-        
+
+        //
         tabs.forEach((tab, index) => {
-            const content = document.createElement('div');
-            content.className = 'tab-content';
-            // 获取tab-item的padding属性，如果没有则使用默认值
             const tabPadding = tab.getAttribute('padding') || this.option.padding;
-            content.style.padding = tabPadding;
             
-            // 检查是否包含iframe，如果是则延迟设置src
-            if (tab.innerHTML.includes('<iframe')) {
-                // 先设置iframe结构但不设置src
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = tab.innerHTML;
-                const iframe = tempDiv.querySelector('iframe');
-                if (iframe) {
-                    const originalSrc = iframe.getAttribute('src'); // 使用getAttribute获取原始src
-                    iframe.removeAttribute('src'); // 移除src属性
-                    content.innerHTML = tempDiv.innerHTML;
-                    
-                    // 延迟设置src，确保DOM准备就绪
-                    setTimeout(() => {
-                        const newIframe = content.querySelector('iframe');
-                        if (newIframe && originalSrc) {
-                            newIframe.src = originalSrc;
-                        }
-                    }, 200); // 增加延迟时间
-                } else {
-                    content.innerHTML = tab.innerHTML;
-                }
+            // 创建内容包装器而不是直接移动原始元素
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'tab-content';
+            contentWrapper.style.padding = tabPadding;
+            contentWrapper.style.display = index === this.option.activeIndex ? 'block' : 'none';
+            
+            // 检查是否有iframeurl属性
+            const iframeUrl = tab.getAttribute('iframeurl');
+            if (iframeUrl) {
+                // 如果有iframeurl属性，创建iframe元素
+                const iframe = document.createElement('iframe');
+                iframe.src = iframeUrl;
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                contentWrapper.appendChild(iframe);
             } else {
-                // 非iframe内容直接加载
-                content.innerHTML = tab.innerHTML;
+                // 使用cloneNode来保持iframe等元素的完整性
+                const tabChildren = Array.from(tab.children);
+                tabChildren.forEach(child => {
+                    const clonedChild = child.cloneNode(true);
+                    contentWrapper.appendChild(clonedChild);
+                });
             }
             
-            contentsContainer.appendChild(content);
+            // 隐藏原始tab元素以避免显示冲突
+            tab.style.display = 'none';
+            
+            try {
+                contentsContainer.appendChild(contentWrapper);
+            } catch (error) {
+                console.error('Error appending contentWrapper:', error, contentWrapper);
+            }
         });
-        
-        this.appendChild(contentsContainer);
+        try {
+            this.appendChild(contentsContainer);
+        } catch (error) {
+            console.error('Error appending contentsContainer:', error, contentsContainer);
+        }
     }
     
     //------------------------------------------------------
@@ -462,7 +536,8 @@ class TabPanel extends HTMLElement {
             'active-tab-color': 'activeTabColor',
             'tab-text-color': 'tabTextColor',
             'active-tab-text-color': 'activeTabTextColor',
-            'padding': 'padding'
+            'padding': 'padding',
+            'border': 'border'
         };
         
         const optionKey = optionMap[name] || name;
@@ -495,12 +570,16 @@ class TabPanel extends HTMLElement {
         const contents = this.querySelectorAll('.tab-content');
         
         headers.forEach((header, index) => {
-            header.classList.toggle('active', index === this.option.activeIndex);
+            const isActive = index === this.option.activeIndex;
+            header.classList.toggle('active', isActive);
+            header.style.backgroundColor = isActive ? this.option.activeTabColor : this.option.tabColor;
+            header.style.color = isActive ? this.option.activeTabTextColor : this.option.tabTextColor;
         });
         
         contents.forEach((content, index) => {
             const isActive = index === this.option.activeIndex;
             content.classList.toggle('active', isActive);
+            content.style.display = isActive ? 'block' : 'none';
             
             // 如果标签页被激活且有延迟内容，则加载它
             if (isActive && content.dataset.lazyContent) {

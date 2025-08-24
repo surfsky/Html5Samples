@@ -8,6 +8,7 @@
 class SplitPanel extends HTMLElement {
     option = {
         direction: 'horizontal',
+        splitterSize: 4,
         splitterColor: '#dddddda0',
         splitterHoverColor: '#017BFF',
         width: '100%',
@@ -28,6 +29,7 @@ class SplitPanel extends HTMLElement {
     constructor() {
         super();
         this.option.direction          = this.getAttribute('direction') ?? this.option.direction;
+        this.option.splitterSize       = this.getAttribute('splitter-size') ?? this.option.splitterSize;
         this.option.splitterColor      = this.getAttribute('splitter-color') ?? this.option.splitterColor;
         this.option.splitterHoverColor = this.getAttribute('splitter-hover-color') ?? this.option.splitterHoverColor;
         this.option.width              = this.getAttribute('width') ?? this.option.width;
@@ -101,14 +103,22 @@ class SplitPanel extends HTMLElement {
      */
     setResizable(resizable) {
         this.option.resizable = resizable;
-        this.render();
+        //this.render();
+
+        // 遍历所有分隔条，设置是否可调整大小
+        const splitters = this.querySelectorAll('.splitter');
+        splitters.forEach(splitter => {
+            splitter.style.cursor = resizable ? 'col-resize' : 'default';
+        });
     }
 
     /**设置分隔条颜色
+     * @param {number} size - 分隔条大小
      * @param {string} color - 分隔条颜色
      * @param {string} hoverColor - 分隔条悬停颜色
      */
-    setSplitterColor(color, hoverColor) {
+    setSplitterStyle(size, color, hoverColor) {
+        this.option.splitterSize = size;
         this.option.splitterColor = color;
         this.option.splitterHoverColor = hoverColor;
         this.render();
@@ -132,12 +142,12 @@ class SplitPanel extends HTMLElement {
         this.style.overflow = 'hidden';
         
         // 添加样式标签控制子元素、渲染子元素
-        this.addChildStyleTag();
+        this.renderStyleTag();
         this.renderChildren();
     }
     
     /**添加子元素样式标签 */
-    addChildStyleTag() {
+    renderStyleTag() {
         // 检查是否已经添加了样式
         if (document.getElementById('split-panel-styles')) return;
         
@@ -173,8 +183,8 @@ class SplitPanel extends HTMLElement {
                 position: relative;
                 transition: background-color 0.2s;
                 flex-shrink: 0;
-                width: 4px;
-                min-width: 4px;
+                width: ${this.option.splitterSize}px;
+                min-width: 0px;
             }
             
             /* 垂直分隔条样式 */
@@ -183,8 +193,8 @@ class SplitPanel extends HTMLElement {
                 position: relative;
                 transition: background-color 0.2s;
                 flex-shrink: 0;
-                height: 4px;
-                min-height: 4px;
+                height: ${this.option.splitterSize}px;
+                min-height: 0px;
                 width: 100%;
             }
             
@@ -196,8 +206,8 @@ class SplitPanel extends HTMLElement {
                 .splitter {
                     cursor: row-resize !important;
                     width: 100% !important;
-                    height: 4px !important;
-                    min-height: 4px !important;
+                    height: ${this.option.splitterSize}px !important;
+                    min-height: ${this.option.splitterSize}px !important;
                 }
                 .splitter::after {
                     width: 20px !important;
@@ -213,8 +223,17 @@ class SplitPanel extends HTMLElement {
         const isHorizontal = this.option.direction === 'horizontal';
         const showSplitters = this.option.resizable;
 
+        // 清除现有的包装元素和分隔条, 将子元素移回原位置
+        const existingElements = this.querySelectorAll('.split-panel-item, .splitter');
+        existingElements.forEach(el => {
+            if (el.classList.contains('split-panel-item') && el.firstChild) {
+                this.appendChild(el.firstChild);
+            }
+            el.remove();
+        });
+
         // 重新获取子元素（排除包装元素、分隔条和所有非元素节点）
-        const realChildren = Array.from(this.childNodes).filter(child => {
+        const realChildren = Array.from(this.children).filter(child => {
             if (child.nodeName == 'STYLE') return false;
             if (child.nodeType !== Node.ELEMENT_NODE) return false;
             return !child.classList.contains('split-panel-item') && !child.classList.contains('splitter');
@@ -282,11 +301,10 @@ class SplitPanel extends HTMLElement {
         if (!e.target.classList.contains('splitter') || !this.option.resizable) return;
         
         e.preventDefault();
+        const isHorizontal = this.option.direction === 'horizontal';
         this.isDragging = false; // 初始化拖拽标志
         this.currentSplitter = e.target;
-        this.currentSplitter.classList.add('dragging');
-        
-        const isHorizontal = this.option.direction === 'horizontal';
+        this.currentSplitter.classList.add('dragging');        
         this.startPos = isHorizontal ? e.clientX : e.clientY;
         
         // 记录当前所有子元素的大小
@@ -379,13 +397,12 @@ class SplitPanel extends HTMLElement {
     setChildrenSizes() {
         // 选取当前节点下直接挂着的 .split-panel-item 元素
         var items = Array.from(this.children).filter(child => child.classList.contains('split-panel-item'));
-        //const items = this.querySelectorAll('.split-panel-item');
         if (items.length === 0) return;
         
         const isHorizontal = this.option.direction === 'horizontal';
         let containerSize = isHorizontal ? this.offsetWidth : this.offsetHeight;
         const splitterCount = items.length - 1;
-        const splitterSize = 4; // 分隔条大小
+        const splitterSize = this.option.splitterSize;
         const availableSize = containerSize - (splitterCount * splitterSize);
         const customSizes = this.getSizes();
         

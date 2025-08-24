@@ -62,66 +62,11 @@
         
 
         
-        /* 目录树样式 */
-        .tree {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .tree-item {
-            margin: 2px 0;
-        }
-        
-        .tree-node {
-            display: flex;
-            align-items: center;
-            padding: 6px 8px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            user-select: none;
-        }
-        
-        .tree-node:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .tree-node.active {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-        
-        .tree-icon {
-            margin-right: 6px;
-            font-size: 14px;
-            width: 16px;
-            text-align: center;
-        }
-        
-        .tree-label {
-            flex: 1;
-            font-size: 14px;
-        }
-        
-        .tree-children {
-            margin-left: 20px;
-            display: none;
-        }
-        
-        .tree-item.expanded > .tree-children {
+        /* TreeView 控件样式调整 */
+        tree-view {
             display: block;
-        }
-        
-        .folder .tree-icon::before {
-            content: '📁';
-        }
-        
-        .folder.expanded .tree-icon::before {
-            content: '📂';
-        }
-        
-        .file .tree-icon::before {
-            content: '📄';
+            width: 100%;
+            height: 100%;
         }
         
         /* SplitPanel 自定义样式 */
@@ -176,35 +121,25 @@
         
         <main class="main-content">
             <!-- 主分割面板：左右布局 -->
-            <split-panel id="mainSplitPanel" direction="horizontal" sizes="20%,60%,20%" height="100%" width="100%">
+            <split-panel id="mainSplitPanel" direction="horizontal" sizes="20%,80%" height="100%" width="100%">
                 <!-- 左侧目录树 -->
                 <div class="sidebar">
-                    <div id="menuTree" class="tree"></div>
+                    <tree-view id="menuTree"></tree-view>
                 </div>
                 
-                <!-- 右侧内容区域：tabPanel -->
-                <iframe id="pageFrame" src="about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
-                <iframe id="codeFrame" src="code.html?file=about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
-
-
                 <!-- 右侧内容区域：tabPanel。用该方式容纳iframe，死活无法刷新iframe内容 -->
-                <!--
-                <tab-panel id="contentTabPanel" tab-position="top" height="100%" width="100%" active-tab-color="#677ee9">
-                    <tab-item title="内容" padding="0">
-                        <iframe id="pageFrame" src="about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
-                    </tab-item>
-                    <tab-item title="代码" padding="0">
-                        <iframe id="codeFrame" src="code.html?file=about.html" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
-                    </tab-item>
+                <tab-panel id="contentTabPanel" tab-position="top"  active-tab-color="#677ee9" width="100%" height="100%">
+                    <tab-item title="内容" padding="0" iframeurl="about.html"></tab-item>
+                    <tab-item title="代码" padding="0" iframeurl="code.html?file=about.html"></tab-item>
                 </tab-panel>
-                -->
             </split-panel>
         </main>
     </div>
     
     <!-- 引入依赖 -->
-    <script src="tagCustom/splitPanel/splitPanel.js"></script>
-    <script src="tagCustom/tabPanel/tabPanel.js"></script>
+    <script type="module" src="tagCustom/splitPanel/splitPanel.js"></script>
+    <script type="module" src="tagCustom/tabPanel/tabPanel.js"></script>
+    <script type="module" src="tagCustom/treeView/treeView.js?v=2"></script>
     <script type="module" src="index.js"></script>
 </body>
 </html>

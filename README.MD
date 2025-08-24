@@ -66,11 +66,11 @@ Just run index.html in browser.
 
 ## TODO
 
-- [ ] test css clamp function
-- [ ] test css view-transition api
-- [ ] test speculationrules 预加载目标页面
-- [ ] test back/forward cache
+spitplanel在index.html 中里面的百分比布局有问题，估计是splitpanel查找控件的问题，要约束父节点，而不是全页面。或者用shadow dom 方式容纳style，不污染全局。
 
 
-检查一下index.html, index.js 动态变更iframe ur时未刷新，是什么原因？是tabPanel的问题，把iframe挪到外面就正常更新了。
-从index.html中剥离tree-view 自定义标签组件，放到 tagCustom/treeView 目录下。
+## DONE
+
+/检查一下index.html, index.js 动态变更iframe ur时未刷新，是什么原因？是tabPanel的问题，把iframe挪到外面就正常更新了。
+/从index.html中剥离tree-view 自定义标签组件，放到 tagCustom/treeView 目录下。
+

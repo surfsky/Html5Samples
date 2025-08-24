@@ -120,7 +120,7 @@
         
         <!-- 基础用法 -->
         <div class="demo-section">
-            <div class="demo-title">基础用法</div>
+            <div class="demo-title">基础用法 ✅</div>
             <div class="demo-description">
                 最基本的标签页面板，包含三个标签页，默认激活第一个。
             </div>
@@ -151,6 +151,8 @@
                         <p>TabPanel 是我们开发的自定义HTML元素，遵循Web Components标准。</p>
                     </div>
                 </tab-item>
+                <tab-item title="Iframe页" padding="0" iframeurl="demo1.html">
+                </tab-item>
             </tab-panel>
             
             <div class="controls">
@@ -162,7 +164,7 @@
         
         <!-- 可关闭标签页 -->
         <div class="demo-section">
-            <div class="demo-title">可关闭标签页</div>
+            <div class="demo-title">可关闭标签页 ✅</div>
             <div class="demo-description">
                 启用 closable 属性后，每个标签页都会显示关闭按钮，用户可以动态关闭标签页。
             </div>
@@ -202,7 +204,7 @@
         
         <!-- 自定义样式 -->
         <div class="demo-section">
-            <div class="demo-title">自定义样式</div>
+            <div class="demo-title">自定义样式 ✅</div>
             <div class="demo-description">
                 通过属性可以自定义标签页的颜色、文字颜色等样式。
             </div>
@@ -244,7 +246,7 @@
         
         <!-- 标签位置 -->
         <div class="demo-section">
-            <div class="demo-title">标签位置</div>
+            <div class="demo-title">标签位置 ✅</div>
             <div class="demo-description">
                 支持将标签页放置在顶部、底部、左侧或右侧。
             </div>
@@ -291,7 +293,7 @@
         
         <!-- 事件监听 -->
         <div class="demo-section">
-            <div class="demo-title">事件监听</div>
+            <div class="demo-title">事件监听 ✅</div>
             <div class="demo-description">
                 TabPanel 支持多种事件，您可以监听这些事件来实现自定义逻辑。
             </div>
@@ -328,7 +330,7 @@
         
         <!-- API 示例 -->
         <div class="demo-section">
-            <div class="demo-title">API 使用示例</div>
+            <div class="demo-title">API 使用示例 ✅</div>
             <div class="demo-description">
                 展示如何通过 JavaScript API 来控制 TabPanel 组件。
             </div>
@@ -356,6 +358,9 @@ tabPanel.addEventListener('tabChange', (e) => {
     
     <script src="tabPanel.js"></script>
     <script>
+        //--------------------------------------------------------
+        // 设置TabPanel
+        //--------------------------------------------------------
         // 设置激活标签
         function setActiveTab(panelId, index) {
             const panel = document.getElementById(panelId);
@@ -387,7 +392,9 @@ tabPanel.addEventListener('tabChange', (e) => {
             panel.setAttribute('tab-position', position);
         }
         
+        //--------------------------------------------------------
         // 事件监听
+        //--------------------------------------------------------
         const eventPanel = document.getElementById('eventPanel');
         const eventLog = document.getElementById('eventLog');
         
