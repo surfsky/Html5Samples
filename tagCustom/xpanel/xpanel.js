@@ -5,10 +5,10 @@
 class XPanel extends HTMLElement {
     constructor() {
         super();
-        this._shadow = this.attachShadow({mode: 'open'});
+        this.shadow = this.attachShadow({mode: 'open'});
         this.iframe = null;
         this.toggleBtn = null;
-        this._options = {
+        this.options = {
             title: 'XPanel',
             width: '100%',
             height: '400px',
@@ -28,14 +28,14 @@ class XPanel extends HTMLElement {
 
     /**初始化配置选项 */
     initOptions() {
-        this._options.title = this.getAttribute('title') || 'XPanel';
-        this._options.width = this.getAttribute('width') || '100%';
-        this._options.height = this.getAttribute('height') || '400px';
-        this._options.border = this.getAttribute('border') || '1px solid #ddd';
-        this._options.radius = this.getAttribute('radius') || '8px';
-        this._options.expandable = this.hasAttribute('expandable');
-        this._options.expand = this.getAttribute('expand') !== 'false';
-        this._options.iframeurl = this.getAttribute('iframeurl') || '';
+        this.options.title = this.getAttribute('title') || 'XPanel';
+        this.options.width = this.getAttribute('width') || '100%';
+        this.options.height = this.getAttribute('height') || '400px';
+        this.options.border = this.getAttribute('border') || '1px solid #ddd';
+        this.options.radius = this.getAttribute('radius') || '8px';
+        this.options.expandable = this.hasAttribute('expandable');
+        this.options.expand = this.getAttribute('expand') !== 'false';
+        this.options.iframeurl = this.getAttribute('iframeurl') || '';
     }
 
     static get observedAttributes() {
@@ -52,23 +52,22 @@ class XPanel extends HTMLElement {
 
     /**渲染组件 */
     render() {
-        const hasIframe = this._options.iframeurl;
-
-        this._shadow.innerHTML = `
-            <div class="xpanel" style="width: ${this._options.width}; border: ${this._options.border}; border-radius: ${this._options.radius};">
-                <div class="xpanel-header">
-                    <h3 class="xpanel-title">${this._options.title}</h3>
-                    ${this._options.expandable ? `
-                        <button class="xpanel-toggle ${this._options.expand ? 'expanded' : 'collapsed'}">
+        const hasIframe = this.options.iframeurl;
+        this.shadow.innerHTML = `
+            <div class="xpanel" style="width: ${this.options.width}; border: ${this.options.border}; border-radius: ${this.options.radius}; height: ${this.options.height};">
+                <div class="xpanel-header" style='border-radius: ${this.options.radius}  ${this.options.radius} 0 0;'>
+                    <h3 class="xpanel-title">${this.options.title}</h3>
+                    ${this.options.expandable ? `
+                        <button class="xpanel-toggle ${this.options.expand ? 'expanded' : 'collapsed'}">
                             <svg width="16" height="16" viewBox="0 0 16 16">
                                 <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
                     ` : ''}
                 </div>
-                <div class="xpanel-content ${this._options.expandable && !this._options.expand ? 'collapsed' : ''}">
+                <div class="xpanel-content ${this.options.expandable && !this.options.expand ? 'collapsed' : ''}">
                     ${hasIframe ? 
-                        `<iframe src="${this._options.iframeurl}" frameborder="0"></iframe>` :
+                        `<iframe src="${this.options.iframeurl}" frameborder="0"></iframe>` :
                         `<div class="xpanel-body"><slot></slot></div>`
                     }
                 </div>
@@ -76,18 +75,18 @@ class XPanel extends HTMLElement {
         `;
         
         if (hasIframe) {
-            this.iframe = this._shadow.querySelector('iframe');
+            this.iframe = this.shadow.querySelector('iframe');
         }
         
-        this.toggleBtn = this._shadow.querySelector('.xpanel-toggle');
+        this.toggleBtn = this.shadow.querySelector('.xpanel-toggle');
         
-        const panel = this._shadow.querySelector('.xpanel');
-        const header = this._shadow.querySelector('.xpanel-header');
-        const content = this._shadow.querySelector('.xpanel-content');
+        const panel = this.shadow.querySelector('.xpanel');
+        const header = this.shadow.querySelector('.xpanel-header');
+        const content = this.shadow.querySelector('.xpanel-content');
         const headerHeight = header.offsetHeight;
         
-        if (this._options.expand) {
-            panel.style.height = `calc(${this._options.height} + ${headerHeight}px)`;
+        if (this.options.expand) {
+            panel.style.height = `calc(${this.options.height} + ${headerHeight}px)`;
             content.style.maxHeight = '100%';
         } else {
             panel.style.height = `${headerHeight}px`;
@@ -98,7 +97,7 @@ class XPanel extends HTMLElement {
     }
 
     addStyles() {
-        if (this._shadow.querySelector('#xpanel-styles')) return;
+        if (this.shadow.querySelector('#xpanel-styles')) return;
         
         const style = document.createElement('style');
         style.id = 'xpanel-styles';
@@ -158,7 +157,7 @@ class XPanel extends HTMLElement {
             .xpanel-content {
                 flex: 1;
                 overflow: hidden;
-                transition: max-height 0.3s ease, opacity 0.3s ease;
+                transition: max-height 0.3s ease;
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
@@ -168,7 +167,6 @@ class XPanel extends HTMLElement {
             
             .xpanel-content.collapsed {
                 max-height: 0;
-                opacity: 0;
                 overflow: hidden;
             }
             
@@ -188,11 +186,11 @@ class XPanel extends HTMLElement {
                 min-height: 0;
             }
         `;
-        this._shadow.appendChild(style);
+        this.shadow.appendChild(style);
     }
 
     setupEvents() {
-        if (!this._options.expandable) return;
+        if (!this.options.expandable) return;
         
         if (this.toggleBtn) {
             // 移除旧的事件监听器以防止重复
@@ -204,21 +202,21 @@ class XPanel extends HTMLElement {
     }
 
     toggle() {
-        this._options.expand = !this._options.expand;
-        this.setAttribute('expand', this._options.expand ? 'true' : 'false');
+        this.options.expand = !this.options.expand;
+        this.setAttribute('expand', this.options.expand ? 'true' : 'false');
         
-        const content = this._shadow.querySelector('.xpanel-content');
-        const panel = this._shadow.querySelector('.xpanel');
-        const header = this._shadow.querySelector('.xpanel-header');
+        const content = this.shadow.querySelector('.xpanel-content');
+        const panel = this.shadow.querySelector('.xpanel');
+        const header = this.shadow.querySelector('.xpanel-header');
         const headerHeight = header.offsetHeight;
-        const fullHeight = `calc(${this._options.height} + ${headerHeight}px)`;
+        const fullHeight = `calc(${this.options.height} + ${headerHeight}px)`;
         
         if (this.toggleBtn) {
-            this.toggleBtn.className = `xpanel-toggle ${this._options.expand ? 'expanded' : 'collapsed'}`;
+            this.toggleBtn.className = `xpanel-toggle ${this.options.expand ? 'expanded' : 'collapsed'}`;
         }
         
         if (content && panel) {
-            if (this._options.expand) {
+            if (this.options.expand) {
                 content.classList.remove('collapsed');
                 content.style.maxHeight = '0px';
                 panel.style.height = `${headerHeight}px`;
@@ -253,17 +251,16 @@ class XPanel extends HTMLElement {
         
         // 触发事件
         this.dispatchEvent(new CustomEvent('toggle', {
-            detail: { expanded: this._options.expand }
+            detail: { expanded: this.options.expand }
         }));
     }
 
     //------------------------------------------------------
     // 公共方法
     //------------------------------------------------------
-    
     /**设置选项 */
     setOptions(options) {
-        Object.assign(this._options, options);
+        Object.assign(this.options, options);
         Object.keys(options).forEach(key => {
             if (options[key] !== undefined) {
                 this.setAttribute(key, options[key]);
@@ -273,19 +270,19 @@ class XPanel extends HTMLElement {
     
     /**获取选项 */
     getOptions() {
-        return { ...this._options };
+        return { ...this.options };
     }
     
     /**设置内容 */
     setContent(html) {
-        this._options.iframeurl = '';
+        this.options.iframeurl = '';
         this.removeAttribute('iframeurl');
         this.innerHTML = html;
     }
     
     /**设置iframe URL */
     setIframeUrl(url) {
-        this._options.iframeurl = url;
+        this.options.iframeurl = url;
         this.setAttribute('iframeurl', url);
         this.render();
     }
