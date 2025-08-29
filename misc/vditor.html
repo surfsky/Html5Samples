@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vditor 编辑器测试</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor@3.9.7/dist/index.css" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .controls {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+        }
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .mode-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mode-btn:hover {
+            background: #f0f0f0;
+        }
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .editor-container {
+            padding: 20px;
+            min-height: 500px;
+        }
+        #vditor {
+            min-height: 400px;
+        }
+        .demo-content {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #667eea;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .feature-item {
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e1e5e9;
+        }
+        .feature-item h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+        }
+        .feature-item p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖋️ Vditor 编辑器测试</h1>
+            <p>支持所见即所得、即时渲染和分屏预览的现代化 Markdown 编辑器</p>
+        </div>
+        
+        <div class="controls">
+            <div class="mode-buttons">
+                <button class="mode-btn active" data-mode="wysiwyg">所见即所得 (WYSIWYG)</button>
+                <button class="mode-btn" data-mode="ir">即时渲染 (IR)</button>
+                <button class="mode-btn" data-mode="sv">分屏预览 (SV)</button>
+            </div>
+            
+            <div class="demo-content">
+                <strong>💡 使用提示：</strong>
+                <ul style="margin: 8px 0 0 20px; padding: 0;">
+                    <li><strong>所见即所得模式</strong>：类似富文本编辑器，适合不熟悉 Markdown 的用户</li>
+                    <li><strong>即时渲染模式</strong>：类似 Typora，边写边渲染，适合熟悉 Markdown 的用户</li>
+                    <li><strong>分屏预览模式</strong>：传统的左编辑右预览模式，适合大屏编辑</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="editor-container">
+            <div id="vditor"></div>
+        </div>
+        
+        <div style="padding: 20px; background: #f8f9fa;">
+            <h3>🚀 Vditor 主要特性</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>📝 三种编辑模式</h4>
+                    <p>支持所见即所得、即时渲染和分屏预览，适应不同使用场景</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎨 丰富的语法支持</h4>
+                    <p>支持 CommonMark、GFM 规范，以及数学公式、图表、流程图等扩展</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🛠️ 强大的工具栏</h4>
+                    <p>包含 36+ 项操作，支持自定义快捷键、图标和功能</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🌈 多主题支持</h4>
+                    <p>内置多套主题，支持自定义样式和暗黑模式</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📱 移动端友好</h4>
+                    <p>响应式设计，在移动设备上也有良好的编辑体验</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🔧 易于集成</h4>
+                    <p>支持 Vue、React、Angular 等主流框架集成</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vditor@3.9.7/dist/index.min.js"></script>
+    <script>
+        let vditor;
+        
+        // 初始化编辑器
+        function initVditor(mode = 'wysiwyg') {
+            if (vditor) {
+                vditor.destroy();
+            }
+            
+            const demoContent = `# 🎉 欢迎使用 Vditor 编辑器
+
+这是一个功能强大的 Markdown 编辑器演示页面。
+
+## ✨ 主要特性
+
+- **所见即所得编辑**：直观的富文本编辑体验
+- **即时渲染**：类似 Typora 的编辑模式
+- **分屏预览**：传统的 Markdown 编辑模式
+- **语法高亮**：支持多种编程语言
+- **数学公式**：支持 LaTeX 数学公式渲染
+
+## 📝 Markdown 语法示例
+
+### 文本格式
+
+**粗体文本** 和 *斜体文本* 以及 ~~删除线~~
+
+### 代码块
+
+\`\`\`javascript
+// JavaScript 代码示例
+function hello(name) {
+    console.log(\`Hello, \${name}!\`);
+}
+
+hello('Vditor');
+\`\`\`
+
+### 列表
+
+1. 有序列表项 1
+2. 有序列表项 2
+   - 无序子列表
+   - 另一个子列表项
+
+### 表格
+
+| 功能 | 支持 | 说明 |
+|------|------|------|
+| 所见即所得 | ✅ | 富文本编辑模式 |
+| 即时渲染 | ✅ | 类似 Typora |
+| 分屏预览 | ✅ | 传统编辑模式 |
+
+### 引用
+
+> 这是一个引用块示例。
+> 
+> Vditor 是一款优秀的 Markdown 编辑器。
+
+### 链接和图片
+
+[Vditor GitHub](https://github.com/Vanessa219/vditor)
+
+---
+
+💡 **提示**：尝试切换不同的编辑模式来体验各种功能！`;
+            
+            vditor = new Vditor('vditor', {
+                height: 400,
+                mode: mode,
+                value: demoContent,
+                placeholder: '开始编写你的 Markdown 内容...',
+                theme: 'classic',
+                icon: 'material',
+                preview: {
+                    theme: {
+                        current: 'light',
+                        path: 'https://cdn.jsdelivr.net/npm/vditor@3.9.7/dist/css/content-theme'
+                    },
+                    hljs: {
+                        enable: true,
+                        lineNumber: true,
+                        style: 'github'
+                    },
+                    math: {
+                        inlineDigit: true,
+                        engine: 'KaTeX'
+                    }
+                },
+                toolbar: [
+                    'emoji',
+                    'headings',
+                    'bold',
+                    'italic',
+                    'strike',
+                    'link',
+                    '|',
+                    'list',
+                    'ordered-list',
+                    'check',
+                    'outdent',
+                    'indent',
+                    '|',
+                    'quote',
+                    'line',
+                    'code',
+                    'inline-code',
+                    'insert-before',
+                    'insert-after',
+                    '|',
+                    'table',
+                    '|',
+                    'undo',
+                    'redo',
+                    '|',
+                    'fullscreen',
+                    'edit-mode',
+                    {
+                        name: 'more',
+                        toolbar: [
+                            'both',
+                            'code-theme',
+                            'content-theme',
+                            'export',
+                            'outline',
+                            'preview',
+                            'devtools'
+                        ]
+                    }
+                ],
+                counter: {
+                    enable: true,
+                    type: 'text'
+                },
+                cache: {
+                    enable: false
+                },
+                after: () => {
+                    console.log('Vditor 初始化完成，当前模式：', mode);
+                }
+            });
+        }
+        
+        // 模式切换事件
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // 更新按钮状态
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // 切换编辑器模式
+                const mode = e.target.dataset.mode;
+                initVditor(mode);
+            });
+        });
+        
+        // 页面加载完成后初始化编辑器
+        document.addEventListener('DOMContentLoaded', () => {
+            initVditor('wysiwyg');
+        });
+    </script>
+</body>
+</html>

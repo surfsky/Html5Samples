@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FontAwesome 图标示例</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .icon-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #e3f2fd;
+        }
+        
+        .icon-item i {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #667eea;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .icon-item span {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .size-demo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .size-demo i {
+            color: #667eea;
+        }
+        
+        .color-demo {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .color-item {
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .animation-demo {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .animation-demo i {
+            font-size: 2em;
+            color: #667eea;
+        }
+        
+        .btn-demo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn-demo:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fab fa-font-awesome"></i> FontAwesome 图标示例</h1>
+            <p>展示 FontAwesome 图标库的各种使用方法和效果</p>
+        </div>
+        
+        <div class="content">
+            <!-- 基础图标 -->
+            <div class="section">
+                <h2><i class="fas fa-star"></i> 基础图标</h2>
+                <div class="icon-grid">
+                    <div class="icon-item">
+                        <i class="fas fa-home"></i>
+                        <span>fa-home</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-user"></i>
+                        <span>fa-user</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>fa-envelope</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-phone"></i>
+                        <span>fa-phone</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-heart"></i>
+                        <span>fa-heart</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-star"></i>
+                        <span>fa-star</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-search"></i>
+                        <span>fa-search</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>fa-shopping-cart</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 尺寸示例 -->
+            <div class="section">
+                <h2><i class="fas fa-expand-arrows-alt"></i> 尺寸示例</h2>
+                <div class="size-demo">
+                    <i class="fas fa-heart fa-xs"></i>
+                    <span>fa-xs</span>
+                    <i class="fas fa-heart fa-sm"></i>
+                    <span>fa-sm</span>
+                    <i class="fas fa-heart"></i>
+                    <span>normal</span>
+                    <i class="fas fa-heart fa-lg"></i>
+                    <span>fa-lg</span>
+                    <i class="fas fa-heart fa-xl"></i>
+                    <span>fa-xl</span>
+                    <i class="fas fa-heart fa-2x"></i>
+                    <span>fa-2x</span>
+                    <i class="fas fa-heart fa-3x"></i>
+                    <span>fa-3x</span>
+                </div>
+                
+                <div class="code-block">
+&lt;i class="fas fa-heart <span class="highlight">fa-xs</span>"&gt;&lt;/i&gt;
+&lt;i class="fas fa-heart <span class="highlight">fa-sm</span>"&gt;&lt;/i&gt;
+&lt;i class="fas fa-heart"&gt;&lt;/i&gt;
+&lt;i class="fas fa-heart <span class="highlight">fa-lg</span>"&gt;&lt;/i&gt;
+&lt;i class="fas fa-heart <span class="highlight">fa-2x</span>"&gt;&lt;/i&gt;
+&lt;i class="fas fa-heart <span class="highlight">fa-3x</span>"&gt;&lt;/i&gt;
+                </div>
+            </div>
+            
+            <!-- 颜色示例 -->
+            <div class="section">
+                <h2><i class="fas fa-palette"></i> 颜色示例</h2>
+                <div class="color-demo">
+                    <div class="color-item" style="background: #e74c3c;">
+                        <i class="fas fa-heart"></i> 红色
+                    </div>
+                    <div class="color-item" style="background: #3498db;">
+                        <i class="fas fa-star"></i> 蓝色
+                    </div>
+                    <div class="color-item" style="background: #2ecc71;">
+                        <i class="fas fa-check"></i> 绿色
+                    </div>
+                    <div class="color-item" style="background: #f39c12;">
+                        <i class="fas fa-sun"></i> 橙色
+                    </div>
+                    <div class="color-item" style="background: #9b59b6;">
+                        <i class="fas fa-gem"></i> 紫色
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 动画效果 -->
+            <div class="section">
+                <h2><i class="fas fa-magic"></i> 动画效果</h2>
+                <div class="animation-demo">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>fa-spin</span>
+                    
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    <span>fa-spin</span>
+                    
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                    <span>fa-spin</span>
+                    
+                    <i class="fas fa-cog fa-spin"></i>
+                    <span>fa-spin</span>
+                    
+                    <i class="fas fa-heart fa-beat"></i>
+                    <span>fa-beat</span>
+                    
+                    <i class="fas fa-bell fa-shake"></i>
+                    <span>fa-shake</span>
+                </div>
+                
+                <div class="code-block">
+&lt;i class="fas fa-spinner <span class="highlight">fa-spin</span>"&gt;&lt;/i&gt;
+&lt;i class="fas fa-heart <span class="highlight">fa-beat</span>"&gt;&lt;/i&gt;
+&lt;i class="fas fa-bell <span class="highlight">fa-shake</span>"&gt;&lt;/i&gt;
+                </div>
+            </div>
+            
+            <!-- 按钮示例 -->
+            <div class="section">
+                <h2><i class="fas fa-mouse-pointer"></i> 按钮示例</h2>
+                <div>
+                    <a href="#" class="btn-demo">
+                        <i class="fas fa-download"></i>
+                        下载
+                    </a>
+                    <a href="#" class="btn-demo">
+                        <i class="fas fa-share"></i>
+                        分享
+                    </a>
+                    <a href="#" class="btn-demo">
+                        <i class="fas fa-edit"></i>
+                        编辑
+                    </a>
+                    <a href="#" class="btn-demo">
+                        <i class="fas fa-trash"></i>
+                        删除
+                    </a>
+                    <a href="#" class="btn-demo">
+                        <i class="fas fa-save"></i>
+                        保存
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 社交媒体图标 -->
+            <div class="section">
+                <h2><i class="fas fa-share-alt"></i> 社交媒体图标</h2>
+                <div class="icon-grid">
+                    <div class="icon-item">
+                        <i class="fab fa-facebook" style="color: #3b5998;"></i>
+                        <span>Facebook</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                        <span>Twitter</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-instagram" style="color: #e4405f;"></i>
+                        <span>Instagram</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-linkedin" style="color: #0077b5;"></i>
+                        <span>LinkedIn</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-youtube" style="color: #ff0000;"></i>
+                        <span>YouTube</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-github" style="color: #333;"></i>
+                        <span>GitHub</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-weixin" style="color: #1aad19;"></i>
+                        <span>微信</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fab fa-weibo" style="color: #e6162d;"></i>
+                        <span>微博</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 使用说明 -->
+            <div class="section">
+                <h2><i class="fas fa-info-circle"></i> 使用说明</h2>
+                <p>FontAwesome 是一个流行的图标字体库，提供了丰富的图标资源。</p>
+                
+                <h3>引入方式：</h3>
+                <div class="code-block">
+&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;
+                </div>
+                
+                <h3>基本用法：</h3>
+                <div class="code-block">
+&lt;i class="<span class="highlight">fas</span> fa-home"&gt;&lt;/i&gt;  &lt;!-- 实心图标 --&gt;
+&lt;i class="<span class="highlight">far</span> fa-heart"&gt;&lt;/i&gt;  &lt;!-- 空心图标 --&gt;
+&lt;i class="<span class="highlight">fab</span> fa-github"&gt;&lt;/i&gt; &lt;!-- 品牌图标 --&gt;
+                </div>
+                
+                <h3>图标类型：</h3>
+                <ul>
+                    <li><strong>fas</strong> - Solid (实心图标)</li>
+                    <li><strong>far</strong> - Regular (常规图标)</li>
+                    <li><strong>fal</strong> - Light (轻量图标，需要 Pro 版本)</li>
+                    <li><strong>fab</strong> - Brands (品牌图标)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

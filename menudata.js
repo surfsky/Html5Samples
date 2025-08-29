@@ -122,7 +122,8 @@ export const menuData = [
             { name: 'css3-unit-vh', text: 'CSS3 VH单位', icon: '🎨', url: 'css3/css3-unit-vh.html', children: null },
             { name: 'css3-variable-change', text: 'CSS3变量变化', icon: '🎨', url: 'css3/css3-variable-change.html', children: null },
             { name: 'css3-variable-region', text: 'CSS3变量区域', icon: '🎨', url: 'css3/css3-variable-region.html', children: null },
-            { name: 'css3-variable', text: 'CSS3变量', icon: '🎨', url: 'css3/css3-variable.html', children: null }
+            { name: 'css3-variable', text: 'CSS3变量', icon: '🎨', url: 'css3/css3-variable.html', children: null },
+            { name: 'css-function', text: 'CSS @function', icon: '🎨', url: 'css-function/css-function.html', children: null }
         ]
     },
     {
@@ -143,7 +144,9 @@ export const menuData = [
         icon: '📂',
         url: null,
         children: [
-            { name: 'iconfont', text: '图标字体示例', icon: '🔤', url: 'iconfont/iconfont.html', children: null }
+            { name: 'iconfont', text: 'IconFont', icon: '🔤', url: 'draw-iconfont/iconfont.html', children: null },
+            { name: 'iconfont', text: 'IconFont All', icon: '🔤', url: 'draw-iconfont/baseicon/demo.html', children: null },
+            { name: 'fontawesome', text: 'FontAwesome图标', icon: '🔤', url: 'draw-fontawesome/fontawesome.html', children: null }
         ]
     },
     {
@@ -265,6 +268,9 @@ export const menuData = [
         icon: '📂',
         url: null,
         children: [
+            { name: 'highlight', text: '代码高亮', icon: '🌐', url: 'misc/highlight.html', children: null },
+            { name: 'markdown', text: 'Markdown渲染', icon: '📝', url: 'misc/markdown.html', children: null },
+            { name: 'vditor', text: 'Vditor编辑器', icon: '✏️', url: 'misc/vditor.html', children: null },
             { name: 'advertise', text: '广告示例', icon: '🌐', url: 'misc/advertise.html', children: null }
         ]
     },

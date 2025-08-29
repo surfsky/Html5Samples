@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS @function 规则演示</title>
+    <!-- Prism.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .intro {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            border-left: 4px solid #007bff;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            background: #fafafa;
+        }
+
+        .demo-title {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .code-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .code-title {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .copy-btn {
+            background: rgba(59, 130, 246, 0.8);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 1);
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        /* Prism.js 自定义样式 */
+        .code-block pre[class*="language-"] {
+            margin: 0;
+            padding: 25px;
+            background: transparent;
+            border-radius: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .code-block code[class*="language-"] {
+            font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Menlo', monospace;
+            font-feature-settings: 'liga' 1, 'calt' 1;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* 行号样式 */
+        .line-numbers .line-numbers-rows {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .line-numbers-rows > span:before {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .demo-item {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* CSS @function 演示样式 */
+        
+        /* 1. 虚线边框函数 */
+        @function --dashed-border(--color: red) {
+            result: 2px dashed var(--color);
+        }
+
+        .border-demo {
+            padding: 20px;
+            margin: 10px 0;
+            border: --dashed-border(blue);
+            background: #f8f9fa;
+        }
+
+        .border-demo-default {
+            padding: 20px;
+            margin: 10px 0;
+            border: --dashed-border();
+            background: #fff3cd;
+        }
+
+        /* 2. 负值函数 */
+        @function --negate(--value) {
+            result: calc(-1 * var(--value));
+        }
+
+        .negative-margin {
+            background: #d4edda;
+            padding: 20px;
+            margin: --negate(10px);
+            border-radius: 8px;
+        }
+
+        /* 3. 透明度函数 */
+        @function --opacity(--opacity, --color: #007bff) {
+            result: rgb(from var(--color) r g b / var(--opacity));
+        }
+
+        .opacity-button {
+            background: --opacity(0.8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .opacity-button:hover {
+            background: --opacity(1);
+            transform: translateY(-2px);
+        }
+
+        .opacity-button:disabled {
+            background: --opacity(0.3, gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .opacity-button.green {
+            background: --opacity(0.8, #28a745);
+        }
+
+        .opacity-button.green:hover {
+            background: --opacity(1, #28a745);
+        }
+
+        /* 4. 流体排版函数 */
+        @function --fluid-type(--font-min, --font-max, --type: 'header') {
+            --scalar: if(style(--type: 'header'): 4vw; style(--type: 'copy'): 0.5vw);
+            result: clamp(var(--font-min), var(--scalar) + var(--font-min), var(--font-max));
+        }
+
+        .fluid-header {
+            font-size: --fluid-type(24px, 36px);
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+
+        .fluid-text {
+            font-size: --fluid-type(16px, 24px, 'copy');
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* 5. 条件圆角函数 */
+        @function --conditional-radius(--radius, --edge-dist: 4px) {
+            result: clamp(0px, ((100vw - var(--edge-dist)) - 100%) * 1e5, var(--radius));
+        }
+
+        .conditional-box {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: --conditional-radius(1rem);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .conditional-box-2 {
+            background: linear-gradient(45deg, #a8e6cf, #ffd93d);
+            color: #333;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: --conditional-radius(1rem, 0px);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* 6. 主题切换函数 */
+        @function --light-dark(--light, --dark) {
+            result: if(style(--scheme: dark): var(--dark); else: var(--light));
+        }
+
+        :root {
+            --root-scheme: light;
+            --scheme: light;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --root-scheme: dark;
+                --scheme: dark;
+            }
+        }
+
+        @scope ([data-scheme]) {
+            :scope {
+                --scheme-from-attr: attr(data-scheme type());
+                --scheme: if(style(--scheme-from-attr: system): var(--root-scheme); else: var(--scheme-from-attr));
+                color-scheme: var(--scheme);
+            }
+        }
+
+        .theme-demo {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: --light-dark(#333, #e4e4e4);
+            background-color: --light-dark(#f8f9fa, #2d3748);
+            border: 1px solid --light-dark(#dee2e6, #4a5568);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            background: --light-dark(#007bff, #4299e1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        /* 响应式网格 */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        /* 警告信息 */
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .warning strong {
+            color: #b45309;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSS @function 规则演示</h1>
+        
+        <div class="intro">
+            <h3>关于 CSS @function</h3>
+            <p><strong>@function</strong> 规则是 Chrome 139+ 推出的新功能，允许你定义自定义的 CSS 函数来封装可复用的样式逻辑。它就像一个迷你 JavaScript 函数，但专为 CSS 设计：纯粹、声明式，并且直接内置于浏览器中。CSS @function 的函数名必须以 -- 开头。</p>
+        </div>
+
+        <div class="warning">
+            <strong>浏览器支持：</strong> CSS @function 目前仅在 Chrome 139+ 版本中支持，其他浏览器可能无法正确显示效果。
+        </div>
+
+        <!-- 1. 虚线边框演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">1. 虚线边框函数</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">CSS</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+                <pre class="line-numbers"><code class="language-css">@function --dashed-border(--color: red) {
+  result: 2px dashed var(--color);
+}
+
+.border-demo {
+  border: --dashed-border(blue);
+}
+
+.border-demo-default {
+  border: --dashed-border(); /* 使用默认红色 */
+}</code></pre>
+            </div>
+            
+            <div class="demo-item">
+                <div class="border-demo">蓝色虚线边框 - 使用参数 blue</div>
+                <div class="border-demo-default">红色虚线边框 - 使用默认颜色</div>
+            </div>
+        </div>
+
+        <!-- 2. 负值函数演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">2. 负值函数</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">CSS</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+                <pre class="line-numbers"><code class="language-css">@function --negate(--value) {
+  result: calc(-1 * var(--value));
+}
+
+.negative-margin {
+  margin: --negate(10px); /* 等同于 margin: -10px */
+}</code></pre>
+            </div>
+            
+            <div class="demo-item">
+                <div class="negative-margin">这个元素使用了负边距 -10px</div>
+                <p>上面的绿色区域向外扩展了 10px，展示了负值函数的效果。</p>
+            </div>
+        </div>
+
+        <!-- 3. 透明度函数演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">3. 透明度函数</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">CSS</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+                <pre class="line-numbers"><code class="language-css">@function --opacity(--opacity, --color: #007bff) {
+  result: rgb(from var(--color) r g b / var(--opacity));
+}
+
+button {
+  background: --opacity(0.8);
+}
+button:hover {
+  background: --opacity(1);
+}
+button:disabled {
+  background: --opacity(0.3, gray);
+}</code></pre>
+            </div>
+            
+            <div class="demo-item">
+                <button class="opacity-button">普通按钮 (80% 透明度)</button>
+                <button class="opacity-button green">绿色按钮 (80% 透明度)</button>
+                <button class="opacity-button" disabled>禁用按钮 (30% 透明度)</button>
+                <p>鼠标悬停查看透明度变化效果</p>
+            </div>
+        </div>
+
+        <!-- 4. 流体排版演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">4. 流体排版函数</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">CSS</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+                <pre class="line-numbers"><code class="language-css">@function --fluid-type(--font-min, --font-max, --type: 'header') {
+  --scalar: if(style(--type: 'header'): 4vw; style(--type: 'copy'): 0.5vw);
+  result: clamp(var(--font-min), var(--scalar) + var(--font-min), var(--font-max));
+}
+
+h1 {
+  font-size: --fluid-type(24px, 36px);
+}
+p {
+  font-size: --fluid-type(16px, 24px, 'copy');
+}</code></pre>
+            </div>
+            
+            <div class="demo-item">
+                <div class="fluid-header">这是流体标题文字</div>
+                <div class="fluid-text">这是流体正文文字。调整浏览器窗口大小可以看到字体大小会根据视口宽度平滑缩放。这种技术特别适合响应式设计，能够在不同设备上提供最佳的阅读体验。</div>
+                <p><em>提示：调整浏览器窗口大小查看字体缩放效果</em></p>
+            </div>
+        </div>
+
+        <!-- 5. 条件圆角演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">5. 条件圆角函数</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">CSS</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+                <pre class="line-numbers"><code class="language-css">@function --conditional-radius(--radius, --edge-dist: 4px) {
+  result: clamp(0px, ((100vw - var(--edge-dist)) - 100%) * 1e5, var(--radius));
+}
+
+.box {
+  border-radius: --conditional-radius(1rem);
+}
+.box-2 {
+  border-radius: --conditional-radius(1rem, 0px);
+}</code></pre>
+            </div>
+            
+            <div class="demo-item">
+                <div class="conditional-box">条件圆角盒子 1 - 靠近边缘时圆角消失</div>
+                <div class="conditional-box-2">条件圆角盒子 2 - 不同的边缘距离设置</div>
+                <p><em>提示：调整浏览器窗口大小，当元素接触视口边缘时圆角会自动消失</em></p>
+            </div>
+        </div>
+
+        <!-- 6. 主题切换演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">6. 主题切换函数</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">CSS</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+                <pre class="line-numbers"><code class="language-css">@function --light-dark(--light, --dark) {
+  result: if(style(--scheme: dark): var(--dark); else: var(--light));
+}
+
+.theme-demo {
+  color: --light-dark(#333, #e4e4e4);
+  background-color: --light-dark(#f8f9fa, #2d3748);
+}</code></pre>
+            </div>
+            
+            <div class="demo-item" data-scheme="light">
+                <div class="theme-demo">这是主题切换演示区域。当前为浅色主题。</div>
+                <button class="theme-toggle" onclick="toggleTheme(this.parentElement)">切换到深色主题</button>
+                <button class="theme-toggle" onclick="setSystemTheme(this.parentElement)">跟随系统主题</button>
+            </div>
+        </div>
+
+        <!-- 综合演示 -->
+        <div class="demo-section">
+            <h2 class="demo-title">7. 综合应用演示</h2>
+            <p>以下展示了多个 CSS 函数的组合使用：</p>
+            
+            <div class="demo-grid">
+                <div class="demo-item" style="border: --dashed-border(#28a745); border-radius: --conditional-radius(12px);">
+                    <h4 style="font-size: --fluid-type(18px, 24px);">组合效果 1</h4>
+                    <p>绿色虚线边框 + 条件圆角 + 流体字体</p>
+                </div>
+                
+                <div class="demo-item" style="background: --opacity(0.1, #ff6b6b); border-radius: --conditional-radius(8px);">
+                    <h4 style="font-size: --fluid-type(18px, 24px);">组合效果 2</h4>
+                    <p>透明背景 + 条件圆角 + 流体字体</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="intro">
+            <h3>总结</h3>
+            <p>CSS @function 规则为我们提供了一种全新的方式来编写可复用、动态的样式代码。它不仅能减少重复代码，还能让样式表在不依赖预处理器或脚本的情况下具备强大的动态能力。随着浏览器支持的完善，这将成为现代 CSS 开发的重要工具。</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme(container) {
+            const currentScheme = container.getAttribute('data-scheme');
+            const newScheme = currentScheme === 'light' ? 'dark' : 'light';
+            container.setAttribute('data-scheme', newScheme);
+            
+            const button = container.querySelector('.theme-toggle');
+            button.textContent = newScheme === 'light' ? '切换到深色主题' : '切换到浅色主题';
+        }
+        
+        function setSystemTheme(container) {
+            container.setAttribute('data-scheme', 'system');
+            const button = container.querySelector('.theme-toggle');
+            button.textContent = '跟随系统主题';
+        }
+        
+        // 复制代码功能
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const codeElement = codeBlock.querySelector('code');
+            const text = codeElement.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '已复制!';
+                button.style.backgroundColor = '#10b981';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                button.textContent = '复制失败';
+                button.style.backgroundColor = '#ef4444';
+                
+                setTimeout(() => {
+                    button.textContent = '复制';
+                    button.style.backgroundColor = '';
+                }, 2000);
+            });
+        }
+        
+        // 添加一些交互提示
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查浏览器支持
+            if (!CSS.supports('@function', '--test() { result: 1px; }')) {
+                const warning = document.createElement('div');
+                warning.className = 'warning';
+                warning.innerHTML = '<strong>浏览器兼容性提醒：</strong> 您的浏览器可能不支持 CSS @function 规则，部分效果可能无法正常显示。建议使用 Chrome 139+ 版本浏览。';
+                document.querySelector('.container').insertBefore(warning, document.querySelector('.demo-section'));
+            }
+            
+            // 为代码块添加鼠标悬停效果
+            document.querySelectorAll('.code-block').forEach(block => {
+                block.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
+                });
+                
+                block.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+                });
+            });
+        });
+    </script>
+    
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+</body>
+</html>
